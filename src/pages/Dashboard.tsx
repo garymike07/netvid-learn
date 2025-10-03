@@ -1,109 +1,71 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Award, BookOpen, Loader2, PlayCircle, TrendingUp } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { COURSES } from "@/data/courses";
+import { calculateMetrics, loadProgress, saveProgress, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 
-type DashboardMetrics = {
-  coursesEnrolled: number;
-  videosWatched: number;
-  certificatesEarned: number;
-  progressPercentage: number;
-};
-
-type CourseProgress = {
+type ContinueCourse = {
   id: string;
   title: string;
-  level?: string | null;
+  level: string;
   progress: number;
-  nextLesson?: string | null;
+  nextLessonTitle: string;
+  slug: string;
 };
 
-const fallbackMetrics: DashboardMetrics = {
-  coursesEnrolled: 0,
-  videosWatched: 0,
-  certificatesEarned: 0,
-  progressPercentage: 0,
-};
+const deriveContinueList = (progress: UserProgress): ContinueCourse[] => {
+  return COURSES.map((course) => {
+    const courseProgress = progress.courses[course.id];
+    const lessonList = course.modules.flatMap((module) => module.lessons);
+    const completedSet = new Set(courseProgress?.completedLessons ?? []);
+    const nextLesson = lessonList.find((lesson) => !completedSet.has(lesson.id)) ?? lessonList[lessonList.length - 1];
 
-const fallbackCourses: CourseProgress[] = [
-  {
-    id: "network-fundamentals",
-    title: "Network Foundations",
-    level: "Beginner",
-    progress: 0,
-    nextLesson: "Start with 'What is a Network?'",
-  },
-];
+    const totalLessons = lessonList.length;
+    const completedCount = lessonList.filter((lesson) => completedSet.has(lesson.id)).length;
+    const progressPercent = totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
+
+    return {
+      id: course.id,
+      title: course.title,
+      level: course.level,
+      progress: progressPercent,
+      nextLessonTitle: progressPercent === 100 ? "🎉 Course completed" : nextLesson?.title ?? "Start your first lesson",
+      slug: course.slug,
+    };
+  });
+};
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [metrics, setMetrics] = useState<DashboardMetrics>(fallbackMetrics);
-  const [courseProgress, setCourseProgress] = useState<CourseProgress[]>(fallbackCourses);
-  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [signingOut, setSigningOut] = useState(false);
+  const metrics = useMemo(() => calculateMetrics(progress), [progress]);
+  const continueLearning = useMemo(() => deriveContinueList(progress), [progress]);
 
   useEffect(() => {
-    const loadData = async () => {
-      if (!user) return;
+    setProgress(loadProgress(user?.id));
+  }, [user?.id]);
 
-      try {
-        const [{ data: metricsData, error: metricsError }, { data: coursesData, error: coursesError }] = await Promise.all([
-          supabase
-            .from("learner_metrics")
-            .select("courses_enrolled, videos_watched, certificates, progress")
-            .eq("user_id", user.id)
-            .maybeSingle(),
-          supabase
-            .from("enrollments")
-            .select("progress, next_lesson, courses ( id, title, level )")
-            .eq("user_id", user.id),
-        ]);
-
-        if (metricsError) {
-          if (metricsError.code !== "42P01") {
-            throw metricsError;
-          }
-        } else if (metricsData) {
-          setMetrics({
-            coursesEnrolled: metricsData.courses_enrolled ?? 0,
-            videosWatched: metricsData.videos_watched ?? 0,
-            certificatesEarned: metricsData.certificates ?? 0,
-            progressPercentage: metricsData.progress ?? 0,
-          });
-        }
-
-        if (coursesError) {
-          if (coursesError.code !== "42P01") {
-            throw coursesError;
-          }
-        } else if (coursesData && coursesData.length > 0) {
-          setCourseProgress(
-            coursesData.map((item, index) => ({
-              id: item.courses?.id ?? `course-${index}`,
-              title: item.courses?.title ?? "Course",
-              level: item.courses?.level,
-              progress: item.progress ?? 0,
-              nextLesson: item.next_lesson,
-            })),
-          );
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "Unable to load your data";
-        toast.error(message, {
-          description: "Showing cached data until the connection is restored.",
-        });
-      } finally {
-        setLoading(false);
-      }
+  useEffect(() => {
+    const syncProgress = () => {
+      setProgress(loadProgress(user?.id));
     };
 
-    loadData();
-  }, [user]);
+    if (typeof window === "undefined") return;
+
+    window.addEventListener("focus", syncProgress);
+    window.addEventListener("storage", syncProgress);
+
+    return () => {
+      window.removeEventListener("focus", syncProgress);
+      window.removeEventListener("storage", syncProgress);
+    };
+  }, [user?.id]);
 
   const handleSignOut = async () => {
     try {
@@ -119,6 +81,13 @@ const Dashboard = () => {
     }
   };
 
+  const handleResetProgress = () => {
+    const fresh = loadProgress(user?.id);
+    setProgress(fresh);
+    saveProgress(fresh, user?.id);
+    toast.success("Progress reset", { description: "All lessons are now marked as not started." });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -127,10 +96,15 @@ const Dashboard = () => {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-semibold">Back to Home</span>
           </Link>
-          <Button variant="outline" onClick={handleSignOut} disabled={signingOut} className="gap-2">
-            {signingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {signingOut ? "Signing out..." : "Sign Out"}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" onClick={handleResetProgress} className="hidden md:inline-flex">
+              Reset Progress
+            </Button>
+            <Button variant="outline" onClick={handleSignOut} disabled={signingOut} className="gap-2">
+              {signingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {signingOut ? "Signing out..." : "Sign Out"}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -196,36 +170,36 @@ const Dashboard = () => {
               <CardTitle>Continue Learning</CardTitle>
               <CardDescription>Pick up where you left off</CardDescription>
             </div>
-            <Button asChild variant="default">
-              <Link to="/courses">Browse Courses</Link>
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" className="md:hidden" onClick={handleResetProgress}>
+                Reset Progress
+              </Button>
+              <Button asChild variant="default">
+                <Link to="/courses">Browse Courses</Link>
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <div className="flex items-center justify-center py-12 text-muted-foreground">
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Fetching your courses...
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {courseProgress.map((course) => (
-                  <div key={course.id} className="rounded-lg border border-border p-5">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground">{course.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {course.level ?? "Self-paced"}
-                          {course.nextLesson ? ` • Next: ${course.nextLesson}` : ""}
-                        </p>
-                      </div>
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                        {Math.round(course.progress)}% complete
-                      </span>
+            <div className="space-y-6">
+              {continueLearning.map((course) => (
+                <div key={course.id} className="rounded-lg border border-border p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">{course.title}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {course.level} • Next: {course.nextLessonTitle}
+                      </p>
                     </div>
+                    <Link
+                      to={`/courses/${course.slug}`}
+                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary hover:bg-primary/20"
+                    >
+                      {course.progress}% complete
+                    </Link>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </main>

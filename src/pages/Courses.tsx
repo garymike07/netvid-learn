@@ -1,88 +1,15 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle2, Lock, PlayCircle } from "lucide-react";
 import Curriculum from "@/components/Curriculum";
 import Footer from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
-
-type Course = {
-  id: string;
-  title: string;
-  summary: string;
-  level: string;
-  duration?: string | null;
-  isPremium?: boolean | null;
-};
-
-const fallbackCourses: Course[] = [
-  {
-    id: "network-fundamentals",
-    title: "Network Foundations",
-    summary: "Start with core networking concepts, hardware, and terminology.",
-    level: "Beginner",
-    duration: "4-6 weeks",
-    isPremium: false,
-  },
-  {
-    id: "routing-essentials",
-    title: "Routing Essentials",
-    summary: "Build confidence with routing protocols and real-world labs.",
-    level: "Intermediate",
-    duration: "6-8 weeks",
-    isPremium: true,
-  },
-  {
-    id: "security-strategies",
-    title: "Network Security Essentials",
-    summary: "Secure modern networks with practical firewall and VPN labs.",
-    level: "Advanced",
-    duration: "8-10 weeks",
-    isPremium: true,
-  },
-];
+import { COURSES } from "@/data/courses";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Courses = () => {
-  const [courses, setCourses] = useState<Course[]>(fallbackCourses);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadCourses = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("courses")
-          .select("id, title, summary, level, duration, is_premium")
-          .order("level", { ascending: true });
-
-        if (error) {
-          if (error.code !== "42P01") {
-            throw error;
-          }
-          return;
-        }
-
-        if (data && data.length > 0) {
-          setCourses(
-            data.map((course) => ({
-              id: course.id,
-              title: course.title,
-              summary: course.summary ?? "",
-              level: course.level ?? "Self-paced",
-              duration: course.duration,
-              isPremium: course.is_premium,
-            })),
-          );
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCourses();
-  }, []);
+  const courses = COURSES;
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -92,9 +19,15 @@ const Courses = () => {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-semibold">Back to Home</span>
           </Link>
-          <Link to="/auth">
-            <Button variant="default" size="lg">Sign In</Button>
-          </Link>
+          {user ? (
+            <Link to="/dashboard">
+              <Button variant="default" size="lg">Go to Dashboard</Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button variant="default" size="lg">Sign In</Button>
+            </Link>
+          )}
         </div>
       </header>
 
@@ -121,36 +54,37 @@ const Courses = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {loading
-                ? Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className="h-full animate-pulse rounded-2xl border border-border bg-muted/40" />
-                  ))
-                : courses.map((course) => (
-                    <Card
-                      key={course.id}
-                      className={`h-full border-2 transition-all duration-300 hover:-translate-y-2 hover:border-primary/80 ${
-                        course.isPremium ? "hover:shadow-xl" : "hover:shadow-lg"
-                      }`}
-                    >
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-xl">{course.title}</CardTitle>
-                          {course.isPremium && <Lock className="h-4 w-4 text-accent" />}
-                        </div>
-                        <CardDescription className="flex items-center gap-2 text-sm">
-                          <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">{course.level}</span>
-                          {course.duration && <span className="text-muted-foreground">{course.duration}</span>}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <p className="text-sm text-muted-foreground">{course.summary}</p>
-                        <div className="flex items-center gap-2 text-sm text-success">
-                          <CheckCircle2 className="h-4 w-4" />
-                          Includes labs and certifications
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+              {courses.map((course) => (
+                <Card
+                  key={course.id}
+                  className={`flex h-full flex-col border-2 transition-all duration-300 hover:-translate-y-2 hover:border-primary/80 ${
+                    course.isPremium ? "hover:shadow-xl" : "hover:shadow-lg"
+                  }`}
+                >
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xl">{course.title}</CardTitle>
+                      {course.isPremium && <Lock className="h-4 w-4 text-accent" />}
+                    </div>
+                    <CardDescription className="flex items-center gap-2 text-sm">
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">{course.level}</span>
+                      {course.duration && <span className="text-muted-foreground">{course.duration}</span>}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-1 flex-col justify-between space-y-4">
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">{course.summary}</p>
+                      <div className="flex items-center gap-2 text-sm text-success">
+                        <CheckCircle2 className="h-4 w-4" />
+                        Includes labs, quizzes, and certifications
+                      </div>
+                    </div>
+                    <Button asChild className="w-full">
+                      <Link to={`/courses/${course.slug}`}>View learning path</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -163,10 +97,10 @@ const Courses = () => {
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Sign up now and get immediate access to Level 1 content completely free.
             </p>
-            <Link to="/auth">
+            <Link to={user ? "/dashboard" : "/auth"}>
               <Button size="xl" className="gap-2">
                 <PlayCircle className="w-5 h-5" />
-                Start Free
+                {user ? "Resume learning" : "Start Free"}
               </Button>
             </Link>
           </div>
