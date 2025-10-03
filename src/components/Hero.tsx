@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Play, BookOpen, Video } from "lucide-react";
 
@@ -27,14 +28,18 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button variant="hero" size="xl" className="group">
-              Start Learning Free
-              <Play className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />
-            </Button>
-            <Button variant="outline" size="xl" className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary">
-              <BookOpen className="mr-2 h-5 w-5" />
-              View Curriculum
-            </Button>
+            <Link to="/courses">
+              <Button variant="hero" size="xl" className="group">
+                Start Learning Free
+                <Play className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />
+              </Button>
+            </Link>
+            <Link to="/courses">
+              <Button variant="outline" size="xl" className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary">
+                <BookOpen className="mr-2 h-5 w-5" />
+                View Curriculum
+              </Button>
+            </Link>
           </div>
           
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">

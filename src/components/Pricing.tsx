@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +61,7 @@ const plans = [
 
 const Pricing = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section id="pricing" className="py-20 md:py-28">
       <div className="container mx-auto px-4">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
@@ -116,13 +117,15 @@ const Pricing = () => {
               </CardContent>
               
               <CardFooter>
-                <Button 
-                  className="w-full"
-                  variant={plan.popular ? "default" : "outline"}
-                  size="lg"
-                >
-                  {plan.cta}
-                </Button>
+                <Link to={plan.price === "0" ? "/courses" : "/auth"} className="w-full">
+                  <Button 
+                    className="w-full"
+                    variant={plan.popular ? "default" : "outline"}
+                    size="lg"
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

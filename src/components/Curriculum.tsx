@@ -1,5 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 
 const levels = [
@@ -102,6 +104,13 @@ const Curriculum = () => {
                     <span className="text-sm text-foreground">{topic}</span>
                   </div>
                 ))}
+                <div className="pt-4">
+                  <Link to="/courses" className="w-full">
+                    <Button variant="outline" className="w-full">
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           ))}

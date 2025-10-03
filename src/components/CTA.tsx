@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -23,17 +24,21 @@ const CTA = () => {
           </p>
           
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button variant="hero" size="xl" className="group">
-              Get Started Free
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="xl" 
-              className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary"
-            >
-              View Pricing
-            </Button>
+            <Link to="/courses">
+              <Button variant="hero" size="xl" className="group">
+                Get Started Free
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Link to="/#pricing">
+              <Button 
+                variant="outline" 
+                size="xl" 
+                className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary"
+              >
+                View Pricing
+              </Button>
+            </Link>
           </div>
           
           <p className="mt-8 text-sm text-blue-100">
