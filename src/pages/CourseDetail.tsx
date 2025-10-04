@@ -14,19 +14,42 @@ import { toast } from "sonner";
 import TrialBanner from "@/components/TrialBanner";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
+const formatCountdown = (ms: number | null) => {
+  if (ms == null) return null;
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  return { days, hours, minutes };
+};
+
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
-  const { isTrialActive, hasActiveSubscription, openUpgradeDialog, loading: subscriptionLoading, daysRemaining } = useSubscription();
+  const { isTrialActive, hasActiveSubscription, openUpgradeDialog, loading: subscriptionLoading, durationMs } = useSubscription();
+  const [msRemaining, setMsRemaining] = useState(durationMs);
+  const countdown = useMemo(() => formatCountdown(msRemaining), [msRemaining]);
 
   const course = useMemo(() => (slug ? getCourseBySlug(slug) : undefined), [slug]);
 
   useEffect(() => {
     setProgress(loadProgress(user?.id));
   }, [user?.id]);
+
+  useEffect(() => {
+    setMsRemaining(durationMs);
+  }, [durationMs]);
+
+  useEffect(() => {
+    if (!isTrialActive || durationMs == null) return;
+    const interval = setInterval(() => {
+      setMsRemaining((prev) => (prev == null ? null : Math.max(0, prev - 1000)));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTrialActive, durationMs]);
 
   useEffect(() => {
     if (!course && slug) {
@@ -326,7 +349,9 @@ const CourseDetail = () => {
                   ? "Your trial has ended. Upgrade your plan to keep watching premium lessons."
                   : hasActiveSubscription
                     ? "Premium plan active — enjoy unlimited access."
-                    : `Trial access active${typeof daysRemaining === "number" ? ` • ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left` : ""}.`}
+                    : countdown
+                      ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m remaining.`
+                      : "Trial access active."}
               </div>
             )}
 

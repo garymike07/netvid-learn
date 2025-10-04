@@ -17,7 +17,7 @@ const Hero = () => {
           </div>
 
           <h1 className="mb-6 text-4xl font-bold leading-tight text-foreground md:text-6xl lg:text-7xl">
-            Master Networking
+            Mike Net Academy
             <br />
             <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
               From Zero to Expert

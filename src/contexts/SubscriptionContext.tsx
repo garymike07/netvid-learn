@@ -12,7 +12,8 @@ type ComputedSubscription = {
   refresh: () => Promise<void>;
   isTrialActive: boolean;
   isExpired: boolean;
-  daysRemaining: number | null;
+  expiresAt: Date | null;
+  durationMs: number | null;
   hasActiveSubscription: boolean;
   openUpgradeDialog: () => void;
   upgradeDialogOpen: boolean;
@@ -50,6 +51,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
+  const [now, setNow] = useState(() => new Date());
 
   const ensureTrialSubscription = useCallback(async (userId: string) => {
     const payload = createTrialPayload(userId);
@@ -108,6 +110,14 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   }, [refresh]);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 1000 * 60);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
     const channel = supabase
       .channel("public:subscriptions")
@@ -131,13 +141,12 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   }, [refresh, user]);
 
   const computed = useMemo<ComputedSubscription>(() => {
-    const now = new Date();
     const expires = record?.trial_expires_at ? new Date(record.trial_expires_at) : null;
     const diffMs = expires ? expires.getTime() - now.getTime() : null;
-    const daysRemaining = diffMs !== null ? Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24))) : null;
+    const clampedMs = diffMs !== null ? Math.max(0, diffMs) : null;
 
     const hasActiveSubscription = record?.status === "active";
-    const isTrialActive = record?.status === "trial_active" && (expires ? expires.getTime() > now.getTime() : true);
+    const isTrialActive = record?.status === "trial_active" && (clampedMs === null || clampedMs > 0);
     const isExpired = Boolean(record) && !hasActiveSubscription && !isTrialActive;
 
     return {
@@ -147,13 +156,14 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
       refresh,
       isTrialActive,
       isExpired,
-      daysRemaining,
+      expiresAt: expires,
+      durationMs: clampedMs,
       hasActiveSubscription,
       openUpgradeDialog: () => setUpgradeDialogOpen(true),
       upgradeDialogOpen,
       setUpgradeDialogOpen,
     };
-  }, [record, loading, error, refresh, upgradeDialogOpen]);
+  }, [record, loading, error, refresh, upgradeDialogOpen, now]);
 
   return <SubscriptionContext.Provider value={computed}>{children}</SubscriptionContext.Provider>;
 };

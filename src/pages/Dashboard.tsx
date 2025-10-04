@@ -43,7 +43,28 @@ const deriveContinueList = (progress: UserProgress): ContinueCourse[] => {
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
-  const { isTrialActive, hasActiveSubscription, daysRemaining, openUpgradeDialog, loading: subscriptionLoading } = useSubscription();
+  const { isTrialActive, hasActiveSubscription, durationMs, openUpgradeDialog, loading: subscriptionLoading } = useSubscription();
+  const [msRemaining, setMsRemaining] = useState(durationMs);
+  const countdown = useMemo(() => {
+    if (msRemaining == null) return null;
+    const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000));
+    const days = Math.floor(totalSeconds / (60 * 60 * 24));
+    const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+    return { days, hours, minutes };
+  }, [msRemaining]);
+
+  useEffect(() => {
+    setMsRemaining(durationMs);
+  }, [durationMs]);
+
+  useEffect(() => {
+    if (!isTrialActive || durationMs == null) return;
+    const interval = setInterval(() => {
+      setMsRemaining((prev) => (prev == null ? null : Math.max(0, prev - 1000)));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTrialActive, durationMs]);
   const navigate = useNavigate();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [signingOut, setSigningOut] = useState(false);
@@ -138,7 +159,11 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-col gap-2 sm:items-end">
                   <span className="text-xs uppercase tracking-widest">Time remaining</span>
-                  <span className="text-2xl font-semibold">{typeof daysRemaining === "number" ? `${daysRemaining} day${daysRemaining === 1 ? "" : "s"}` : "14 days"}</span>
+                  <span className="text-2xl font-semibold">
+                    {countdown
+                      ? `${countdown.days}d ${countdown.hours}h ${countdown.minutes}m`
+                      : "14 days"}
+                  </span>
                 </div>
               </div>
             ) : (

@@ -13,7 +13,16 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const Courses = () => {
   const { user } = useAuth();
-  const { isTrialActive, hasActiveSubscription, daysRemaining, openUpgradeDialog } = useSubscription();
+  const { isTrialActive, hasActiveSubscription, durationMs, openUpgradeDialog } = useSubscription();
+  const [msRemaining, setMsRemaining] = useState(durationMs);
+  const countdown = useMemo(() => {
+    if (msRemaining == null) return null;
+    const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000));
+    const days = Math.floor(totalSeconds / (60 * 60 * 24));
+    const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+    return { days, hours, minutes };
+  }, [msRemaining]);
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
   );
@@ -22,6 +31,18 @@ const Courses = () => {
     if (typeof window === "undefined") return;
     setProgress(loadProgress(user?.id));
   }, [user?.id]);
+
+  useEffect(() => {
+    setMsRemaining(durationMs);
+  }, [durationMs]);
+
+  useEffect(() => {
+    if (!isTrialActive || durationMs == null) return;
+    const interval = setInterval(() => {
+      setMsRemaining((prev) => (prev == null ? null : Math.max(0, prev - 1000)));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTrialActive, durationMs]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -158,7 +179,9 @@ const Courses = () => {
                       <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-muted-foreground">
                         {premiumLocked
                           ? "Trial ended — upgrade to unlock premium modules."
-                          : `Trial access active${typeof daysRemaining === "number" ? ` • ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left` : ""}.`}
+                          : countdown
+                            ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m remaining.`
+                            : "Trial access active."}
                       </div>
                     )}
 

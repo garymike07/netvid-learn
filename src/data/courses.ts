@@ -881,6 +881,309 @@ export const COURSES: Course[] = [
       },
     ],
   },
+  {
+    id: "wireless-design-specialist",
+    slug: "wireless-design-specialist",
+    title: "Enterprise Wireless Design Specialist",
+    level: "Advanced",
+    summary: "Plan, secure, and optimise high-density Wi-Fi deployments for modern enterprises.",
+    description:
+      "Master the full lifecycle of enterprise Wi-Fi from RF planning and spectrum analysis to WPA3 security, network assurance, and day-two operations. Build confidence delivering resilient wireless across campuses, hospitals, and logistics facilities.",
+    duration: "6-8 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/7_LPdttKXPc",
+    outcomes: [
+      "Design Wi-Fi coverage and capacity plans aligned to business requirements",
+      "Execute professional spectrum surveys and interpret heatmaps for action",
+      "Roll out WPA3-Enterprise with RADIUS and certificate-based onboarding",
+      "Operationalise wireless analytics to keep user experience consistently excellent",
+    ],
+    prerequisites: [
+      "Routing & Switching Essentials or equivalent",
+      "Comfort with basic RF concepts and site survey workflows",
+    ],
+    modules: [
+      {
+        id: "wireless-1",
+        title: "RF Planning & Survey Execution",
+        description: "Engineer reliable Wi-Fi coverage using professional survey tools and RF fundamentals.",
+        lessons: [
+          {
+            id: "wireless-1-1",
+            title: "RF Fundamentals for Wi-Fi Engineers",
+            type: "video",
+            duration: "19 min",
+            description: "Clarify signal strength, SNR, and attenuation so you can design with confidence.",
+            videoUrl: "https://www.youtube.com/embed/1NTzNPdCMJo",
+            resources: [
+              { label: "RF Design Workbook", url: "https://networkacademy.ke/resources/rf-design-workbook.pdf" },
+              { label: "Link Budget Template", url: "https://networkacademy.ke/resources/link-budget-template.xlsx" },
+            ],
+          },
+          {
+            id: "wireless-1-2",
+            title: "Hands-on: Spectrum Analysis Lab",
+            type: "lab",
+            duration: "30 min",
+            description: "Use a spectrum analyser to spot interference and validate channel allocations.",
+            videoUrl: "https://www.youtube.com/embed/z7MyR8im-IE",
+            resources: [
+              { label: "Interference Checklist", url: "https://networkacademy.ke/resources/interference-checklist.pdf" },
+            ],
+          },
+          {
+            id: "wireless-1-3",
+            title: "Channel Planning Workshop",
+            type: "reading",
+            duration: "20 min",
+            description: "Develop 2.4/5/6 GHz channel reuse plans for high-density venues.",
+            videoUrl: "https://www.youtube.com/embed/Yz7UPY_dX_I",
+            resources: [
+              { label: "Channel Planner", url: "https://networkacademy.ke/tools/channel-planner" },
+              { label: "Venue Survey Template", url: "https://networkacademy.ke/resources/venue-survey-template.docx" },
+            ],
+          },
+          {
+            id: "wireless-1-4",
+            title: "Ekahau Survey Walkthrough",
+            type: "video",
+            duration: "24 min",
+            description: "Follow a full Ekahau survey workflow from floorplans to visualisations.",
+            videoUrl: "https://www.youtube.com/embed/34MBRCns67E",
+            resources: [
+              { label: "Survey Checklist", url: "https://networkacademy.ke/resources/ekahau-survey-checklist.pdf" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "wireless-2",
+        title: "Secure Enterprise WLAN",
+        description: "Implement WPA3-Enterprise, certificate onboarding, and policy-based access.",
+        lessons: [
+          {
+            id: "wireless-2-1",
+            title: "WPA3-Enterprise Deep Dive",
+            type: "video",
+            duration: "28 min",
+            description: "Understand SAE, PMF, and transition modes for modern secure Wi-Fi.",
+            videoUrl: "https://www.youtube.com/embed/o4AfWbkKvB8",
+            resources: [
+              { label: "Security Design Guide", url: "https://networkacademy.ke/resources/wpa3-design-guide.pdf" },
+            ],
+          },
+          {
+            id: "wireless-2-2",
+            title: "Lab: RADIUS Onboarding Automation",
+            type: "lab",
+            duration: "45 min",
+            description: "Configure FreeRADIUS with Azure AD and automate certificate provisioning.",
+            videoUrl: "https://www.youtube.com/embed/80C8dxnPZGM",
+            resources: [
+              { label: "Lab Files", url: "https://networkacademy.ke/labs/radius-onboarding.zip" },
+              { label: "Automation Playbook", url: "https://networkacademy.ke/resources/wpa3-automation-playbook.pdf" },
+            ],
+          },
+          {
+            id: "wireless-2-3",
+            title: "Wi-Fi 6E Roaming Strategies",
+            type: "reading",
+            duration: "18 min",
+            description: "Tune roaming thresholds and 6 GHz client steering for uninterrupted mobility.",
+            videoUrl: "https://www.youtube.com/embed/F073caS3Hlw",
+            resources: [
+              { label: "Roaming Checklist", url: "https://networkacademy.ke/resources/roaming-checklist.pdf" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "wireless-3",
+        title: "Operations & Optimisation",
+        description: "Keep enterprise Wi-Fi performant with proactive analytics and automation.",
+        lessons: [
+          {
+            id: "wireless-3-1",
+            title: "AI-Assisted Wi-Fi Optimisation",
+            type: "video",
+            duration: "26 min",
+            description: "Leverage Ekahau AI workflows to maintain optimal AP placement and tuning.",
+            videoUrl: "https://www.youtube.com/embed/6gB6hpd-HGc",
+            resources: [
+              { label: "Optimisation Runbook", url: "https://networkacademy.ke/resources/wifi-optimisation-runbook.pdf" },
+            ],
+          },
+          {
+            id: "wireless-3-2",
+            title: "Planning the Upgrade to Wi-Fi 6E",
+            type: "reading",
+            duration: "21 min",
+            description: "Review spectrum, hardware, and policy updates required for 6 GHz adoption.",
+            videoUrl: "https://www.youtube.com/embed/13jel6FHpYo",
+            resources: [
+              { label: "6E Upgrade Tracker", url: "https://networkacademy.ke/resources/wifi6e-upgrade-tracker.xlsx" },
+            ],
+          },
+          {
+            id: "wireless-3-3",
+            title: "Troubleshooting Playbook",
+            type: "lab",
+            duration: "35 min",
+            description: "Apply Wi-Fi troubleshooting workflows powered by spectrum and client analytics.",
+            videoUrl: "https://www.youtube.com/embed/u0U2BqsD_6A",
+            resources: [
+              { label: "Troubleshooting Worksheet", url: "https://networkacademy.ke/resources/wifi-troubleshooting-worksheet.pdf" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "cloud-networking-architect",
+    slug: "cloud-networking-architect",
+    title: "Cloud Networking Architect",
+    level: "Expert",
+    summary: "Design global multi-cloud networks, automate connectivity, and monitor experience end to end.",
+    description:
+      "Become the technical lead who connects hybrid data centres, cloud regions, and remote sites with policy-driven automation. This capstone track blends SD-WAN, Infrastructure as Code, SLOs, and executive communication skills.",
+    duration: "8-10 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/alLFg1EDyk0",
+    outcomes: [
+      "Architect resilient global transit across AWS, Azure, and Google Cloud",
+      "Deploy SD-WAN fabrics integrated with cloud on-ramps and security service edge",
+      "Automate network provisioning using Terraform, Ansible, and CI pipelines",
+      "Instrument digital experience metrics and communicate value to stakeholders",
+    ],
+    prerequisites: [
+      "Network Automation & Programmability or equivalent",
+      "Comfort with at least one public cloud provider",
+    ],
+    modules: [
+      {
+        id: "cloud-1",
+        title: "Multi-Cloud Foundations",
+        description: "Connect VPCs/VNETs across providers with consistent policy and routing.",
+        lessons: [
+          {
+            id: "cloud-1-1",
+            title: "Designing Multi-Region VPC Fabrics",
+            type: "video",
+            duration: "32 min",
+            description: "Model hub-and-spoke, full-mesh, and hybrid topologies for enterprise workloads.",
+            videoUrl: "https://www.youtube.com/embed/alLFg1EDyk0",
+            resources: [
+              { label: "Architecture Diagram Pack", url: "https://networkacademy.ke/resources/multicloud-diagrams.zip" },
+            ],
+          },
+          {
+            id: "cloud-1-2",
+            title: "Connectivity Patterns Across Providers",
+            type: "reading",
+            duration: "22 min",
+            description: "Compare Azure Virtual WAN, AWS Cloud WAN, and Google NCC designs.",
+            videoUrl: "https://www.youtube.com/embed/3cOBlNPs5qQ",
+            resources: [
+              { label: "Pattern Comparison Sheet", url: "https://networkacademy.ke/resources/multicloud-patterns.xlsx" },
+            ],
+          },
+          {
+            id: "cloud-1-3",
+            title: "Lab: Build a Global Transit Network",
+            type: "lab",
+            duration: "50 min",
+            description: "Use automation to connect three cloud regions and on-prem via IPsec and direct links.",
+            videoUrl: "https://www.youtube.com/embed/D8EJc3n75aY",
+            resources: [
+              { label: "Lab Guide", url: "https://networkacademy.ke/labs/multicloud-transit-lab.zip" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "cloud-2",
+        title: "SD-WAN & Automation",
+        description: "Blend SD-WAN fabrics with Infrastructure as Code to deliver repeatable outcomes.",
+        lessons: [
+          {
+            id: "cloud-2-1",
+            title: "SD-WAN Strategy Deep Dive",
+            type: "video",
+            duration: "27 min",
+            description: "Evaluate controller architectures, policy models, and SASE integrations.",
+            videoUrl: "https://www.youtube.com/embed/1SXpE08hvGs",
+            resources: [
+              { label: "SD-WAN Strategy Checklist", url: "https://networkacademy.ke/resources/sdwan-strategy-checklist.pdf" },
+            ],
+          },
+          {
+            id: "cloud-2-2",
+            title: "Terraform Automation Pack",
+            type: "lab",
+            duration: "55 min",
+            description: "Provision VPNs, cloud firewalls, and routing policies using Terraform modules.",
+            videoUrl: "https://www.youtube.com/embed/0F0FCRh9bx4",
+            resources: [
+              { label: "Terraform Modules", url: "https://networkacademy.ke/labs/terraform-network-pack.zip" },
+              { label: "CI Pipeline Example", url: "https://networkacademy.ke/resources/network-ci-pipeline.yaml" },
+            ],
+          },
+          {
+            id: "cloud-2-3",
+            title: "Quiz: Policy & Routing Blueprints",
+            type: "quiz",
+            duration: "15 min",
+            description: "Validate your understanding of SD-WAN policy intent and failover strategies.",
+            videoUrl: "https://www.youtube.com/embed/uH8A1AsjvZo",
+            resources: [
+              { label: "Answer Key", url: "https://networkacademy.ke/resources/sdwan-quiz-key.pdf" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "cloud-3",
+        title: "Observability & Executive Storytelling",
+        description: "Measure digital experience and narrate outcomes to business stakeholders.",
+        lessons: [
+          {
+            id: "cloud-3-1",
+            title: "End-to-End Visibility with ThousandEyes",
+            type: "video",
+            duration: "23 min",
+            description: "Instrument SaaS, internet, and WAN paths for proactive alerting.",
+            videoUrl: "https://www.youtube.com/embed/9xpoGB8pPNQ",
+            resources: [
+              { label: "Monitoring Dashboard Pack", url: "https://networkacademy.ke/resources/cloud-visibility-dashboards.zip" },
+            ],
+          },
+          {
+            id: "cloud-3-2",
+            title: "SLOs for Distributed Networks",
+            type: "reading",
+            duration: "20 min",
+            description: "Define latency, jitter, and availability targets per application tier.",
+            videoUrl: "https://www.youtube.com/embed/16b0GH0lFFM",
+            resources: [
+              { label: "SLO Calculator", url: "https://networkacademy.ke/tools/network-slo-calculator" },
+            ],
+          },
+          {
+            id: "cloud-3-3",
+            title: "Executive Readout Workshop",
+            type: "video",
+            duration: "18 min",
+            description: "Tell the story of connectivity outcomes to leadership and customers.",
+            videoUrl: "https://www.youtube.com/embed/2flIEuQk340",
+            resources: [
+              { label: "Quarterly Review Template", url: "https://networkacademy.ke/resources/cloud-networking-qbr.pptx" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const getCourseBySlug = (slug: string) => COURSES.find((course) => course.slug === slug);

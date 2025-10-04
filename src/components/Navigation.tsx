@@ -33,7 +33,7 @@ const Navigation = () => {
             <div className="absolute inset-0 rounded-xl bg-primary/30 blur-2xl" />
             <GraduationCap className="relative h-6 w-6" />
           </div>
-          <span className="text-xl font-bold tracking-tight">Network Academy</span>
+          <span className="text-xl font-bold tracking-tight">Mike Net Academy</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           <Link to="/#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">

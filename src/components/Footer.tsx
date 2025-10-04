@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Youtube, Twitter, Linkedin, Mail } from "lucide-react";
+import { Youtube, Twitter, Linkedin, Mail, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -7,10 +7,24 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="motion-safe:animate-fade-up">
-            <h3 className="mb-4 text-lg font-semibold text-foreground">Network Academy</h3>
+            <h3 className="mb-4 text-lg font-semibold text-foreground">Mike Net Academy</h3>
             <p className="text-sm text-muted-foreground">
               Master networking through comprehensive video tutorials and hands-on practice.
             </p>
+            <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <a href="mailto:wrootmike@gmail.com" className="transition-colors hover:text-primary">
+                  wrootmike@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-primary" />
+                <a href="tel:+254792618156" className="transition-colors hover:text-primary">
+                  +254 792 618 156
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="motion-safe:animate-fade-up" style={{ animationDelay: "0.1s" }}>
@@ -58,7 +72,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="mailto:hello@networkacademy.ke" className="transition-colors hover:text-primary">
+                <a href="mailto:wrootmike@gmail.com" className="transition-colors hover:text-primary">
                   Contact
                 </a>
               </li>
@@ -81,7 +95,7 @@ const Footer = () => {
                 icon: Linkedin,
                 label: "LinkedIn",
               }, {
-                href: "mailto:hello@networkacademy.ke",
+                href: "mailto:wrootmike@gmail.com",
                 icon: Mail,
                 label: "Email",
               }].map(({ href, icon: Icon, label }) => (
@@ -100,7 +114,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 Network Academy. All rights reserved. Built for Kenya 🇰🇪</p>
+          <p>© 2025 Mike Net Academy. All rights reserved. Built for Kenya 🇰🇪</p>
         </div>
       </div>
     </footer>
