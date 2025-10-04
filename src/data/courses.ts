@@ -74,6 +74,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "15 min",
             description: "Compare bus, ring, mesh, and star topologies and when to use each.",
+            videoUrl: "https://www.youtube.com/embed/IPvYjXCsTg8",
             resources: [
               { label: "Interactive Lab", url: "https://networkacademy.ke/labs/topology-designer" },
             ],
@@ -84,8 +85,20 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "25 min",
             description: "Use a guided simulation to connect hosts, switches, and routers.",
+            videoUrl: "https://www.youtube.com/embed/7WrzosvGkDE",
             resources: [
               { label: "Lab Simulation", url: "https://networkacademy.ke/labs/lan-builder" },
+            ],
+          },
+          {
+            id: "foundations-1-4",
+            title: "Tour a Real Small Office Network",
+            type: "video",
+            duration: "16 min",
+            description: "Walk through cabling, switch placement, and router setup in a real office.",
+            videoUrl: "https://www.youtube.com/embed/74Yh1OqKiUo",
+            resources: [
+              { label: "Topology Checklist", url: "https://networkacademy.ke/resources/office-topology-checklist.pdf" },
             ],
           },
         ],
@@ -113,6 +126,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "12 min",
             description: "Understand Wi-Fi standards, channels, and coverage planning.",
+            videoUrl: "https://www.youtube.com/embed/7_1dJ1uJnj4",
             resources: [
               { label: "Cheat Sheet", url: "https://networkacademy.ke/resources/wireless-cheatsheet.pdf" },
             ],
@@ -123,8 +137,20 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "10 min",
             description: "Check your understanding with scenario-based questions.",
+            videoUrl: "https://www.youtube.com/embed/Xpf_iB-7_3g",
             resources: [
               { label: "Review Guide", url: "https://networkacademy.ke/resources/hardware-review-guide.pdf" },
+            ],
+          },
+          {
+            id: "foundations-2-4",
+            title: "Inside a Modern Wireless Access Point",
+            type: "video",
+            duration: "14 min",
+            description: "Disassemble an AP to understand radios, antennas, and controller integration.",
+            videoUrl: "https://www.youtube.com/embed/1cMQbFae3x4",
+            resources: [
+              { label: "AP Components Diagram", url: "https://networkacademy.ke/resources/ap-components.pdf" },
             ],
           },
         ],
@@ -151,8 +177,20 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "30 min",
             description: "Capture and analyze packets to diagnose latency issues.",
+            videoUrl: "https://www.youtube.com/embed/Gs3bVQL4B6k",
             resources: [
               { label: "Lab Instructions", url: "https://networkacademy.ke/labs/wireshark-lab" },
+            ],
+          },
+          {
+            id: "foundations-3-3",
+            title: "TCP vs UDP Explained",
+            type: "video",
+            duration: "13 min",
+            description: "Clarify when applications choose TCP or UDP and how ports stay organized.",
+            videoUrl: "https://www.youtube.com/embed/uwoD5YsGACg",
+            resources: [
+              { label: "Transport Layer Worksheet", url: "https://networkacademy.ke/resources/transport-layer-worksheet.pdf" },
             ],
           },
         ],
@@ -203,6 +241,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "35 min",
             description: "Bridge VLANs using router-on-a-stick and layer 3 switches.",
+            videoUrl: "https://www.youtube.com/embed/IeCIc0LZ0Pc",
             resources: [
               { label: "Packet Tracer File", url: "https://networkacademy.ke/labs/inter-vlan-routing.pkt" },
             ],
@@ -213,8 +252,20 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "20 min",
             description: "Prevent switching loops using STP, RSTP, and Rapid PVST+.",
+            videoUrl: "https://www.youtube.com/embed/JK9SX5Eoxzk",
             resources: [
               { label: "STP Troubleshooting Flowchart", url: "https://networkacademy.ke/resources/stp-troubleshooting.png" },
+            ],
+          },
+          {
+            id: "routing-1-4",
+            title: "Switch Stacking & EtherChannel",
+            type: "video",
+            duration: "18 min",
+            description: "Combine switches for higher capacity and redundancy using EtherChannel.",
+            videoUrl: "https://www.youtube.com/embed/bScsLkgR5Kw",
+            resources: [
+              { label: "EtherChannel Lab", url: "https://networkacademy.ke/labs/etherchannel-practice.zip" },
             ],
           },
         ],
@@ -241,6 +292,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "18 min",
             description: "Tune bandwidth, delay, and variance to optimize path selection.",
+            videoUrl: "https://www.youtube.com/embed/suC2XpsJ2DY",
             resources: [
               { label: "EIGRP Calculator", url: "https://networkacademy.ke/tools/eigrp-metric-calculator" },
             ],
@@ -251,6 +303,18 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "12 min",
             description: "Scenario-based quiz comparing static, OSPF, and EIGRP approaches.",
+            videoUrl: "https://www.youtube.com/embed/fmGm-vT5QEk",
+          },
+          {
+            id: "routing-2-4",
+            title: "Multi-area OSPF Design Walkthrough",
+            type: "video",
+            duration: "21 min",
+            description: "Plan area boundaries, ABRs, and summarization for scalable deployments.",
+            videoUrl: "https://www.youtube.com/embed/Ifm2-5w0h2I",
+            resources: [
+              { label: "Design Template", url: "https://networkacademy.ke/resources/ospf-design-template.pdf" },
+            ],
           },
         ],
       },
@@ -276,8 +340,20 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "40 min",
             description: "Use traceroute and show commands to debug misconfigurations.",
+            videoUrl: "https://www.youtube.com/embed/BbGNsq4CPYE",
             resources: [
               { label: "MikroTik Config Pack", url: "https://networkacademy.ke/labs/routing-toolkit.zip" },
+            ],
+          },
+          {
+            id: "routing-3-3",
+            title: "Troubleshooting OSPF and EIGRP",
+            type: "video",
+            duration: "19 min",
+            description: "Apply show commands and debugs to isolate adjacency and route issues.",
+            videoUrl: "https://www.youtube.com/embed/m20u5l5lHvs",
+            resources: [
+              { label: "Troubleshooting Worksheet", url: "https://networkacademy.ke/resources/routing-troubleshooting.pdf" },
             ],
           },
         ],
@@ -328,6 +404,21 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "45 min",
             description: "Deploy WildFire, URL filtering, and logging for monitored enforcement.",
+            videoUrl: "https://www.youtube.com/embed/7C0tH40_Ny8",
+            resources: [
+              { label: "Security Profiles Workbook", url: "https://networkacademy.ke/labs/palo-alto-profiles.pdf" },
+            ],
+          },
+          {
+            id: "security-1-3",
+            title: "Firewall Lab Walkthrough",
+            type: "video",
+            duration: "23 min",
+            description: "Watch a full Palo Alto configuration session with best practices explained.",
+            videoUrl: "https://www.youtube.com/embed/z9G8qecR0e8",
+            resources: [
+              { label: "Session Notes", url: "https://networkacademy.ke/resources/firewall-walkthrough-notes.pdf" },
+            ],
           },
         ],
       },
@@ -353,6 +444,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "25 min",
             description: "Adopt identity-aware segmentation and software-defined perimeters.",
+            videoUrl: "https://www.youtube.com/embed/HrW7x0yG2Ko",
             resources: [
               { label: "Zero Trust Reference Architecture", url: "https://networkacademy.ke/resources/zero-trust-reference.pdf" },
             ],
@@ -363,8 +455,20 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "10 min",
             description: "Assess your readiness to respond to common attack scenarios.",
+            videoUrl: "https://www.youtube.com/embed/MelB7LKqUBo",
             resources: [
               { label: "SOC Checklist", url: "https://networkacademy.ke/resources/soc-checklist.pdf" },
+            ],
+          },
+          {
+            id: "security-2-4",
+            title: "Remote Access VPN Demo",
+            type: "video",
+            duration: "18 min",
+            description: "Configure client VPN connectivity end-to-end with certificate auth.",
+            videoUrl: "https://www.youtube.com/embed/3pvNQeXWzsM",
+            resources: [
+              { label: "VPN Checklist", url: "https://networkacademy.ke/resources/vpn-checklist.pdf" },
             ],
           },
         ],
@@ -391,8 +495,31 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "40 min",
             description: "Use Python scripts to quarantine infected hosts via API.",
+            videoUrl: "https://www.youtube.com/embed/02_p9pPXZ9Q",
             resources: [
               { label: "GitHub Repo", url: "https://github.com/network-academy/automation-playbooks" },
+            ],
+          },
+          {
+            id: "security-3-3",
+            title: "Alert Triage Workflow",
+            type: "video",
+            duration: "17 min",
+            description: "See how analysts rank alerts, gather context, and communicate updates.",
+            videoUrl: "https://www.youtube.com/embed/WG43P3UX77s",
+            resources: [
+              { label: "Triage Template", url: "https://networkacademy.ke/resources/alert-triage-template.xlsx" },
+            ],
+          },
+          {
+            id: "security-3-4",
+            title: "Automating Incident Response",
+            type: "video",
+            duration: "19 min",
+            description: "Trigger SOAR playbooks and rollback changes during incidents.",
+            videoUrl: "https://www.youtube.com/embed/zx06RkBwyVQ",
+            resources: [
+              { label: "SOAR Playbook", url: "https://networkacademy.ke/resources/soar-playbook.pdf" },
             ],
           },
         ],
@@ -443,6 +570,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "35 min",
             description: "Authenticate to network controllers and retrieve telemetry using requests and httpx.",
+            videoUrl: "https://www.youtube.com/embed/eIbf8tuNI2k",
             resources: [
               { label: "Lab Workbook", url: "https://networkacademy.ke/labs/api-automation-guide.pdf" },
               { label: "Postman Collection", url: "https://networkacademy.ke/labs/controller-api.postman_collection.json" },
@@ -454,8 +582,20 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "12 min",
             description: "Validate your understanding of key Python concepts used in automation workflows.",
+            videoUrl: "https://www.youtube.com/embed/hiyhwy1YcKc",
             resources: [
               { label: "Cheat Sheet", url: "https://networkacademy.ke/resources/python-automation-cheatsheet.pdf" },
+            ],
+          },
+          {
+            id: "automation-1-4",
+            title: "Python Tips for Network Engineers",
+            type: "video",
+            duration: "20 min",
+            description: "Level up your Python with data parsing, error handling, and environment management.",
+            videoUrl: "https://www.youtube.com/embed/sIeylHUt6U0",
+            resources: [
+              { label: "Code Samples", url: "https://networkacademy.ke/resources/python-network-snippets.zip" },
             ],
           },
         ],
@@ -482,6 +622,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "40 min",
             description: "Build an inventory, run parallel tasks, and validate changes using Nornir and napalm.",
+            videoUrl: "https://www.youtube.com/embed/M5khhEfacrU",
             resources: [
               { label: "Nornir Inventory", url: "https://networkacademy.ke/labs/nornir-inventory.zip" },
             ],
@@ -492,8 +633,20 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "18 min",
             description: "Integrate PyTest assertions to confirm intent before and after automation runs.",
+            videoUrl: "https://www.youtube.com/embed/hiyhwy1YcKc",
             resources: [
               { label: "PyTest Templates", url: "https://networkacademy.ke/resources/network-pytest-templates.zip" },
+            ],
+          },
+          {
+            id: "automation-2-4",
+            title: "Scrapli Deep Dive",
+            type: "video",
+            duration: "24 min",
+            description: "Explore fast, asynchronous network automation with Scrapli core and driver plugins.",
+            videoUrl: "https://www.youtube.com/embed/_BIp8B0w_x8",
+            resources: [
+              { label: "Scrapli Examples", url: "https://networkacademy.ke/resources/scrapli-examples.zip" },
             ],
           },
         ],
@@ -520,6 +673,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "22 min",
             description: "Design pipelines with GitHub Actions or GitLab CI to test and deploy network changes.",
+            videoUrl: "https://www.youtube.com/embed/8XfbJD_MnS4",
             resources: [
               { label: "Pipeline Blueprint", url: "https://networkacademy.ke/resources/network-cicd-blueprint.pdf" },
             ],
@@ -530,8 +684,20 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "45 min",
             description: "Implement automated rollback across multiple regions using Ansible and Git.",
+            videoUrl: "https://www.youtube.com/embed/Wg2mRZ6sQ9w",
             resources: [
               { label: "Rollback Lab", url: "https://networkacademy.ke/labs/rollback-strategy.zip" },
+            ],
+          },
+          {
+            id: "automation-3-4",
+            title: "Ansible Network Automation Demo",
+            type: "video",
+            duration: "25 min",
+            description: "See a complete Ansible pipeline push changes, validate state, and document results.",
+            videoUrl: "https://www.youtube.com/embed/zqOZ6B8MSmc",
+            resources: [
+              { label: "Playbook Bundle", url: "https://networkacademy.ke/resources/ansible-bundle.zip" },
             ],
           },
         ],
@@ -582,6 +748,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "50 min",
             description: "Use SR-TE policies and Fast Reroute to guarantee latency and protect against failures.",
+            videoUrl: "https://www.youtube.com/embed/6SmiZxwYxR0",
             resources: [
               { label: "SR-TE Lab", url: "https://networkacademy.ke/labs/segment-routing-te.zip" },
             ],
@@ -592,8 +759,20 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "15 min",
             description: "Validate your ability to map customer SLAs to routing policy and redundancy decisions.",
+            videoUrl: "https://www.youtube.com/embed/QzU4iigFsRQ",
             resources: [
               { label: "SLA Template", url: "https://networkacademy.ke/resources/sla-template.docx" },
+            ],
+          },
+          {
+            id: "carrier-1-4",
+            title: "Segment Routing Lab Walkthrough",
+            type: "video",
+            duration: "28 min",
+            description: "Follow a live SR-MPLS configuration with topology validation and failover tests.",
+            videoUrl: "https://www.youtube.com/embed/DpEGZfZgsw0",
+            resources: [
+              { label: "Lab Notes", url: "https://networkacademy.ke/resources/sr-mpls-lab-notes.pdf" },
             ],
           },
         ],
@@ -620,6 +799,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "45 min",
             description: "Deliver L3VPN and broadband services with automated turn-up and QoS enforcement.",
+            videoUrl: "https://www.youtube.com/embed/JQwqj3TgIK4",
             resources: [
               { label: "Service Turn-up Lab", url: "https://networkacademy.ke/labs/carrier-edge-lab.zip" },
             ],
@@ -630,8 +810,20 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "20 min",
             description: "Implement MACsec, DHCP snooping, and subscriber policies for last-mile protection.",
+            videoUrl: "https://www.youtube.com/embed/4fyqCkCmZ1U",
             resources: [
               { label: "Security Playbook", url: "https://networkacademy.ke/resources/customer-onboarding-playbook.pdf" },
+            ],
+          },
+          {
+            id: "carrier-2-4",
+            title: "Automating BGP Edge Policies",
+            type: "video",
+            duration: "24 min",
+            description: "See a controller push BGP communities, QoS, and ACL updates to PE routers.",
+            videoUrl: "https://www.youtube.com/embed/F9O9XDjFD0w",
+            resources: [
+              { label: "Automation Blueprint", url: "https://networkacademy.ke/resources/carrier-automation-blueprint.pdf" },
             ],
           },
         ],
@@ -658,6 +850,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "55 min",
             description: "Trigger automated remediation playbooks based on telemetry thresholds and alarms.",
+            videoUrl: "https://www.youtube.com/embed/WXGZrxhgb9Q",
             resources: [
               { label: "Remediation Playbooks", url: "https://networkacademy.ke/labs/intent-remediation.zip" },
             ],
@@ -668,8 +861,20 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "12 min",
             description: "Ensure you can prioritize incidents, communicate effectively, and document fixes.",
+            videoUrl: "https://www.youtube.com/embed/mh0I2y1k4EY",
             resources: [
               { label: "Operations Checklist", url: "https://networkacademy.ke/resources/operations-checklist.pdf" },
+            ],
+          },
+          {
+            id: "carrier-3-4",
+            title: "Building NOC Dashboards",
+            type: "video",
+            duration: "22 min",
+            description: "Design Grafana dashboards and alerts that highlight ISP health metrics.",
+            videoUrl: "https://www.youtube.com/embed/pY2N_UJvGDs",
+            resources: [
+              { label: "Dashboard Pack", url: "https://networkacademy.ke/resources/noc-dashboard-pack.zip" },
             ],
           },
         ],

@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { getCourseBySlug } from "@/data/courses";
+import { getCourseBySlug, type Lesson } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 
@@ -17,7 +17,7 @@ const CourseDetail = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
-  const [videoDialog, setVideoDialog] = useState<{ lessonId: string; title: string; videoUrl: string } | null>(null);
+  const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
 
   const course = useMemo(() => (slug ? getCourseBySlug(slug) : undefined), [slug]);
 
@@ -31,13 +31,22 @@ const CourseDetail = () => {
     }
   }, [course, slug, navigate]);
 
+  type LessonCatalogEntry = { moduleId: string; moduleTitle: string; lesson: Lesson };
+
+  const lessonCatalog = useMemo<LessonCatalogEntry[]>(() => {
+    if (!course) return [];
+    return course.modules.flatMap((module) =>
+      module.lessons.map((lesson) => ({ moduleId: module.id, moduleTitle: module.title, lesson })),
+    );
+  }, [course]);
+  const lessons = useMemo(() => lessonCatalog.map((entry) => entry.lesson), [lessonCatalog]);
+
   if (!course) {
     return null;
   }
 
   const courseProgress = progress.courses[course.id] ?? { courseId: course.id, completedLessons: [] };
   const completedSet = new Set(courseProgress.completedLessons);
-  const lessons = course.modules.flatMap((module) => module.lessons);
   const completedCount = lessons.filter((lesson) => completedSet.has(lesson.id)).length;
   const totalLessons = lessons.length;
   const completionPercentage = totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
@@ -49,11 +58,12 @@ const CourseDetail = () => {
     if (isGuest) {
       toast.info("Sign in to track your progress.");
       navigate(authRedirect);
-      return;
+      return false;
     }
     const updated = updateLessonCompletion(progress, course.id, lessonId, checked);
     setProgress(updated);
     saveProgress(updated, user?.id);
+    return true;
   };
 
   const handleStartLearning = () => {
@@ -62,16 +72,60 @@ const CourseDetail = () => {
       navigate(authRedirect);
       return;
     }
-    const nextLesson = lessons.find((lesson) => !completedSet.has(lesson.id)) ?? lessons[0];
-    if (!nextLesson) return;
+    const nextIndex = lessonCatalog.findIndex((entry) => !completedSet.has(entry.lesson.id));
+    const targetIndex = nextIndex === -1 ? 0 : nextIndex;
+    const targetEntry = lessonCatalog[targetIndex];
+    if (!targetEntry) return;
 
-    const element = document.getElementById(nextLesson.id);
+    if (targetEntry.lesson.videoUrl) {
+      goToLesson(targetIndex);
+      return;
+    }
+
+    const element = document.getElementById(targetEntry.lesson.id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
       element.classList.add("ring", "ring-primary", "ring-offset-2");
       setTimeout(() => element.classList.remove("ring", "ring-primary", "ring-offset-2"), 1800);
     }
   };
+
+  const openLesson = (lessonId: string) => {
+    const index = lessonCatalog.findIndex((entry) => entry.lesson.id === lessonId);
+    if (index === -1) {
+      toast.error("Lesson not found");
+      return;
+    }
+    const entry = lessonCatalog[index];
+    if (!entry.lesson.videoUrl) {
+      const element = document.getElementById(entry.lesson.id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      toast.info("This lesson does not have a video. Review the resources below instead.");
+      return;
+    }
+    goToLesson(index);
+  };
+
+  const goToLesson = (index: number | null) => {
+    if (index === null) {
+      setActiveLessonIndex(null);
+      return;
+    }
+    if (index < 0 || index >= lessonCatalog.length) {
+      setActiveLessonIndex(null);
+      return;
+    }
+    setActiveLessonIndex(index);
+  };
+
+  const closeLesson = () => goToLesson(null);
+
+  const activeLesson = activeLessonIndex !== null ? lessonCatalog[activeLessonIndex] : null;
+  const nextLessonEntry = activeLessonIndex !== null ? lessonCatalog[activeLessonIndex + 1] : undefined;
+  const prevLessonEntry = activeLessonIndex !== null && activeLessonIndex > 0 ? lessonCatalog[activeLessonIndex - 1] : undefined;
+  const isActiveLessonComplete = activeLesson ? completedSet.has(activeLesson.lesson.id) : false;
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,22 +147,114 @@ const CourseDetail = () => {
       </header>
 
       <main className="container mx-auto px-4 py-12 space-y-12">
-        <Dialog open={Boolean(videoDialog)} onOpenChange={(open) => !open && setVideoDialog(null)}>
-          <DialogContent className="max-w-3xl">
-            {videoDialog ? (
+        <Dialog open={activeLessonIndex !== null} onOpenChange={(open) => !open && closeLesson()}>
+          <DialogContent className="max-w-4xl">
+            {activeLesson ? (
               <>
                 <DialogHeader>
-                  <DialogTitle>{videoDialog.title}</DialogTitle>
-                  <DialogDescription>Watch the lesson without leaving the course.</DialogDescription>
+                  <DialogTitle>{activeLesson.lesson.title}</DialogTitle>
+                  <DialogDescription>
+                    {activeLesson.moduleTitle} • {activeLesson.lesson.duration} • {activeLesson.lesson.type}
+                  </DialogDescription>
                 </DialogHeader>
-                <div className="aspect-video overflow-hidden rounded-lg">
-                  <iframe
-                    title={videoDialog.title}
-                    src={`${videoDialog.videoUrl}?rel=0`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="h-full w-full"
-                  />
+                {activeLesson.lesson.videoUrl ? (
+                  <div className="aspect-video overflow-hidden rounded-lg">
+                    <iframe
+                      title={activeLesson.lesson.title}
+                      src={`${activeLesson.lesson.videoUrl}?rel=0`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="h-full w-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
+                    No embedded video for this lesson. Review the summary and resources below.
+                  </div>
+                )}
+                <div className="space-y-4 pt-4">
+                  <p className="text-sm text-muted-foreground">{activeLesson.lesson.description}</p>
+                  {activeLesson.lesson.resources && activeLesson.lesson.resources.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {activeLesson.lesson.resources.map((resource) => (
+                        <a
+                          key={resource.label}
+                          href={resource.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1 text-xs font-medium text-primary hover:border-primary"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          {resource.label}
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex gap-2">
+                      {prevLessonEntry ? (
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            goToLesson(activeLessonIndex !== null ? activeLessonIndex - 1 : null)
+                          }
+                        >
+                          Previous lesson
+                        </Button>
+                      ) : (
+                        <Button variant="outline" onClick={closeLesson}>
+                          Close
+                        </Button>
+                      )}
+                      {nextLessonEntry ? (
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null)
+                          }
+                        >
+                          Next lesson
+                        </Button>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {!isGuest ? (
+                        <>
+                          <Button
+                            variant={isActiveLessonComplete ? "secondary" : "default"}
+                            onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
+                          >
+                            {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
+                          </Button>
+                          {nextLessonEntry ? (
+                            <Button
+                              onClick={() => {
+                                if (handleToggleLesson(activeLesson.lesson.id, true)) {
+                                  goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
+                                }
+                              }}
+                            >
+                              Complete & continue
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => {
+                                if (handleToggleLesson(activeLesson.lesson.id, true)) {
+                                  closeLesson();
+                                }
+                              }}
+                            >
+                              Complete lesson
+                            </Button>
+                          )}
+                        </>
+                      ) : (
+                        <Button asChild>
+                          <Link to={authRedirect}>Sign in to track progress</Link>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </>
             ) : null}
@@ -265,11 +411,9 @@ const CourseDetail = () => {
                           <Button
                             variant="outline"
                             className="w-full sm:w-auto"
-                            onClick={() =>
-                              setVideoDialog({ lessonId: lesson.id, title: lesson.title, videoUrl: lesson.videoUrl })
-                            }
+                            onClick={() => openLesson(lesson.id)}
                           >
-                            Watch lesson
+                            {completed ? "Rewatch lesson" : "Watch lesson"}
                           </Button>
                         )}
                       </div>
