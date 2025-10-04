@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getCourseBySlug } from "@/data/courses";
@@ -16,6 +17,7 @@ const CourseDetail = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
+  const [videoDialog, setVideoDialog] = useState<{ lessonId: string; title: string; videoUrl: string } | null>(null);
 
   const course = useMemo(() => (slug ? getCourseBySlug(slug) : undefined), [slug]);
 
@@ -91,6 +93,28 @@ const CourseDetail = () => {
       </header>
 
       <main className="container mx-auto px-4 py-12 space-y-12">
+        <Dialog open={Boolean(videoDialog)} onOpenChange={(open) => !open && setVideoDialog(null)}>
+          <DialogContent className="max-w-3xl">
+            {videoDialog ? (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{videoDialog.title}</DialogTitle>
+                  <DialogDescription>Watch the lesson without leaving the course.</DialogDescription>
+                </DialogHeader>
+                <div className="aspect-video overflow-hidden rounded-lg">
+                  <iframe
+                    title={videoDialog.title}
+                    src={`${videoDialog.videoUrl}?rel=0`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full"
+                  />
+                </div>
+              </>
+            ) : null}
+          </DialogContent>
+        </Dialog>
+
         {isGuest && (
           <section className="rounded-xl border border-border bg-secondary/30 p-6">
             <h2 className="text-lg font-semibold text-foreground">Sign in to track your learning</h2>
@@ -238,10 +262,14 @@ const CourseDetail = () => {
                           </div>
                         </div>
                         {lesson.videoUrl && (
-                          <Button asChild variant="outline" className="w-full sm:w-auto">
-                            <a href={lesson.videoUrl} target="_blank" rel="noreferrer">
-                              Watch lesson
-                            </a>
+                          <Button
+                            variant="outline"
+                            className="w-full sm:w-auto"
+                            onClick={() =>
+                              setVideoDialog({ lessonId: lesson.id, title: lesson.title, videoUrl: lesson.videoUrl })
+                            }
+                          >
+                            Watch lesson
                           </Button>
                         )}
                       </div>
