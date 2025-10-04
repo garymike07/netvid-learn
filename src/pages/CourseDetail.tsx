@@ -156,112 +156,110 @@ const CourseDetail = () => {
 
       <main className="relative z-20 container mx-auto space-y-12 px-4 py-16">
         <Dialog open={activeLessonIndex !== null} onOpenChange={(open) => !open && closeLesson()}>
-          <DialogContent className="glass-panel max-w-4xl border-none p-0 sm:rounded-2xl">
+          <DialogContent className="glass-panel max-h-[90vh] max-w-4xl overflow-hidden border-none p-0 sm:rounded-2xl md:max-w-5xl">
             {activeLesson ? (
-              <div className="space-y-6 p-6">
-                <DialogHeader className="space-y-3 text-left">
+              <div className="flex h-full max-h-[90vh] flex-col">
+                <DialogHeader className="space-y-3 border-b border-white/10 px-6 py-5 text-left">
                   <DialogTitle className="text-2xl font-semibold text-foreground">{activeLesson.lesson.title}</DialogTitle>
                   <DialogDescription className="text-sm text-muted-foreground">
                     {activeLesson.moduleTitle} • {activeLesson.lesson.duration} • {activeLesson.lesson.type}
                   </DialogDescription>
                 </DialogHeader>
-                {activeLesson.lesson.videoUrl ? (
-                  <div className="aspect-video overflow-hidden rounded-2xl border border-white/10">
-                    <iframe
-                      title={activeLesson.lesson.title}
-                      src={`${activeLesson.lesson.videoUrl}?rel=0`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="h-full w-full"
-                    />
-                  </div>
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-sm text-muted-foreground">
-                    No embedded video for this lesson. Review the summary and resources below.
-                  </div>
-                )}
-                <div className="space-y-5">
-                  <p className="text-sm text-muted-foreground">{activeLesson.lesson.description}</p>
-                  {activeLesson.lesson.resources && activeLesson.lesson.resources.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {activeLesson.lesson.resources.map((resource) => (
-                        <a
-                          key={resource.label}
-                          href={resource.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          {resource.label}
-                        </a>
-                      ))}
+                <div className="flex-1 overflow-y-auto px-6 pb-6">
+                  {activeLesson.lesson.videoUrl ? (
+                    <div className="aspect-video overflow-hidden rounded-2xl border border-white/10">
+                      <iframe
+                        title={activeLesson.lesson.title}
+                        src={`${activeLesson.lesson.videoUrl}?rel=0`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="h-full w-full"
+                      />
                     </div>
-                  ) : null}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex gap-2">
-                      {prevLessonEntry ? (
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            goToLesson(activeLessonIndex !== null ? activeLessonIndex - 1 : null)
-                          }
-                        >
-                          Previous lesson
-                        </Button>
-                      ) : (
-                        <Button variant="outline" onClick={closeLesson}>
-                          Close
-                        </Button>
-                      )}
-                      {nextLessonEntry ? (
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null)
-                          }
-                        >
-                          Next lesson
-                        </Button>
-                      ) : null}
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-sm text-muted-foreground">
+                      No embedded video for this lesson. Review the summary and resources below.
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {!isGuest ? (
-                        <>
-                          <Button
-                            variant={isActiveLessonComplete ? "secondary" : "default"}
-                            onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
+                  )}
+                  <div className="mt-6 space-y-5">
+                    <p className="text-sm text-muted-foreground">{activeLesson.lesson.description}</p>
+                    {activeLesson.lesson.resources && activeLesson.lesson.resources.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {activeLesson.lesson.resources.map((resource) => (
+                          <a
+                            key={resource.label}
+                            href={resource.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
                           >
-                            {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
-                          </Button>
-                          {nextLessonEntry ? (
-                            <Button
-                              onClick={() => {
-                                if (handleToggleLesson(activeLesson.lesson.id, true)) {
-                                  goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
-                                }
-                              }}
-                            >
-                              Complete & continue
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={() => {
-                                if (handleToggleLesson(activeLesson.lesson.id, true)) {
-                                  closeLesson();
-                                }
-                              }}
-                            >
-                              Complete lesson
-                            </Button>
-                          )}
-                        </>
-                      ) : (
-                        <Button asChild>
-                          <Link to={authRedirect}>Sign in to track progress</Link>
+                            <ExternalLink className="h-3 w-3" />
+                            {resource.label}
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-6 py-4">
+                  <div className="flex gap-2">
+                    {prevLessonEntry ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => goToLesson(activeLessonIndex !== null ? activeLessonIndex - 1 : null)}
+                      >
+                        Previous lesson
+                      </Button>
+                    ) : (
+                      <Button variant="outline" onClick={closeLesson}>
+                        Close
+                      </Button>
+                    )}
+                    {nextLessonEntry ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null)}
+                      >
+                        Next lesson
+                      </Button>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {!isGuest ? (
+                      <>
+                        <Button
+                          variant={isActiveLessonComplete ? "secondary" : "default"}
+                          onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
+                        >
+                          {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
                         </Button>
-                      )}
-                    </div>
+                        {nextLessonEntry ? (
+                          <Button
+                            onClick={() => {
+                              if (handleToggleLesson(activeLesson.lesson.id, true)) {
+                                goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
+                              }
+                            }}
+                          >
+                            Complete & continue
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => {
+                              if (handleToggleLesson(activeLesson.lesson.id, true)) {
+                                closeLesson();
+                              }
+                            }}
+                          >
+                            Complete lesson
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      <Button asChild>
+                        <Link to={authRedirect}>Sign in to track progress</Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
