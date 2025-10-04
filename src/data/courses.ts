@@ -43,7 +43,7 @@ export const COURSES: Course[] = [
       "Start your networking journey with a comprehensive tour of how modern networks operate. You will understand the building blocks, terminology, and real-world use cases that power today's connected world.",
     duration: "4-6 weeks",
     isPremium: false,
-    heroVideo: "https://www.youtube.com/embed/q8NVJG7FOa4",
+    heroVideo: "https://www.youtube.com/embed/ltBWJIhcjpA",
     outcomes: [
       "Explain how the internet routes traffic end to end",
       "Identify common networking hardware and their responsibilities",
@@ -74,7 +74,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "15 min",
             description: "Compare bus, ring, mesh, and star topologies and when to use each.",
-            videoUrl: "https://www.youtube.com/embed/4A0MU7AY8UA",
+            videoUrl: "https://www.youtube.com/embed/3ARTjvpZCoQ",
             resources: [
               { label: "Interactive Lab", url: "https://networkacademy.ke/labs/topology-designer" },
             ],
@@ -85,7 +85,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "25 min",
             description: "Use a guided simulation to connect hosts, switches, and routers.",
-            videoUrl: "https://www.youtube.com/embed/M9XHu9CLi7I",
+            videoUrl: "https://www.youtube.com/embed/jW5GhNhBReA",
             resources: [
               { label: "Lab Simulation", url: "https://networkacademy.ke/labs/lan-builder" },
             ],
@@ -96,7 +96,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "16 min",
             description: "Walk through cabling, switch placement, and router setup in a real office.",
-            videoUrl: "https://www.youtube.com/embed/XA0wcO_v5XQ",
+            videoUrl: "https://www.youtube.com/embed/3jDaE2mbHJ0",
             resources: [
               { label: "Topology Checklist", url: "https://networkacademy.ke/resources/office-topology-checklist.pdf" },
             ],
@@ -114,7 +114,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "14 min",
             description: "Dive into the data-link and network layer responsibilities of routers and switches.",
-            videoUrl: "https://www.youtube.com/embed/G8hk0lA6nNg",
+            videoUrl: "https://www.youtube.com/embed/qIIRSwnIcaA",
             resources: [
               { label: "Packet Flow Diagram", url: "https://networkacademy.ke/resources/router-switch-flow.pdf" },
               { label: "CLI Cheat Sheet", url: "https://networkacademy.ke/resources/router-switch-cli.pdf" },
@@ -126,7 +126,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "12 min",
             description: "Understand Wi-Fi standards, channels, and coverage planning.",
-            videoUrl: "https://www.youtube.com/embed/LpI1R5SdBQo",
+            videoUrl: "https://www.youtube.com/embed/NalNQAGN7mQ",
             resources: [
               { label: "Cheat Sheet", url: "https://networkacademy.ke/resources/wireless-cheatsheet.pdf" },
             ],
@@ -137,7 +137,7 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "10 min",
             description: "Check your understanding with scenario-based questions.",
-            videoUrl: "https://www.youtube.com/embed/YWV3qBGA9as",
+            videoUrl: "https://www.youtube.com/embed/MXr_cyY0BVc",
             resources: [
               { label: "Review Guide", url: "https://networkacademy.ke/resources/hardware-review-guide.pdf" },
             ],
@@ -148,7 +148,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "14 min",
             description: "Disassemble an AP to understand radios, antennas, and controller integration.",
-            videoUrl: "https://www.youtube.com/embed/SI9z0ssHGp0",
+            videoUrl: "https://www.youtube.com/embed/IStbaTQTBio",
             resources: [
               { label: "AP Components Diagram", url: "https://networkacademy.ke/resources/ap-components.pdf" },
             ],
@@ -166,7 +166,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "18 min",
             description: "Visualize the encapsulation process across OSI and TCP/IP models.",
-            videoUrl: "https://www.youtube.com/embed/OnPak3USuxA",
+            videoUrl: "https://www.youtube.com/embed/6_eQUFZWlKE",
             resources: [
               { label: "Encapsulation Worksheet", url: "https://networkacademy.ke/resources/tcpip-worksheet.pdf" },
             ],
@@ -177,7 +177,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "30 min",
             description: "Capture and analyze packets to diagnose latency issues.",
-            videoUrl: "https://www.youtube.com/embed/o3L5LklOqzs",
+            videoUrl: "https://www.youtube.com/embed/5nS_2zA-kDw",
             resources: [
               { label: "Lab Instructions", url: "https://networkacademy.ke/labs/wireshark-lab" },
             ],
@@ -188,7 +188,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "13 min",
             description: "Clarify when applications choose TCP or UDP and how ports stay organized.",
-            videoUrl: "https://www.youtube.com/embed/8IDmUOQwGi8",
+            videoUrl: "https://www.youtube.com/embed/7brFDwM64aQ",
             resources: [
               { label: "Transport Layer Worksheet", url: "https://networkacademy.ke/resources/transport-layer-worksheet.pdf" },
             ],
@@ -207,7 +207,7 @@ export const COURSES: Course[] = [
       "Take your skills to the next level by configuring real Cisco and MikroTik environments. You will implement routing protocols, VLANs, and redundancy technologies used across Kenyan ISPs and enterprises.",
     duration: "6-8 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/S7wCOIaNYEc",
+    heroVideo: "https://www.youtube.com/embed/alfMH_iwMxA",
     outcomes: [
       "Deploy VLANs and trunking on managed switches",
       "Configure OSPF and EIGRP in multi-router topologies",
@@ -230,7 +230,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "20 min",
             description: "Configure access, trunk, and voice VLANs with security best practices.",
-            videoUrl: "https://www.youtube.com/embed/WluK_22L1wI",
+            videoUrl: "https://www.youtube.com/embed/IYwR4c0kgCE",
             resources: [
               { label: "VLAN Design Guide", url: "https://networkacademy.ke/resources/vlan-design-guide.pdf" },
             ],
@@ -241,7 +241,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "35 min",
             description: "Bridge VLANs using router-on-a-stick and layer 3 switches.",
-            videoUrl: "https://www.youtube.com/embed/p5ZIB5T_WbM",
+            videoUrl: "https://www.youtube.com/embed/N6dfmfO-3Dw",
             resources: [
               { label: "Packet Tracer File", url: "https://networkacademy.ke/labs/inter-vlan-routing.pkt" },
             ],
@@ -252,7 +252,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "20 min",
             description: "Prevent switching loops using STP, RSTP, and Rapid PVST+.",
-            videoUrl: "https://www.youtube.com/embed/1qwp0xAJZPQ",
+            videoUrl: "https://www.youtube.com/embed/MX-NOZqbxh0",
             resources: [
               { label: "STP Troubleshooting Flowchart", url: "https://networkacademy.ke/resources/stp-troubleshooting.png" },
             ],
@@ -263,7 +263,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "18 min",
             description: "Combine switches for higher capacity and redundancy using EtherChannel.",
-            videoUrl: "https://www.youtube.com/embed/KPtgSecu5lI",
+            videoUrl: "https://www.youtube.com/embed/-9KjBC5Jv-U",
             resources: [
               { label: "EtherChannel Lab", url: "https://networkacademy.ke/labs/etherchannel-practice.zip" },
             ],
@@ -281,7 +281,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "22 min",
             description: "Follow step-by-step configuration of OSPF on Cisco IOS.",
-            videoUrl: "https://www.youtube.com/embed/4M1iRV8ThBw",
+            videoUrl: "https://www.youtube.com/embed/Y4imT775wxQ",
             resources: [
               { label: "OSPF Topology File", url: "https://networkacademy.ke/labs/ospf-topology.pkt" },
             ],
@@ -292,7 +292,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "18 min",
             description: "Tune bandwidth, delay, and variance to optimize path selection.",
-            videoUrl: "https://www.youtube.com/embed/FK8Nf4cT7mY",
+            videoUrl: "https://www.youtube.com/embed/eJOqHt8J3LA",
             resources: [
               { label: "EIGRP Calculator", url: "https://networkacademy.ke/tools/eigrp-metric-calculator" },
             ],
@@ -303,7 +303,7 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "12 min",
             description: "Scenario-based quiz comparing static, OSPF, and EIGRP approaches.",
-            videoUrl: "https://www.youtube.com/embed/on0OToR8G1E",
+            videoUrl: "https://www.youtube.com/embed/rLNmrFh-sd8",
           },
           {
             id: "routing-2-4",
@@ -311,7 +311,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "21 min",
             description: "Plan area boundaries, ABRs, and summarization for scalable deployments.",
-            videoUrl: "https://www.youtube.com/embed/aOt8lzh3sLs",
+            videoUrl: "https://www.youtube.com/embed/n4J9M-HBPn4",
             resources: [
               { label: "Design Template", url: "https://networkacademy.ke/resources/ospf-design-template.pdf" },
             ],
@@ -329,7 +329,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "16 min",
             description: "Configure HSRP for seamless failover between edge routers.",
-            videoUrl: "https://www.youtube.com/embed/k-Z4Nqkz05A",
+            videoUrl: "https://www.youtube.com/embed/mDsk2r3Bh0M",
             resources: [
               { label: "HSRP Configuration Workbook", url: "https://networkacademy.ke/resources/hsrp-workbook.pdf" },
             ],
@@ -340,7 +340,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "40 min",
             description: "Use traceroute and show commands to debug misconfigurations.",
-            videoUrl: "https://www.youtube.com/embed/4uqrQhOMuUs",
+            videoUrl: "https://www.youtube.com/embed/Yshd2z5ru9Q",
             resources: [
               { label: "MikroTik Config Pack", url: "https://networkacademy.ke/labs/routing-toolkit.zip" },
             ],
@@ -351,7 +351,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "19 min",
             description: "Apply show commands and debugs to isolate adjacency and route issues.",
-            videoUrl: "https://www.youtube.com/embed/MmGzX6OxNq8",
+            videoUrl: "https://www.youtube.com/embed/bxPUubJl71s",
             resources: [
               { label: "Troubleshooting Worksheet", url: "https://networkacademy.ke/resources/routing-troubleshooting.pdf" },
             ],
@@ -370,7 +370,7 @@ export const COURSES: Course[] = [
       "Master modern security controls including firewalls, VPNs, NAC, and threat detection. Apply policy frameworks tailored for African enterprises and telecoms.",
     duration: "8-10 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/qWlwz0GxITg",
+    heroVideo: "https://www.youtube.com/embed/nII9yL8yf5Y",
     outcomes: [
       "Design secure access control policies across wired and wireless networks",
       "Deploy IPSec VPNs and SSL remote access solutions",
@@ -536,7 +536,7 @@ export const COURSES: Course[] = [
       "Move beyond manual configuration with an automation toolkit that covers Python, REST APIs, Netmiko, Nornir, and Ansible. Learn how to design idempotent workflows, validate changes automatically, and roll out updates at scale.",
     duration: "8-10 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/-LEPeGd7owg",
+    heroVideo: "https://www.youtube.com/embed/OsHFLvCV_cs",
     outcomes: [
       "Write Python scripts that gather inventory and push network changes",
       "Interact with vendor APIs to automate configuration and monitoring",
@@ -714,7 +714,7 @@ export const COURSES: Course[] = [
       "Take command of large-scale service provider environments. Design resilient MPLS cores, engineer traffic with segment routing, and build observability pipelines that keep customers online.",
     duration: "10-12 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/3nWP3n2Vh6g",
+    heroVideo: "https://www.youtube.com/embed/_CRatGf2v6Q",
     outcomes: [
       "Design MPLS and segment routing architectures for multi-region deployments",
       "Engineer traffic flows using TE, QoS, and fast reroute techniques",
