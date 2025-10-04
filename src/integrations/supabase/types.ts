@@ -14,7 +14,52 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      subscriptions: {
+        Row: {
+          id: string
+          user_id: string
+          plan: string | null
+          status: "trial_active" | "active" | "canceled" | "expired" | "past_due" | null
+          trial_started_at: string | null
+          trial_expires_at: string | null
+          cancel_at: string | null
+          created_at: string
+          updated_at: string | null
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          plan?: string | null
+          status?: "trial_active" | "active" | "canceled" | "expired" | "past_due" | null
+          trial_started_at?: string | null
+          trial_expires_at?: string | null
+          cancel_at?: string | null
+          created_at?: string
+          updated_at?: string | null
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          plan?: string | null
+          status?: "trial_active" | "active" | "canceled" | "expired" | "past_due" | null
+          trial_started_at?: string | null
+          trial_expires_at?: string | null
+          cancel_at?: string | null
+          created_at?: string
+          updated_at?: string | null
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

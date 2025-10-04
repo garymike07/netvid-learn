@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Award, BookOpen, Loader2, PlayCircle, TrendingUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { COURSES } from "@/data/courses";
 import { calculateMetrics, loadProgress, resetProgress, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
+import TrialBanner from "@/components/TrialBanner";
 
 type ContinueCourse = {
   id: string;
@@ -41,6 +43,7 @@ const deriveContinueList = (progress: UserProgress): ContinueCourse[] => {
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
+  const { isTrialActive, hasActiveSubscription, daysRemaining, openUpgradeDialog, loading: subscriptionLoading } = useSubscription();
   const navigate = useNavigate();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [signingOut, setSigningOut] = useState(false);
@@ -110,6 +113,7 @@ const Dashboard = () => {
             </Button>
           </div>
         </div>
+        <TrialBanner />
       </header>
 
       <main className="container mx-auto px-4 py-16">
@@ -117,6 +121,44 @@ const Dashboard = () => {
           <h1 className="mb-4 text-4xl font-semibold text-foreground">My Dashboard</h1>
           <p className="text-lg text-muted-foreground">Track your progress and continue learning</p>
         </div>
+
+        {!subscriptionLoading && !hasActiveSubscription && (
+          <Card
+            className={`mb-12 p-6 text-sm ${
+              isTrialActive
+                ? "border border-primary/30 bg-primary/10 text-primary"
+                : "border border-destructive/30 bg-destructive/10 text-destructive"
+            }`}
+          >
+            {isTrialActive ? (
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-base font-semibold text-primary">Your trial is active</h2>
+                  <p>Make the most of premium lessons while you have access.</p>
+                </div>
+                <div className="flex flex-col gap-2 sm:items-end">
+                  <span className="text-xs uppercase tracking-widest">Time remaining</span>
+                  <span className="text-2xl font-semibold">{typeof daysRemaining === "number" ? `${daysRemaining} day${daysRemaining === 1 ? "" : "s"}` : "14 days"}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-base font-semibold">Trial ended</h2>
+                  <p>Upgrade to regain access to premium tracks, labs, and certifications.</p>
+                </div>
+                <Button onClick={openUpgradeDialog} size="sm">
+                  Upgrade now
+                </Button>
+              </div>
+            )}
+            {isTrialActive && (
+              <div className="mt-4 rounded-xl border border-white/20 bg-white/5 p-4 text-xs text-muted-foreground">
+                Tip: Finish at least one module per day to maximise your learning streak before the trial ends.
+              </div>
+            )}
+          </Card>
+        )}
 
         <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[{

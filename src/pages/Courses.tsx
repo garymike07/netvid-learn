@@ -8,9 +8,12 @@ import Footer from "@/components/Footer";
 import { COURSES } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { createEmptyProgress, loadProgress, type UserProgress } from "@/lib/progress";
+import TrialBanner from "@/components/TrialBanner";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const Courses = () => {
   const { user } = useAuth();
+  const { isTrialActive, hasActiveSubscription, daysRemaining, openUpgradeDialog } = useSubscription();
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
   );
@@ -88,6 +91,7 @@ const Courses = () => {
             </Link>
           )}
         </div>
+        <TrialBanner />
       </header>
 
       <main className="flex-1">
@@ -113,7 +117,11 @@ const Courses = () => {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => (
+              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => {
+                const premiumLocked =
+                  course.isPremium && user && !hasActiveSubscription && !isTrialActive;
+
+                return (
                 <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
                   <CardHeader className="space-y-4 p-0">
                     <div className="flex items-center justify-between">
@@ -146,12 +154,30 @@ const Courses = () => {
                         </p>
                       )}
                     </div>
-                    <Button asChild className="w-full">
-                      <Link to={ctaTarget}>{ctaLabel}</Link>
+                    {course.isPremium && user && !hasActiveSubscription && (
+                      <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-muted-foreground">
+                        {premiumLocked
+                          ? "Trial ended — upgrade to unlock premium modules."
+                          : `Trial access active${typeof daysRemaining === "number" ? ` • ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left` : ""}.`}
+                      </div>
+                    )}
+
+                    <Button
+                      asChild={!premiumLocked}
+                      className="w-full"
+                      onClick={premiumLocked ? openUpgradeDialog : undefined}
+                      variant={premiumLocked ? "outline" : "default"}
+                    >
+                      {premiumLocked ? (
+                        <span>Upgrade to continue</span>
+                      ) : (
+                        <Link to={ctaTarget}>{ctaLabel}</Link>
+                      )}
                     </Button>
                   </CardContent>
                 </Card>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

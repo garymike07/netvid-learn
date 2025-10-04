@@ -11,6 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getCourseBySlug, type Lesson } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
+import TrialBanner from "@/components/TrialBanner";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +20,7 @@ const CourseDetail = () => {
   const { user } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
+  const { isTrialActive, hasActiveSubscription, openUpgradeDialog, loading: subscriptionLoading, daysRemaining } = useSubscription();
 
   const course = useMemo(() => (slug ? getCourseBySlug(slug) : undefined), [slug]);
 
@@ -53,11 +56,17 @@ const CourseDetail = () => {
   const coursePath = `/courses/${course.slug}`;
   const authRedirect = `/auth?redirect=${encodeURIComponent(coursePath)}`;
   const isGuest = !user;
+  const trialLocked = course.isPremium && !isGuest && !hasActiveSubscription && !isTrialActive;
 
   const handleToggleLesson = (lessonId: string, checked: boolean) => {
     if (isGuest) {
       toast.info("Sign in to track your progress.");
       navigate(authRedirect);
+      return false;
+    }
+    if (trialLocked) {
+      toast.info("Upgrade to continue this premium course.");
+      openUpgradeDialog();
       return false;
     }
     const updated = updateLessonCompletion(progress, course.id, lessonId, checked);
@@ -70,6 +79,11 @@ const CourseDetail = () => {
     if (isGuest) {
       toast.info("Sign in to start learning.");
       navigate(authRedirect);
+      return;
+    }
+    if (trialLocked) {
+      toast.error("Your trial has ended. Upgrade to continue premium lessons.");
+      openUpgradeDialog();
       return;
     }
     const nextIndex = lessonCatalog.findIndex((entry) => !completedSet.has(entry.lesson.id));
@@ -103,6 +117,11 @@ const CourseDetail = () => {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       toast.info("This lesson does not have a video. Review the resources below instead.");
+      return;
+    }
+    if (trialLocked) {
+      toast.error("Upgrade required to watch premium lessons.");
+      openUpgradeDialog();
       return;
     }
     goToLesson(index);
@@ -149,9 +168,10 @@ const CourseDetail = () => {
           </div>
           <Button size="lg" className="gap-2" onClick={handleStartLearning}>
             <PlayCircle className="h-5 w-5" />
-            {isGuest ? "Sign in to start" : "Start learning"}
+            {isGuest ? "Sign in to start" : trialLocked ? "Upgrade to continue" : "Start learning"}
           </Button>
         </div>
+        <TrialBanner />
       </header>
 
       <main className="relative z-20 container mx-auto space-y-12 px-4 py-16">
@@ -219,6 +239,7 @@ const CourseDetail = () => {
                       <Button
                         variant="outline"
                         onClick={() => goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null)}
+                        disabled={trialLocked}
                       >
                         Next lesson
                       </Button>
@@ -230,6 +251,7 @@ const CourseDetail = () => {
                         <Button
                           variant={isActiveLessonComplete ? "secondary" : "default"}
                           onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
+                          disabled={trialLocked}
                         >
                           {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
                         </Button>
@@ -240,6 +262,7 @@ const CourseDetail = () => {
                                 goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
                               }
                             }}
+                            disabled={trialLocked}
                           >
                             Complete & continue
                           </Button>
@@ -250,6 +273,7 @@ const CourseDetail = () => {
                                 closeLesson();
                               }
                             }}
+                            disabled={trialLocked}
                           >
                             Complete lesson
                           </Button>
@@ -288,6 +312,23 @@ const CourseDetail = () => {
           <div className="space-y-6">
             <h1 className="text-4xl font-semibold text-foreground">{course.title}</h1>
             <p className="text-lg text-muted-foreground">{course.description}</p>
+            {course.isPremium && !isGuest && !subscriptionLoading && (
+              <div
+                className={`rounded-2xl border p-4 text-sm ${
+                  trialLocked
+                    ? "border-destructive/40 bg-destructive/10 text-destructive"
+                    : hasActiveSubscription
+                      ? "border-success/30 bg-success/10 text-success"
+                      : "border-primary/40 bg-primary/10 text-primary"
+                }`}
+              >
+                {trialLocked
+                  ? "Your trial has ended. Upgrade your plan to keep watching premium lessons."
+                  : hasActiveSubscription
+                    ? "Premium plan active — enjoy unlimited access."
+                    : `Trial access active${typeof daysRemaining === "number" ? ` • ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left` : ""}.`}
+              </div>
+            )}
 
             <div className="glass-panel overflow-hidden rounded-3xl">
               <div className="aspect-video">
@@ -359,7 +400,11 @@ const CourseDetail = () => {
 
           <div className="space-y-4">
             {course.modules.map((module, moduleIndex) => (
-              <Card key={module.id} className="glass-panel border-none p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.05 * moduleIndex}s` }}>
+              <Card
+                key={module.id}
+                className={`glass-panel border-none p-6 motion-safe:animate-fade-up ${trialLocked ? "opacity-75" : ""}`}
+                style={{ animationDelay: `${0.05 * moduleIndex}s` }}
+              >
                 <CardHeader className="p-0">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
@@ -388,7 +433,7 @@ const CourseDetail = () => {
                         <div className="flex flex-1 items-start gap-4">
                           <Checkbox
                             checked={completed}
-                            disabled={isGuest}
+                            disabled={isGuest || trialLocked}
                             onCheckedChange={(checked) => handleToggleLesson(lesson.id, Boolean(checked))}
                             aria-label={`Mark ${lesson.title} ${completed ? "incomplete" : "complete"}`}
                           />
@@ -426,8 +471,9 @@ const CourseDetail = () => {
                             variant="outline"
                             className="w-full sm:w-auto"
                             onClick={() => openLesson(lesson.id)}
+                            disabled={trialLocked}
                           >
-                            {completed ? "Rewatch lesson" : "Watch lesson"}
+                            {trialLocked ? "Upgrade required" : completed ? "Rewatch lesson" : "Watch lesson"}
                           </Button>
                         )}
                       </div>

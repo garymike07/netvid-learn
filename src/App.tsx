@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { useAuth } from "./contexts/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
+import UpgradeDialog from "@/components/UpgradeDialog";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToHash />
+        <UpgradeDialog />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<Courses />} />
