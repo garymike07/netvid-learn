@@ -26,24 +26,27 @@ const Navigation = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-          <GraduationCap className="w-8 h-8 text-primary" />
-          <span className="text-xl font-bold">Network Academy</span>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-background/30 backdrop-blur-2xl transition-colors">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
+        <Link to="/" className="group flex items-center gap-2 text-foreground transition-colors hover:text-primary">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-primary">
+            <div className="absolute inset-0 rounded-xl bg-primary/30 blur-2xl" />
+            <GraduationCap className="relative h-6 w-6" />
+          </div>
+          <span className="text-xl font-bold tracking-tight">Network Academy</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/#features" className="text-foreground hover:text-primary transition-colors">
+        <nav className="hidden items-center gap-6 md:flex">
+          <Link to="/#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Features
           </Link>
-          <Link to="/courses" className="text-foreground hover:text-primary transition-colors">
+          <Link to="/courses" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Courses
           </Link>
-          <Link to="/#pricing" className="text-foreground hover:text-primary transition-colors">
+          <Link to="/#pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Pricing
           </Link>
           {user && !loading && (
-            <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors">
+            <Link to="/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
               Dashboard
             </Link>
           )}

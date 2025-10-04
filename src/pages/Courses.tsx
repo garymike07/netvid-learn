@@ -69,77 +69,76 @@ const Courses = () => {
   }, [progress, user]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Home</span>
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-background/40 backdrop-blur-xl">
+        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+          <Link to="/" className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary">
+            <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-semibold uppercase tracking-wide">Back to Home</span>
           </Link>
           {user ? (
             <Link to="/dashboard">
-              <Button variant="default" size="lg">Go to Dashboard</Button>
+              <Button variant="outline" size="lg" className="border-white/10 bg-white/5">
+                Go to Dashboard
+              </Button>
             </Link>
           ) : (
             <Link to="/auth?redirect=%2Fcourses">
-              <Button variant="default" size="lg">Sign In</Button>
+              <Button size="lg">Sign In</Button>
             </Link>
           )}
         </div>
       </header>
 
       <main className="flex-1">
-        <section className="py-20 bg-gradient-to-b from-primary/5 to-background">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+        <section className="relative overflow-hidden py-24">
+          <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 0%, hsla(278,97%,72%,0.2), transparent 60%)" }} />
+          <div className="container relative mx-auto px-4 text-center motion-safe:animate-fade-up">
+            <h1 className="mb-6 text-4xl font-semibold text-foreground md:text-5xl">
               Complete Network Engineering Curriculum
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Progressive learning path from beginner to expert. Each module includes written lessons, 
-              video tutorials, hands-on labs, and assessments.
+            <p className="mx-auto max-w-3xl text-lg text-muted-foreground">
+              Progressive learning path from beginner to expert. Each module includes written lessons, video tutorials, hands-on labs, and assessments.
             </p>
           </div>
         </section>
 
-        <section className="py-16">
+        <section className="py-20">
           <div className="container mx-auto px-4">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl font-bold text-foreground md:text-4xl">Course Library</h2>
-              <p className="mt-2 text-muted-foreground">
+            <div className="mb-12 text-center motion-safe:animate-fade-up">
+              <h2 className="text-3xl font-semibold text-foreground md:text-4xl">Course Library</h2>
+              <p className="mt-3 text-muted-foreground">
                 Choose a track that matches your experience. Your enrollment syncs automatically with the dashboard.
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }) => (
-                <Card
-                  key={course.id}
-                  className={`flex h-full flex-col border-2 transition-all duration-300 hover:-translate-y-2 hover:border-primary/80 ${
-                    course.isPremium ? "hover:shadow-xl" : "hover:shadow-lg"
-                  }`}
-                >
-                  <CardHeader>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => (
+                <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
+                  <CardHeader className="space-y-4 p-0">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{course.title}</CardTitle>
-                      {course.isPremium && <Lock className="h-4 w-4 text-accent" />}
+                      <CardTitle className="text-xl text-foreground">{course.title}</CardTitle>
+                      {course.isPremium && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
+                          <Lock className="h-3 w-3" /> Premium
+                        </span>
+                      )}
                     </div>
-                    <CardDescription className="flex items-center gap-2 text-sm">
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">{course.level}</span>
+                    <CardDescription className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
+                      <span className="rounded-full bg-primary/15 px-3 py-1 text-primary">{course.level}</span>
                       {course.duration && <span className="text-muted-foreground">{course.duration}</span>}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col justify-between space-y-4">
-                    <div className="space-y-4">
-                      <p className="text-sm text-muted-foreground">{course.summary}</p>
-                      <div className="flex items-center gap-2 text-sm text-success">
+                  <CardContent className="flex flex-1 flex-col justify-between space-y-6 p-0">
+                    <div className="space-y-4 text-sm text-muted-foreground">
+                      <p>{course.summary}</p>
+                      <div className="flex items-center gap-2 text-success">
                         <CheckCircle2 className="h-4 w-4" />
                         Includes labs, quizzes, and certifications
                       </div>
                       {user ? (
                         <p className="text-xs font-medium text-muted-foreground">
-                          {hasProgress
-                            ? `${completion}% complete • ${totalLessons} lessons`
-                            : `Not started • ${totalLessons} lessons`}
+                          {hasProgress ? `${completion}% complete • ${totalLessons} lessons` : `Not started • ${totalLessons} lessons`}
                         </p>
                       ) : (
                         <p className="text-xs font-medium text-muted-foreground">
@@ -159,15 +158,16 @@ const Courses = () => {
 
         <Curriculum />
 
-        <section className="py-20 bg-muted/30">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to Start Learning?</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <section className="relative py-24">
+          <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 10% 20%, hsla(215,91%,65%,0.22), transparent 60%)" }} />
+          <div className="container relative mx-auto px-4 text-center motion-safe:animate-fade-up">
+            <h2 className="mb-6 text-3xl font-semibold text-foreground">Ready to Start Learning?</h2>
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
               Sign up now and get immediate access to Level 1 content completely free.
             </p>
             <Link to={user ? "/dashboard" : "/auth?redirect=%2Fdashboard"}>
               <Button size="xl" className="gap-2">
-                <PlayCircle className="w-5 h-5" />
+                <PlayCircle className="h-5 w-5" />
                 {user ? "Resume learning" : "Start Free"}
               </Button>
             </Link>

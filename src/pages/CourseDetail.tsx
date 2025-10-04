@@ -128,16 +128,24 @@ const CourseDetail = () => {
   const isActiveLessonComplete = activeLesson ? completedSet.has(activeLesson.lesson.id) : false;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 opacity-60" style={{ backgroundImage: "var(--gradient-hero)" }} />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,hsla(278,97%,72%,0.2),transparent_55%),radial-gradient(circle_at_85%_10%,hsla(215,91%,65%,0.22),transparent_60%)]" />
+
+      <header className="relative z-20 border-b border-white/10 bg-background/40 backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" asChild className="text-muted-foreground hover:text-primary">
               <Link to="/courses" className="gap-2">
                 <ArrowLeft className="h-4 w-4" /> Back to courses
               </Link>
             </Button>
-            <Badge variant={course.isPremium ? "default" : "secondary"}>{course.level}</Badge>
+            <Badge
+              variant={course.isPremium ? "default" : "secondary"}
+              className="border border-white/20 bg-white/10 text-xs font-semibold uppercase tracking-widest"
+            >
+              {course.level}
+            </Badge>
           </div>
           <Button size="lg" className="gap-2" onClick={handleStartLearning}>
             <PlayCircle className="h-5 w-5" />
@@ -146,19 +154,19 @@ const CourseDetail = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12 space-y-12">
+      <main className="relative z-20 container mx-auto space-y-12 px-4 py-16">
         <Dialog open={activeLessonIndex !== null} onOpenChange={(open) => !open && closeLesson()}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="glass-panel max-w-4xl border-none p-0 sm:rounded-2xl">
             {activeLesson ? (
-              <>
-                <DialogHeader>
-                  <DialogTitle>{activeLesson.lesson.title}</DialogTitle>
-                  <DialogDescription>
+              <div className="space-y-6 p-6">
+                <DialogHeader className="space-y-3 text-left">
+                  <DialogTitle className="text-2xl font-semibold text-foreground">{activeLesson.lesson.title}</DialogTitle>
+                  <DialogDescription className="text-sm text-muted-foreground">
                     {activeLesson.moduleTitle} • {activeLesson.lesson.duration} • {activeLesson.lesson.type}
                   </DialogDescription>
                 </DialogHeader>
                 {activeLesson.lesson.videoUrl ? (
-                  <div className="aspect-video overflow-hidden rounded-lg">
+                  <div className="aspect-video overflow-hidden rounded-2xl border border-white/10">
                     <iframe
                       title={activeLesson.lesson.title}
                       src={`${activeLesson.lesson.videoUrl}?rel=0`}
@@ -168,11 +176,11 @@ const CourseDetail = () => {
                     />
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
+                  <div className="rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-sm text-muted-foreground">
                     No embedded video for this lesson. Review the summary and resources below.
                   </div>
                 )}
-                <div className="space-y-4 pt-4">
+                <div className="space-y-5">
                   <p className="text-sm text-muted-foreground">{activeLesson.lesson.description}</p>
                   {activeLesson.lesson.resources && activeLesson.lesson.resources.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -182,7 +190,7 @@ const CourseDetail = () => {
                           href={resource.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1 text-xs font-medium text-primary hover:border-primary"
+                          className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
                         >
                           <ExternalLink className="h-3 w-3" />
                           {resource.label}
@@ -256,13 +264,13 @@ const CourseDetail = () => {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             ) : null}
           </DialogContent>
         </Dialog>
 
         {isGuest && (
-          <section className="rounded-xl border border-border bg-secondary/30 p-6">
+          <section className="glass-panel rounded-2xl border-none p-6">
             <h2 className="text-lg font-semibold text-foreground">Sign in to track your learning</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Create an account to mark lessons complete, resume where you left off, and unlock premium training.
@@ -280,17 +288,19 @@ const CourseDetail = () => {
 
         <section className="grid gap-10 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            <h1 className="text-4xl font-bold text-foreground">{course.title}</h1>
+            <h1 className="text-4xl font-semibold text-foreground">{course.title}</h1>
             <p className="text-lg text-muted-foreground">{course.description}</p>
 
-            <div className="aspect-video overflow-hidden rounded-xl bg-muted">
-              <iframe
-                title={course.title}
-                src={`${course.heroVideo}?rel=0`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="h-full w-full"
-              />
+            <div className="glass-panel overflow-hidden rounded-3xl">
+              <div className="aspect-video">
+                <iframe
+                  title={course.title}
+                  src={`${course.heroVideo}?rel=0`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -311,23 +321,27 @@ const CourseDetail = () => {
             </div>
           </div>
 
-          <Card className="self-start border-2">
-            <CardHeader>
-              <CardTitle>What you will achieve</CardTitle>
-              <CardDescription>Master skills that Kenyan employers look for.</CardDescription>
+          <Card className="glass-panel self-start border-none p-6">
+            <CardHeader className="p-0">
+              <CardTitle className="text-foreground">What you will achieve</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Master skills that Kenyan employers look for.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
+            <CardContent className="space-y-4 p-0 pt-6">
+              <div className="space-y-3">
                 {course.outcomes.map((outcome) => (
-                  <div key={outcome} className="flex items-start gap-2 text-sm">
-                    <Layers className="mt-0.5 h-4 w-4 text-primary" />
+                  <div key={outcome} className="flex items-start gap-3 text-sm">
+                    <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <Layers className="h-4 w-4" />
+                    </div>
                     <span className="text-muted-foreground">{outcome}</span>
                   </div>
                 ))}
               </div>
-              <div className="rounded-lg bg-secondary/40 p-4">
+              <div className="glass-panel rounded-2xl border-none p-4">
                 <h3 className="text-sm font-semibold text-foreground">Prerequisites</h3>
-                <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+                <ul className="mt-3 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
                   {course.prerequisites.map((req) => (
                     <li key={req}>{req}</li>
                   ))}
@@ -338,7 +352,7 @@ const CourseDetail = () => {
         </section>
 
         <section className="space-y-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between motion-safe:animate-fade-up">
             <h2 className="text-2xl font-semibold text-foreground">Course modules</h2>
             <p className="text-sm text-muted-foreground">
               Track progress by marking each lesson complete after you finish watching or labbing.
@@ -346,12 +360,12 @@ const CourseDetail = () => {
           </div>
 
           <div className="space-y-4">
-            {course.modules.map((module) => (
-              <Card key={module.id} className="border border-border/60">
-                <CardHeader>
+            {course.modules.map((module, moduleIndex) => (
+              <Card key={module.id} className="glass-panel border-none p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.05 * moduleIndex}s` }}>
+                <CardHeader className="p-0">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <CardTitle className="flex items-center gap-2 text-xl">
+                      <CardTitle className="flex items-center gap-2 text-xl text-foreground">
                         <Film className="h-5 w-5 text-primary" />
                         {module.title}
                       </CardTitle>
@@ -359,17 +373,19 @@ const CourseDetail = () => {
                         {module.description}
                       </CardDescription>
                     </div>
-                    <Badge variant="outline">{module.lessons.length} lessons</Badge>
+                    <Badge variant="outline" className="border-white/15 bg-white/5 text-muted-foreground">
+                      {module.lessons.length} lessons
+                    </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-4 p-0 pt-6">
                   {module.lessons.map((lesson) => {
                     const completed = completedSet.has(lesson.id);
                     return (
                       <div
                         id={lesson.id}
                         key={lesson.id}
-                        className="flex flex-col gap-4 rounded-lg border border-border/80 bg-muted/30 p-4 transition hover:border-primary/60 sm:flex-row sm:items-center sm:justify-between"
+                        className="glass-panel flex flex-col gap-4 rounded-2xl border-none p-4 transition hover:shadow-[0_24px_60px_-30px_hsla(217,91%,65%,0.55)] sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex flex-1 items-start gap-4">
                           <Checkbox
@@ -382,10 +398,10 @@ const CourseDetail = () => {
                             <p className="text-base font-semibold text-foreground">{lesson.title}</p>
                             <p className="text-sm text-muted-foreground">{lesson.description}</p>
                             <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                              <span className="inline-flex items-center gap-1 rounded-full bg-secondary/60 px-3 py-1">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1">
                                 <Clock className="h-3 w-3" /> {lesson.duration}
                               </span>
-                              <span className="inline-flex items-center gap-1 rounded-full bg-secondary/60 px-3 py-1 capitalize">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 capitalize">
                                 <Layers className="h-3 w-3" /> {lesson.type}
                               </span>
                             </div>
@@ -397,7 +413,7 @@ const CourseDetail = () => {
                                     href={resource.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1 text-xs font-medium text-primary hover:border-primary"
+                                    className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
                                   >
                                     <ExternalLink className="h-3 w-3" />
                                     {resource.label}
@@ -425,7 +441,7 @@ const CourseDetail = () => {
           </div>
         </section>
 
-        <section className="rounded-xl border border-border bg-secondary/20 p-6">
+        <section className="glass-panel rounded-2xl border-none p-6 motion-safe:animate-fade-up">
           <h2 className="text-xl font-semibold text-foreground">Next steps</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Complete all lessons and labs to unlock a downloadable certificate. Stay consistent – the platform saves your

@@ -31,42 +31,36 @@ const videoCategories = [
 
 const VideoShowcase = () => {
   return (
-    <section id="videos" className="py-20 md:py-28">
+    <section id="videos" className="relative py-24 md:py-32">
+      <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(circle at 10% 0%, hsla(217,91%,65%,0.25), transparent 60%)" }} />
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            Multiple Video Formats
-          </h2>
+        <div className="mb-16 text-center motion-safe:animate-fade-up">
+          <h2 className="mb-4 text-4xl font-semibold text-foreground md:text-5xl">Multiple Video Formats</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Learn through different video styles designed for maximum understanding
           </p>
         </div>
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {videoCategories.map((category, index) => (
-            <Card 
-              key={index}
-              className="group relative overflow-hidden border-2 transition-all duration-300 hover:-translate-y-2 hover:border-primary hover:shadow-xl"
-            >
-              <div className={`flex h-48 items-center justify-center bg-gradient-to-br ${category.color} transition-all group-hover:scale-105`}>
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-all group-hover:scale-110">
+            <Card key={index} className="group overflow-hidden p-0 motion-safe:animate-fade-up" style={{ animationDelay: `${0.08 * index}s` }}>
+              <div className={`relative flex h-48 items-center justify-center bg-gradient-to-br ${category.color}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/40" />
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur transition-transform duration-500 group-hover:scale-110">
                   <Play className="h-8 w-8 fill-white text-white" />
+                  <div className="absolute inset-0 rounded-full bg-white/30 blur-2xl opacity-0 transition-opacity group-hover:opacity-70" />
                 </div>
               </div>
-              
-              <div className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {category.title}
-                  </h3>
-                  <Badge variant="secondary" className="gap-1">
+
+              <div className="space-y-3 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">{category.title}</h3>
+                  <Badge variant="secondary" className="gap-1 border border-white/10 bg-white/5 text-foreground">
                     <Clock className="h-3 w-3" />
                     {category.duration}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {category.description}
-                </p>
+                <p className="text-sm text-muted-foreground">{category.description}</p>
               </div>
             </Card>
           ))}

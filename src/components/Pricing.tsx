@@ -61,68 +61,55 @@ const plans = [
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-20 md:py-28">
+    <section id="pricing" className="relative py-24 md:py-32">
+      <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(circle at 15% 80%, hsla(215,91%,65%,0.22), transparent 55%)" }} />
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
-            Affordable Pricing for Kenya
-          </h2>
+        <div className="mb-16 text-center motion-safe:animate-fade-up">
+          <h2 className="mb-4 text-4xl font-semibold text-foreground md:text-5xl">Affordable Pricing for Kenya</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Invest in your future with pricing designed for East African professionals
           </p>
         </div>
-        
+
         <div className="grid gap-8 lg:grid-cols-3">
           {plans.map((plan, index) => (
-            <Card 
+            <Card
               key={index}
-              className={`relative flex flex-col border-2 transition-all duration-300 hover:-translate-y-2 ${
-                plan.popular 
-                  ? "border-primary shadow-xl lg:scale-105" 
-                  : "hover:border-primary hover:shadow-lg"
-              }`}
+              className={`relative flex h-full flex-col p-8 motion-safe:animate-fade-up ${plan.popular ? "shadow-[0_36px_120px_-40px_hsla(217,91%,65%,0.65)]" : "shadow-[0_24px_80px_-50px_hsla(217,91%,65%,0.4)]"}`}
+              style={{ animationDelay: `${0.1 * index}s` }}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="gap-1 bg-accent px-4 py-1 text-accent-foreground">
-                    <Star className="h-3 w-3 fill-current" />
-                    Best Value
-                  </Badge>
+                <div className="absolute -top-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/20 bg-accent/20 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-accent backdrop-blur">
+                  <Star className="h-3 w-3" /> Best Value
                 </div>
               )}
-              
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
-                <div className="mt-4">
-                  <span className="text-5xl font-bold text-primary">
+
+              <CardHeader className="mt-4 flex-1 text-center">
+                <CardTitle className="text-2xl text-foreground">{plan.name}</CardTitle>
+                <CardDescription className="text-muted-foreground">{plan.description}</CardDescription>
+                <div className="mt-6 space-y-2">
+                  <span className="text-5xl font-bold tracking-tight text-primary">
                     {plan.price === "0" ? "Free" : `KSh ${plan.price.toLocaleString()}`}
                   </span>
-                  {plan.price !== "0" && (
-                    <span className="text-muted-foreground">/{plan.period}</span>
-                  )}
-                  {plan.savings && (
-                    <div className="mt-2 text-sm font-medium text-success">{plan.savings}</div>
-                  )}
+                  {plan.price !== "0" && <span className="block text-sm text-muted-foreground">per {plan.period}</span>}
+                  {plan.savings && <div className="text-sm font-medium text-success">{plan.savings}</div>}
                 </div>
               </CardHeader>
-              
-              <CardContent className="flex-grow space-y-3">
+
+              <CardContent className="flex flex-col gap-3 p-0">
                 {plan.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-success" />
-                    <span className="text-sm text-foreground">{feature}</span>
+                  <div key={featureIndex} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <div className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <Check className="h-3 w-3" />
+                    </div>
+                    <span className="text-foreground/90">{feature}</span>
                   </div>
                 ))}
               </CardContent>
-              
-              <CardFooter>
+
+              <CardFooter className="mt-8 p-0">
                 <Link to={plan.price === "0" ? "/courses" : "/auth?redirect=%2Fdashboard"} className="w-full">
-                  <Button 
-                    className="w-full"
-                    variant={plan.popular ? "default" : "outline"}
-                    size="lg"
-                  >
+                  <Button className="w-full" variant={plan.popular ? "default" : "outline"} size="lg">
                     {plan.cta}
                   </Button>
                 </Link>
@@ -130,11 +117,9 @@ const Pricing = () => {
             </Card>
           ))}
         </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-muted-foreground">
-            💳 We accept M-Pesa, Airtel Money, and Cards
-          </p>
+
+        <div className="mt-12 text-center text-sm text-muted-foreground">
+          💳 We accept M-Pesa, Airtel Money, and Cards
         </div>
       </div>
     </section>

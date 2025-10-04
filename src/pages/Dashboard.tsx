@@ -93,12 +93,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background">
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Home</span>
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-background/40 backdrop-blur-xl">
+        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+          <Link to="/" className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary">
+            <ArrowLeft className="h-5 w-5" />
+            <span className="text-sm font-semibold uppercase tracking-wide">Back to Home</span>
           </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" onClick={handleResetProgress} className="hidden md:inline-flex">
@@ -112,98 +112,83 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4 gradient-text">My Dashboard</h1>
+      <main className="container mx-auto px-4 py-16">
+        <div className="mb-12 motion-safe:animate-fade-up">
+          <h1 className="mb-4 text-4xl font-semibold text-foreground">My Dashboard</h1>
           <p className="text-lg text-muted-foreground">Track your progress and continue learning</p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Courses Enrolled</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-primary" />
-                <span className="text-3xl font-bold">{metrics.coursesEnrolled}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Videos Watched</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <PlayCircle className="w-5 h-5 text-primary" />
-                <span className="text-3xl font-bold">{metrics.videosWatched}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Certificates</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-primary" />
-                <span className="text-3xl font-bold">{metrics.certificatesEarned}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Progress</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-primary" />
-                <span className="text-3xl font-bold">{metrics.progressPercentage}%</span>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[{
+            label: "Courses Enrolled",
+            value: metrics.coursesEnrolled,
+            icon: BookOpen,
+          }, {
+            label: "Videos Watched",
+            value: metrics.videosWatched,
+            icon: PlayCircle,
+          }, {
+            label: "Certificates",
+            value: metrics.certificatesEarned,
+            icon: Award,
+          }, {
+            label: "Progress",
+            value: `${metrics.progressPercentage}%`,
+            icon: TrendingUp,
+          }].map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={stat.label} className="p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.08 * index}s` }}>
+                <CardHeader className="flex items-center justify-between space-y-0 p-0">
+                  <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {stat.label}
+                  </CardTitle>
+                  <div className="rounded-full bg-primary/15 p-2 text-primary">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                </CardHeader>
+                <CardContent className="mt-6 p-0">
+                  <span className="text-3xl font-semibold text-foreground">{stat.value}</span>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <Card className="motion-safe:animate-fade-up">
+          <CardHeader className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <CardTitle>Continue Learning</CardTitle>
-              <CardDescription>Pick up where you left off</CardDescription>
+              <CardTitle className="text-foreground">Continue Learning</CardTitle>
+              <CardDescription className="text-muted-foreground">Pick up where you left off</CardDescription>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" className="md:hidden" onClick={handleResetProgress}>
                 Reset Progress
               </Button>
-              <Button asChild variant="default">
+              <Button asChild>
                 <Link to="/courses">Browse Courses</Link>
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {continueLearning.map((course) => (
-                <div key={course.id} className="rounded-lg border border-border p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">{course.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {course.level} • Next: {course.nextLessonTitle}
-                      </p>
-                    </div>
-                    <Link
-                      to={`/courses/${course.slug}`}
-                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary hover:bg-primary/20"
-                    >
-                      {course.progress}% complete
-                    </Link>
+          <CardContent className="space-y-5 p-6">
+            {continueLearning.map((course, index) => (
+              <div key={course.id} className="glass-panel relative rounded-2xl p-5 motion-safe:animate-fade-up" style={{ animationDelay: `${0.05 * index}s` }}>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">{course.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {course.level} • Next: {course.nextLessonTitle}
+                    </p>
                   </div>
+                  <Link
+                    to={`/courses/${course.slug}`}
+                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm font-semibold text-primary transition hover:bg-white/10"
+                  >
+                    {course.progress}% complete
+                  </Link>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </main>

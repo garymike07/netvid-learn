@@ -26,36 +26,32 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-20 md:py-28">
+    <section id="features" className="relative py-24 md:py-32">
+      <div className="absolute inset-0 -z-10 opacity-50" style={{ backgroundImage: "radial-gradient(circle at 50% 0%, hsla(278,97%,72%,0.2), transparent 55%)" }} />
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl">
+        <div className="mb-16 text-center motion-safe:animate-fade-up">
+          <h2 className="mb-4 text-4xl font-semibold text-foreground md:text-5xl">
             Learn Networking the Right Way
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Multiple learning formats ensure you understand every concept thoroughly
           </p>
         </div>
-        
+
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card 
+              <Card
                 key={index}
-                className="group border-2 transition-all duration-300 hover:-translate-y-2 hover:border-primary hover:shadow-lg"
+                className="group h-full p-6 motion-safe:animate-fade-up"
+                style={{ animationDelay: `${0.1 * index}s` }}
               >
-                <CardContent className="p-6">
-                  <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 transition-all group-hover:from-primary/20 group-hover:to-primary/10">
-                    <Icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 text-primary shadow-[0_20px_45px_-25px_hsla(217,91%,65%,0.7)] transition-transform duration-500 group-hover:-translate-y-1">
+                  <Icon className="h-7 w-7" />
+                </div>
+                <h3 className="mb-3 text-xl font-semibold text-foreground">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </Card>
             );
           })}

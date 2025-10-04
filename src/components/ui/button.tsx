@@ -5,23 +5,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+        default:
+          "bg-gradient-to-r from-primary via-accent to-primary/80 text-primary-foreground shadow-[0_18px_40px_-12px_hsla(222,95%,65%,0.55)] hover:shadow-[0_24px_60px_-18px_hsla(222,95%,68%,0.6)]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border-2 border-primary bg-background text-primary hover:bg-primary hover:text-primary-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        outline:
+          "border border-white/20 bg-background/40 text-foreground backdrop-blur hover:bg-background/60 hover:text-primary",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-[0_12px_30px_-18px_hsla(278,97%,72%,0.65)] hover:bg-secondary/80",
+        ghost: "text-muted-foreground hover:text-foreground hover:bg-white/5",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-md hover:shadow-lg transition-all",
+        hero:
+          "bg-accent text-accent-foreground shadow-[0_24px_60px_-18px_hsla(278,97%,72%,0.6)] hover:brightness-105",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        xl: "h-14 rounded-lg px-10 text-base",
+        lg: "h-11 rounded-lg px-8",
+        xl: "h-14 rounded-xl px-10 text-base",
         icon: "h-10 w-10",
       },
     },
