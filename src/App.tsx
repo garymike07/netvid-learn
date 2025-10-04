@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import Auth from "./pages/Auth";
@@ -12,6 +13,29 @@ import { useAuth } from "./contexts/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
 
 const queryClient = new QueryClient();
+
+const ScrollToHash = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (!location.hash) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const targetId = location.hash.replace(/^#/, "");
+    if (!targetId) return;
+
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location.hash, location.pathname]);
+
+  return null;
+};
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { session, loading } = useAuth();
@@ -37,6 +61,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToHash />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<Courses />} />

@@ -117,7 +117,7 @@ const Pricing = () => {
               </CardContent>
               
               <CardFooter>
-                <Link to={plan.price === "0" ? "/courses" : "/auth"} className="w-full">
+                <Link to={plan.price === "0" ? "/courses" : "/auth?redirect=%2Fdashboard"} className="w-full">
                   <Button 
                     className="w-full"
                     variant={plan.popular ? "default" : "outline"}

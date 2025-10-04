@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,9 +21,12 @@ type AuthFormValues = z.infer<typeof authSchema>;
 const Auth = () => {
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [formMessage, setFormMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const redirectParam = searchParams.get("redirect");
+  const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/dashboard";
 
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
@@ -35,9 +38,9 @@ const Auth = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/dashboard", { replace: true });
+      navigate(redirectTo, { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, redirectTo]);
 
   const toggleLabel = useMemo(
     () => (mode === "signin" ? "Need an account? Create one" : "Already registered? Sign in"),
@@ -45,7 +48,7 @@ const Auth = () => {
   );
 
   if (!loading && user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   const onSubmit = async (values: AuthFormValues) => {
@@ -59,8 +62,8 @@ const Auth = () => {
           setFormMessage(error);
           return;
         }
-        toast.success("Welcome back!", { description: "Redirecting to your dashboard" });
-        navigate("/dashboard", { replace: true });
+        toast.success("Welcome back!", { description: "Redirecting you now" });
+        navigate(redirectTo, { replace: true });
       } else {
         const { error, requiresVerification } = await signUp(values);
         if (error) {
@@ -73,7 +76,7 @@ const Auth = () => {
           return;
         }
         toast.success("Account created!", { description: "You are now signed in" });
-        navigate("/dashboard", { replace: true });
+        navigate(redirectTo, { replace: true });
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Something went wrong";

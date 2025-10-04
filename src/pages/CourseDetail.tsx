@@ -9,6 +9,7 @@ import { ArrowLeft, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide
 import { useAuth } from "@/contexts/AuthContext";
 import { getCourseBySlug } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
+import { toast } from "sonner";
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -38,14 +39,27 @@ const CourseDetail = () => {
   const completedCount = lessons.filter((lesson) => completedSet.has(lesson.id)).length;
   const totalLessons = lessons.length;
   const completionPercentage = totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
+  const coursePath = `/courses/${course.slug}`;
+  const authRedirect = `/auth?redirect=${encodeURIComponent(coursePath)}`;
+  const isGuest = !user;
 
   const handleToggleLesson = (lessonId: string, checked: boolean) => {
+    if (isGuest) {
+      toast.info("Sign in to track your progress.");
+      navigate(authRedirect);
+      return;
+    }
     const updated = updateLessonCompletion(progress, course.id, lessonId, checked);
     setProgress(updated);
     saveProgress(updated, user?.id);
   };
 
   const handleStartLearning = () => {
+    if (isGuest) {
+      toast.info("Sign in to start learning.");
+      navigate(authRedirect);
+      return;
+    }
     const nextLesson = lessons.find((lesson) => !completedSet.has(lesson.id)) ?? lessons[0];
     if (!nextLesson) return;
 
@@ -71,12 +85,29 @@ const CourseDetail = () => {
           </div>
           <Button size="lg" className="gap-2" onClick={handleStartLearning}>
             <PlayCircle className="h-5 w-5" />
-            Start learning
+            {isGuest ? "Sign in to start" : "Start learning"}
           </Button>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-12 space-y-12">
+        {isGuest && (
+          <section className="rounded-xl border border-border bg-secondary/30 p-6">
+            <h2 className="text-lg font-semibold text-foreground">Sign in to track your learning</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Create an account to mark lessons complete, resume where you left off, and unlock premium training.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Button asChild size="sm">
+                <Link to={authRedirect}>Sign in</Link>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <Link to="/auth?redirect=%2Fdashboard">Create free account</Link>
+              </Button>
+            </div>
+          </section>
+        )}
+
         <section className="grid gap-10 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
             <h1 className="text-4xl font-bold text-foreground">{course.title}</h1>
@@ -173,6 +204,7 @@ const CourseDetail = () => {
                         <div className="flex flex-1 items-start gap-4">
                           <Checkbox
                             checked={completed}
+                            disabled={isGuest}
                             onCheckedChange={(checked) => handleToggleLesson(lesson.id, Boolean(checked))}
                             aria-label={`Mark ${lesson.title} ${completed ? "incomplete" : "complete"}`}
                           />
@@ -229,10 +261,10 @@ const CourseDetail = () => {
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Button size="lg" className="gap-2" onClick={handleStartLearning}>
-              Continue from current lesson
+              {isGuest ? "Sign in to start" : "Continue from current lesson"}
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/dashboard">View dashboard</Link>
+              <Link to={isGuest ? "/auth?redirect=%2Fdashboard" : "/dashboard"}>View dashboard</Link>
             </Button>
           </div>
         </section>

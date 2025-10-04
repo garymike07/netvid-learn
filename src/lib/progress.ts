@@ -22,21 +22,23 @@ const buildEmptyProgress = (courses: Course[]): UserProgress => ({
 
 const getStorageKey = (userId?: string | null) => `${STORAGE_PREFIX}:${userId ?? "guest"}`;
 
+export const createEmptyProgress = (courses: Course[] = COURSES) => buildEmptyProgress(courses);
+
 export const loadProgress = (userId?: string | null, courses: Course[] = COURSES): UserProgress => {
   if (typeof window === "undefined") {
-    return buildEmptyProgress(courses);
+    return createEmptyProgress(courses);
   }
 
   try {
     const key = getStorageKey(userId);
     const raw = window.localStorage.getItem(key);
     if (!raw) {
-      const defaults = buildEmptyProgress(courses);
+      const defaults = createEmptyProgress(courses);
       window.localStorage.setItem(key, JSON.stringify(defaults));
       return defaults;
     }
     const parsed = JSON.parse(raw) as UserProgress;
-    const ensured: UserProgress = buildEmptyProgress(courses);
+    const ensured: UserProgress = createEmptyProgress(courses);
 
     for (const course of courses) {
       const existing = parsed.courses?.[course.id];
@@ -64,6 +66,12 @@ export const saveProgress = (progress: UserProgress, userId?: string | null) => 
   } catch (error) {
     console.warn("Unable to persist learning progress", error);
   }
+};
+
+export const resetProgress = (userId?: string | null, courses: Course[] = COURSES) => {
+  const fresh = createEmptyProgress(courses);
+  saveProgress(fresh, userId);
+  return fresh;
 };
 
 export const updateLessonCompletion = (
@@ -100,6 +108,7 @@ export const calculateMetrics = (progress: UserProgress, courses: Course[] = COU
   let totalLessons = 0;
   let completedLessons = 0;
   let certificates = 0;
+  let coursesEnrolled = 0;
 
   for (const course of courses) {
     const courseProgress = progress.courses[course.id];
@@ -109,6 +118,9 @@ export const calculateMetrics = (progress: UserProgress, courses: Course[] = COU
     if (!courseProgress) continue;
 
     const completedSet = new Set(courseProgress.completedLessons);
+    if (completedSet.size > 0) {
+      coursesEnrolled += 1;
+    }
     completedLessons += courseLessonIds.filter((lessonId) => completedSet.has(lessonId)).length;
 
     const courseVideos = course.modules.flatMap((module) => module.lessons.filter((lesson) => lesson.type === "video"));
@@ -122,7 +134,7 @@ export const calculateMetrics = (progress: UserProgress, courses: Course[] = COU
   const progressPercentage = totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100);
 
   return {
-    coursesEnrolled: courses.length,
+    coursesEnrolled,
     videosWatched: videoCount,
     certificatesEarned: certificates,
     progressPercentage,

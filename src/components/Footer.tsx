@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Youtube, Twitter, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -16,24 +17,24 @@ const Footer = () => {
             <h4 className="mb-4 font-semibold text-foreground">Learn</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/#curriculum" className="text-muted-foreground transition-colors hover:text-primary">
                   Curriculum
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/#videos" className="text-muted-foreground transition-colors hover:text-primary">
                   Video Library
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/courses" className="text-muted-foreground transition-colors hover:text-primary">
                   Practice Labs
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/courses" className="text-muted-foreground transition-colors hover:text-primary">
                   Resources
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -42,22 +43,22 @@ const Footer = () => {
             <h4 className="mb-4 font-semibold text-foreground">Company</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/#features" className="text-muted-foreground transition-colors hover:text-primary">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/#pricing" className="text-muted-foreground transition-colors hover:text-primary">
                   Pricing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/courses" className="text-muted-foreground transition-colors hover:text-primary">
                   For Teams
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground transition-colors hover:text-primary">
+                <a href="mailto:hello@networkacademy.ke" className="text-muted-foreground transition-colors hover:text-primary">
                   Contact
                 </a>
               </li>
@@ -67,26 +68,32 @@ const Footer = () => {
           <div>
             <h4 className="mb-4 font-semibold text-foreground">Connect</h4>
             <div className="flex gap-4">
-              <a 
-                href="#" 
+              <a
+                href="https://youtube.com/@networkacademy"
+                target="_blank"
+                rel="noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 <Youtube className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
+              <a
+                href="https://twitter.com/networkacademy"
+                target="_blank"
+                rel="noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 <Twitter className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
+              <a
+                href="https://linkedin.com/company/networkacademy"
+                target="_blank"
+                rel="noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a 
-                href="#" 
+              <a
+                href="mailto:hello@networkacademy.ke"
                 className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 <Mail className="h-5 w-5" />

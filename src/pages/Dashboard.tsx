@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, Award, BookOpen, Loader2, PlayCircle, TrendingUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { COURSES } from "@/data/courses";
-import { calculateMetrics, loadProgress, saveProgress, type UserProgress } from "@/lib/progress";
+import { calculateMetrics, loadProgress, resetProgress, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 
 type ContinueCourse = {
@@ -82,9 +82,13 @@ const Dashboard = () => {
   };
 
   const handleResetProgress = () => {
-    const fresh = loadProgress(user?.id);
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm("This will clear all tracked lesson progress. Continue?");
+      if (!confirmed) return;
+    }
+
+    const fresh = resetProgress(user?.id);
     setProgress(fresh);
-    saveProgress(fresh, user?.id);
     toast.success("Progress reset", { description: "All lessons are now marked as not started." });
   };
 

@@ -9,6 +9,7 @@ const Navigation = () => {
   const { user, loading, signOut } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
   const navigate = useNavigate();
+  const dashboardRedirect = "/auth?redirect=%2Fdashboard";
 
   const handleSignOut = async () => {
     try {
@@ -60,7 +61,7 @@ const Navigation = () => {
             </>
           ) : (
             <>
-              <Link to="/auth">
+              <Link to={dashboardRedirect}>
                 <Button variant="ghost">Sign In</Button>
               </Link>
               <Link to="/courses">
