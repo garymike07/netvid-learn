@@ -6,13 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
+import { ArrowLeft, Award, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getCourseBySlug, type Lesson } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 import TrialBanner from "@/components/TrialBanner";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useCertificates, type CourseCertificatePayload } from "@/contexts/CertificateContext";
 
 const formatCountdown = (ms: number | null) => {
   if (ms == null) return null;
@@ -30,8 +31,11 @@ const CourseDetail = () => {
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const { isTrialActive, hasActiveSubscription, openUpgradeDialog, loading: subscriptionLoading, durationMs } = useSubscription();
+  const { ensureCertificate, downloadCertificate, getCertificateByCourse, loading: certificateLoading } = useCertificates();
   const [msRemaining, setMsRemaining] = useState(durationMs);
   const countdown = useMemo(() => formatCountdown(msRemaining), [msRemaining]);
+  const [certificateBusy, setCertificateBusy] = useState(false);
+  const isGuest = !user;
 
   const course = useMemo(() => (slug ? getCourseBySlug(slug) : undefined), [slug]);
 
@@ -66,20 +70,92 @@ const CourseDetail = () => {
     );
   }, [course]);
   const lessons = useMemo(() => lessonCatalog.map((entry) => entry.lesson), [lessonCatalog]);
+  const totalLessons = lessons.length;
+  const certificatePayload = useMemo<CourseCertificatePayload | null>(
+    () =>
+      course
+        ? {
+            id: course.id,
+            title: course.title,
+            slug: course.slug,
+            level: course.level,
+            duration: course.duration ?? null,
+            totalLessons,
+          }
+        : null,
+    [course, totalLessons],
+  );
+
+  useEffect(() => {
+    if (!course || !certificatePayload || isGuest) {
+      return;
+    }
+    const progressEntry = progress.courses[course.id];
+    const completedLessons = progressEntry?.completedLessons?.length ?? 0;
+    if (certificatePayload.totalLessons === 0 || completedLessons < certificatePayload.totalLessons) {
+      return;
+    }
+    const trialEnded =
+      course.isPremium &&
+      !hasActiveSubscription &&
+      !isTrialActive &&
+      !subscriptionLoading;
+    if (trialEnded) {
+      return;
+    }
+    if (getCertificateByCourse(course.id)) {
+      return;
+    }
+    void ensureCertificate(certificatePayload);
+  }, [course, certificatePayload, ensureCertificate, getCertificateByCourse, progress, isGuest, hasActiveSubscription, isTrialActive, subscriptionLoading]);
 
   if (!course) {
     return null;
   }
 
+  const certificateDetails = certificatePayload!;
   const courseProgress = progress.courses[course.id] ?? { courseId: course.id, completedLessons: [] };
   const completedSet = new Set(courseProgress.completedLessons);
   const completedCount = lessons.filter((lesson) => completedSet.has(lesson.id)).length;
-  const totalLessons = lessons.length;
   const completionPercentage = totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
+  const certificateRecord = getCertificateByCourse(course.id);
   const coursePath = `/courses/${course.slug}`;
   const authRedirect = `/auth?redirect=${encodeURIComponent(coursePath)}`;
-  const isGuest = !user;
-  const trialLocked = course.isPremium && !isGuest && !hasActiveSubscription && !isTrialActive;
+  const trialLocked =
+    course.isPremium &&
+    !isGuest &&
+    !hasActiveSubscription &&
+    !isTrialActive &&
+    !subscriptionLoading;
+  const certificateEligible = !isGuest && completionPercentage === 100;
+  const certificateAccessible = certificateEligible && (!trialLocked || Boolean(certificateRecord));
+  const certificateLockedByTrial = certificateEligible && trialLocked && !certificateRecord;
+  const certificateButtonLabel = certificateBusy
+    ? "Preparing..."
+    : certificateRecord
+      ? "Download certificate"
+      : certificateEligible
+        ? "Generate certificate"
+        : "Complete course to unlock";
+
+  const handleDownloadCertificate = async () => {
+    if (!certificateAccessible) {
+      toast.info("Complete every lesson to unlock your certificate.");
+      return;
+    }
+    setCertificateBusy(true);
+    try {
+      const record = await downloadCertificate(certificateDetails);
+      toast.success("Certificate ready for download.", {
+        description: `Certificate number ${record.certificate_number}`,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to download certificate.";
+      toast.error(message);
+    } finally {
+      setCertificateBusy(false);
+    }
+  };
 
   const handleToggleLesson = (lessonId: string, checked: boolean) => {
     if (isGuest) {
@@ -382,6 +458,64 @@ const CourseDetail = () => {
                   </p>
                 </div>
               </div>
+            </div>
+
+            <div className="glass-panel rounded-2xl border-none p-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
+                    <Award className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground">Completion certificate</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Finish every lesson to receive a personalised Mike Net Academy certificate with a verifiable number.
+                    </p>
+                  </div>
+                </div>
+                {certificateRecord ? (
+                  <Badge variant="outline" className="border-primary/40 bg-primary/10 text-xs font-semibold uppercase tracking-widest text-primary">
+                    #{certificateRecord.certificate_number}
+                  </Badge>
+                ) : certificateEligible ? (
+                  <Badge variant="outline" className="border-primary/30 bg-primary/10 text-xs font-semibold uppercase tracking-widest text-primary">
+                    Generating
+                  </Badge>
+                ) : null}
+              </div>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {isGuest ? (
+                  <>
+                    <Button asChild size="sm">
+                      <Link to={authRedirect}>Sign in to earn certificate</Link>
+                    </Button>
+                    <Button asChild size="sm" variant="outline">
+                      <Link to="/auth?redirect=%2Fdashboard">Create free account</Link>
+                    </Button>
+                  </>
+                ) : certificateLockedByTrial ? (
+                  <>
+                    <Button size="sm" onClick={openUpgradeDialog}>
+                      Upgrade to unlock certificate
+                    </Button>
+                    <p className="text-xs text-muted-foreground sm:ml-3">
+                      Your trial has ended. Upgrade to download your verified certificate.
+                    </p>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    onClick={handleDownloadCertificate}
+                    disabled={certificateBusy || certificateLoading || !certificateAccessible}
+                    className="w-full sm:w-auto"
+                  >
+                    {certificateButtonLabel}
+                  </Button>
+                )}
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Issue date and certificate number are stored securely for future verification requests.
+              </p>
             </div>
           </div>
 

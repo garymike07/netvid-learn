@@ -7,7 +7,7 @@ type AuthContextValue = {
   user: User | null;
   loading: boolean;
   signIn: (params: { email: string; password: string }) => Promise<{ error: string | null }>;
-  signUp: (params: { email: string; password: string }) => Promise<{ error: string | null; requiresVerification: boolean }>;
+  signUp: (params: { email: string; password: string; fullName: string }) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 };
 
@@ -50,10 +50,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         return { error: error?.message ?? null };
       },
-      signUp: async ({ email, password }) => {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        const requiresVerification = !error && data.user?.email_confirmed_at === null;
-        return { error: error?.message ?? null, requiresVerification };
+      signUp: async ({ email, password, fullName }) => {
+        const sanitizedName = fullName.trim();
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: sanitizedName.length > 0 ? sanitizedName : email,
+            },
+          },
+        });
+
+        if (error) {
+          return { error: error.message };
+        }
+
+        if (data.session) {
+          return { error: null };
+        }
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        return { error: signInError?.message ?? null };
       },
       signOut: async () => {
         await supabase.auth.signOut();

@@ -13,7 +13,7 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const Courses = () => {
   const { user } = useAuth();
-  const { isTrialActive, hasActiveSubscription, durationMs, openUpgradeDialog } = useSubscription();
+  const { isTrialActive, hasActiveSubscription, durationMs, openUpgradeDialog, loading: subscriptionLoading } = useSubscription();
   const [msRemaining, setMsRemaining] = useState(durationMs);
   const countdown = useMemo(() => {
     if (msRemaining == null) return null;
@@ -140,7 +140,11 @@ const Courses = () => {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => {
                 const premiumLocked =
-                  course.isPremium && user && !hasActiveSubscription && !isTrialActive;
+                  course.isPremium &&
+                  user &&
+                  !hasActiveSubscription &&
+                  !isTrialActive &&
+                  !subscriptionLoading;
 
                 return (
                 <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
@@ -175,7 +179,7 @@ const Courses = () => {
                         </p>
                       )}
                     </div>
-                    {course.isPremium && user && !hasActiveSubscription && (
+                    {course.isPremium && user && !hasActiveSubscription && !subscriptionLoading && (
                       <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-muted-foreground">
                         {premiumLocked
                           ? "Trial ended — upgrade to unlock premium modules."

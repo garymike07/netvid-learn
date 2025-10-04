@@ -12,6 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { toast } from "sonner";
 
 const authSchema = z.object({
+  fullName: z.string().optional(),
   email: z.string().email("Enter a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
@@ -31,6 +32,7 @@ const Auth = () => {
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
     },
@@ -65,14 +67,14 @@ const Auth = () => {
         toast.success("Welcome back!", { description: "Redirecting you now" });
         navigate(redirectTo, { replace: true });
       } else {
-        const { error, requiresVerification } = await signUp(values);
-        if (error) {
-          setFormMessage(error);
+        const { fullName = "", email, password } = values;
+        if (!fullName || fullName.trim().length < 2) {
+          setFormMessage("Please enter your full name to personalise your certificate.");
           return;
         }
-        if (requiresVerification) {
-          toast.success("Check your inbox to confirm your email");
-          setFormMessage("We've sent a confirmation link to your email");
+        const { error } = await signUp({ email, password, fullName });
+        if (error) {
+          setFormMessage(error);
           return;
         }
         toast.success("Account created!", { description: "You are now signed in" });
@@ -112,6 +114,37 @@ const Auth = () => {
           <CardContent>
             <Form {...form}>
               <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+                {mode === "signup" ? (
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    rules={{
+                      validate: (value) => {
+                        if (mode !== "signup") return true;
+                        if (!value || value.trim().length < 2) {
+                          return "Enter your full name";
+                        }
+                        return true;
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full name</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Mike Wanyama"
+                            autoComplete="name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>Your name appears on your certificate of completion.</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : null}
+
                 <FormField
                   control={form.control}
                   name="email"

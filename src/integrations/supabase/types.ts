@@ -14,6 +14,55 @@ export type Database = {
   }
   public: {
     Tables: {
+      certificates: {
+        Row: {
+          id: string
+          user_id: string
+          course_id: string
+          course_title: string
+          course_slug: string
+          user_name: string
+          certificate_number: string
+          issued_at: string
+          created_at: string
+          updated_at: string | null
+          metadata: Json | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          course_id: string
+          course_title: string
+          course_slug: string
+          user_name: string
+          certificate_number: string
+          issued_at?: string
+          created_at?: string
+          updated_at?: string | null
+          metadata?: Json | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          course_id?: string
+          course_title?: string
+          course_slug?: string
+          user_name?: string
+          certificate_number?: string
+          issued_at?: string
+          created_at?: string
+          updated_at?: string | null
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       subscriptions: {
         Row: {
           id: string
