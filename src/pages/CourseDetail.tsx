@@ -11,19 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getCourseBySlug, type Lesson } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
-import TrialBanner from "@/components/TrialBanner";
-import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useCertificates, type CourseCertificatePayload } from "@/contexts/CertificateContext";
-
-const formatCountdown = (ms: number | null) => {
-  if (ms == null) return null;
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const days = Math.floor(totalSeconds / (60 * 60 * 24));
-  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const seconds = totalSeconds % 60;
-  return { days, hours, minutes, seconds };
-};
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -31,10 +19,7 @@ const CourseDetail = () => {
   const { user } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
-  const { isTrialActive, hasActiveSubscription, openUpgradeDialog, loading: subscriptionLoading, durationMs } = useSubscription();
   const { ensureCertificate, downloadCertificate, getCertificateByCourse, loading: certificateLoading } = useCertificates();
-  const [msRemaining, setMsRemaining] = useState(durationMs);
-  const countdown = useMemo(() => formatCountdown(msRemaining), [msRemaining]);
   const [certificateBusy, setCertificateBusy] = useState(false);
   const isGuest = !user;
 
@@ -44,17 +29,6 @@ const CourseDetail = () => {
     setProgress(loadProgress(user?.id));
   }, [user?.id]);
 
-  useEffect(() => {
-    setMsRemaining(durationMs);
-  }, [durationMs]);
-
-  useEffect(() => {
-    if (!isTrialActive || durationMs == null) return;
-    const interval = setInterval(() => {
-      setMsRemaining((prev) => (prev == null ? null : Math.max(0, prev - 1000)));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isTrialActive, durationMs]);
 
   useEffect(() => {
     if (!course && slug) {
@@ -114,12 +88,6 @@ const CourseDetail = () => {
   const certificateRecord = getCertificateByCourse(course.id);
   const coursePath = `/courses/${course.slug}`;
   const authRedirect = `/auth?redirect=${encodeURIComponent(coursePath)}`;
-  const trialLocked =
-    course.isPremium &&
-    !isGuest &&
-    !hasActiveSubscription &&
-    !isTrialActive &&
-    !subscriptionLoading;
   const certificateEligible = !isGuest && completionPercentage === 100;
   const certificateAccessible = certificateEligible;
   const certificateButtonLabel = certificateBusy
@@ -155,11 +123,6 @@ const CourseDetail = () => {
       navigate(authRedirect);
       return false;
     }
-    if (trialLocked) {
-      toast.info("Upgrade to continue this premium course.");
-      openUpgradeDialog();
-      return false;
-    }
     const updated = updateLessonCompletion(progress, course.id, lessonId, checked);
     setProgress(updated);
     saveProgress(updated, user?.id);
@@ -170,11 +133,6 @@ const CourseDetail = () => {
     if (isGuest) {
       toast.info("Sign in to start learning.");
       navigate(authRedirect);
-      return;
-    }
-    if (trialLocked) {
-      toast.error("Your trial has ended. Upgrade to continue premium lessons.");
-      openUpgradeDialog();
       return;
     }
     const nextIndex = lessonCatalog.findIndex((entry) => !completedSet.has(entry.lesson.id));
@@ -208,11 +166,6 @@ const CourseDetail = () => {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       toast.info("This lesson does not have a video. Review the resources below instead.");
-      return;
-    }
-    if (trialLocked) {
-      toast.error("Upgrade required to watch premium lessons.");
-      openUpgradeDialog();
       return;
     }
     goToLesson(index);
@@ -259,10 +212,9 @@ const CourseDetail = () => {
           </div>
           <Button size="lg" className="gap-2" onClick={handleStartLearning}>
             <PlayCircle className="h-5 w-5" />
-            {isGuest ? "Sign in to start" : trialLocked ? "Upgrade to continue" : "Start learning"}
+            {isGuest ? "Sign in to start" : "Start learning"}
           </Button>
         </div>
-        <TrialBanner />
       </header>
 
       <main className="relative z-20 container mx-auto space-y-12 px-4 py-16">
@@ -302,7 +254,7 @@ const CourseDetail = () => {
                             href={resource.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
+                className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-primary transition hover:border-primary"
                           >
                             <ExternalLink className="h-3 w-3" />
                             {resource.label}
@@ -330,7 +282,6 @@ const CourseDetail = () => {
                       <Button
                         variant="outline"
                         onClick={() => goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null)}
-                        disabled={trialLocked}
                       >
                         Next lesson
                       </Button>
@@ -342,7 +293,6 @@ const CourseDetail = () => {
                         <Button
                           variant={isActiveLessonComplete ? "secondary" : "default"}
                           onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
-                          disabled={trialLocked}
                         >
                           {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
                         </Button>
@@ -353,7 +303,6 @@ const CourseDetail = () => {
                                 goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
                               }
                             }}
-                            disabled={trialLocked}
                           >
                             Complete & continue
                           </Button>
@@ -364,7 +313,6 @@ const CourseDetail = () => {
                                 closeLesson();
                               }
                             }}
-                            disabled={trialLocked}
                           >
                             Complete lesson
                           </Button>
@@ -386,7 +334,7 @@ const CourseDetail = () => {
           <section className="glass-panel rounded-2xl border-none p-6">
             <h2 className="text-lg font-semibold text-foreground">Sign in to track your learning</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Create an account to mark lessons complete, resume where you left off, and unlock premium training.
+              Create an account to mark lessons complete and resume where you left off.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Button asChild size="sm">
@@ -403,26 +351,6 @@ const CourseDetail = () => {
           <div className="space-y-6">
             <h1 className="text-4xl font-semibold text-foreground">{course.title}</h1>
             <p className="text-lg text-muted-foreground">{course.description}</p>
-            {course.isPremium && !isGuest && !subscriptionLoading && (
-              <div
-                className={`rounded-2xl border p-4 text-sm ${
-                  trialLocked
-                    ? "border-destructive/40 bg-destructive/10 text-destructive"
-                    : hasActiveSubscription
-                      ? "border-success/30 bg-success/10 text-success"
-                      : "border-primary/40 bg-primary/10 text-primary"
-                }`}
-              >
-                {trialLocked
-                  ? "Your trial has ended. Upgrade your plan to keep watching premium lessons."
-                  : hasActiveSubscription
-                    ? "Premium plan active — enjoy unlimited access."
-                    : countdown
-                      ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m ${countdown.seconds}s remaining.`
-                      : "Trial access active."}
-              </div>
-            )}
-
             <div className="glass-panel overflow-hidden rounded-3xl">
               <div className="aspect-video">
                 <iframe
@@ -544,7 +472,7 @@ const CourseDetail = () => {
             {course.modules.map((module, moduleIndex) => (
               <Card
                 key={module.id}
-                className={`glass-panel border-none p-6 motion-safe:animate-fade-up ${trialLocked ? "opacity-75" : ""}`}
+                className="glass-panel border-none p-6 motion-safe:animate-fade-up"
                 style={{ animationDelay: `${0.05 * moduleIndex}s` }}
               >
                 <CardHeader className="p-0">
@@ -575,7 +503,7 @@ const CourseDetail = () => {
                         <div className="flex flex-1 items-start gap-4">
                           <Checkbox
                             checked={completed}
-                            disabled={isGuest || trialLocked}
+                            disabled={isGuest}
                             onCheckedChange={(checked) => handleToggleLesson(lesson.id, Boolean(checked))}
                             aria-label={`Mark ${lesson.title} ${completed ? "incomplete" : "complete"}`}
                           />
@@ -613,9 +541,8 @@ const CourseDetail = () => {
                             variant="outline"
                             className="w-full sm:w-auto"
                             onClick={() => openLesson(lesson.id)}
-                            disabled={trialLocked}
                           >
-                            {trialLocked ? "Upgrade required" : completed ? "Rewatch lesson" : "Watch lesson"}
+                            {completed ? "Rewatch lesson" : "Watch lesson"}
                           </Button>
                         )}
                       </div>

@@ -8,22 +8,9 @@ import Footer from "@/components/Footer";
 import { COURSES } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { createEmptyProgress, loadProgress, type UserProgress } from "@/lib/progress";
-import TrialBanner from "@/components/TrialBanner";
-import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const Courses = () => {
   const { user } = useAuth();
-  const { isTrialActive, hasActiveSubscription, durationMs, openUpgradeDialog, loading: subscriptionLoading } = useSubscription();
-  const [msRemaining, setMsRemaining] = useState(durationMs);
-  const countdown = useMemo(() => {
-    if (msRemaining == null) return null;
-    const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000));
-    const days = Math.floor(totalSeconds / (60 * 60 * 24));
-    const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-    const seconds = totalSeconds % 60;
-    return { days, hours, minutes, seconds };
-  }, [msRemaining]);
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
   );
@@ -32,18 +19,6 @@ const Courses = () => {
     if (typeof window === "undefined") return;
     setProgress(loadProgress(user?.id));
   }, [user?.id]);
-
-  useEffect(() => {
-    setMsRemaining(durationMs);
-  }, [durationMs]);
-
-  useEffect(() => {
-    if (!isTrialActive || durationMs == null) return;
-    const interval = setInterval(() => {
-      setMsRemaining((prev) => (prev == null ? null : Math.max(0, prev - 1000)));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isTrialActive, durationMs]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -113,7 +88,6 @@ const Courses = () => {
             </Link>
           )}
         </div>
-        <TrialBanner />
       </header>
 
       <main className="flex-1">
@@ -139,15 +113,7 @@ const Courses = () => {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => {
-                const premiumLocked =
-                  course.isPremium &&
-                  user &&
-                  !hasActiveSubscription &&
-                  !isTrialActive &&
-                  !subscriptionLoading;
-
-                return (
+              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => (
                 <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
                   <CardHeader className="space-y-4 p-0">
                     <div className="flex items-center justify-between">
@@ -176,36 +142,19 @@ const Courses = () => {
                         </p>
                       ) : (
                         <p className="text-xs font-medium text-muted-foreground">
-                          {course.isPremium ? "Premium access requires sign in" : "Free preview available"}
+                          Sign in to track your learning progress
                         </p>
                       )}
                     </div>
-                    {course.isPremium && user && !hasActiveSubscription && !subscriptionLoading && (
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-muted-foreground">
-                        {premiumLocked
-                          ? "Trial ended — upgrade to unlock premium modules."
-                          : countdown
-                            ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m ${countdown.seconds}s remaining.`
-                            : "Trial access active."}
-                      </div>
-                    )}
-
                     <Button
-                      asChild={!premiumLocked}
+                      asChild
                       className="w-full"
-                      onClick={premiumLocked ? openUpgradeDialog : undefined}
-                      variant={premiumLocked ? "outline" : "default"}
                     >
-                      {premiumLocked ? (
-                        <span>Upgrade to continue</span>
-                      ) : (
-                        <Link to={ctaTarget}>{ctaLabel}</Link>
-                      )}
+                      <Link to={ctaTarget}>{ctaLabel}</Link>
                     </Button>
                   </CardContent>
                 </Card>
-                );
-              })}
+              ))}
             </div>
           </div>
         </section>
