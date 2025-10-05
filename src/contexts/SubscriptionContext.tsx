@@ -141,14 +141,19 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   }, [refresh, user]);
 
   const computed = useMemo<ComputedSubscription>(() => {
-    const expires = record?.trial_expires_at ? new Date(record.trial_expires_at) : null;
+    const fallbackExpires = !record && user?.created_at ? addDays(new Date(user.created_at), TRIAL_LENGTH_DAYS) : null;
+    const expires = record?.trial_expires_at ? new Date(record.trial_expires_at) : fallbackExpires;
     const diffMs = expires ? expires.getTime() - now.getTime() : null;
     const clampedMs = diffMs !== null ? Math.max(0, diffMs) : null;
 
     const hasActiveSubscription = record?.status === "active";
-    const trialWindowActive = Boolean(record) && !hasActiveSubscription && (clampedMs === null || clampedMs > 0);
+    const hasTrialRecord = Boolean(record);
+    const trialRecordActive = hasTrialRecord && record?.status === "trial_active" && (clampedMs === null || clampedMs > 0);
+    const fallbackTrialActive = !hasTrialRecord && fallbackExpires !== null && clampedMs !== null && clampedMs > 0;
+    const trialWindowActive = !hasActiveSubscription && (trialRecordActive || fallbackTrialActive);
     const isTrialActive = trialWindowActive;
-    const isExpired = Boolean(record) && !hasActiveSubscription && !trialWindowActive;
+    const hasAnyTrialSignal = hasTrialRecord || fallbackExpires !== null;
+    const isExpired = !hasActiveSubscription && hasAnyTrialSignal && !trialWindowActive;
 
     return {
       record,
@@ -164,7 +169,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
       upgradeDialogOpen,
       setUpgradeDialogOpen,
     };
-  }, [record, loading, error, refresh, upgradeDialogOpen, now]);
+  }, [record, loading, error, refresh, upgradeDialogOpen, now, user?.created_at]);
 
   return <SubscriptionContext.Provider value={computed}>{children}</SubscriptionContext.Provider>;
 };
