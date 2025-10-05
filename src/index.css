@@ -128,7 +128,12 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground antialiased;
     background-attachment: fixed;
-    background-image: var(--gradient-hero);
+    background-image:
+      linear-gradient(160deg, hsl(222 80% 5% / 0.94), hsl(220 72% 12% / 0.88)),
+      url("/images/futuristic-lab.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
 
