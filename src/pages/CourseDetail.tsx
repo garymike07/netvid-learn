@@ -8,10 +8,73 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, Award, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { getCourseBySlug, type Lesson } from "@/data/courses";
+import { getCourseBySlug, type Lesson, type Module } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 import { useCertificates, type CourseCertificatePayload } from "@/contexts/CertificateContext";
+
+type LessonTypeCounts = Record<Lesson["type"], number>;
+
+const durationToMinutes = (duration: string | undefined): number => {
+  if (!duration) return 0;
+  const normalized = duration.toLowerCase();
+  const pattern = /(?<value>\d+(?:\.\d+)?)\s*(?<unit>hours?|hrs?|h|minutes?|mins?|m)/g;
+  let total = 0;
+  for (const match of normalized.matchAll(pattern)) {
+    const value = Number(match.groups?.value ?? 0);
+    const unit = match.groups?.unit ?? "";
+    if (!Number.isFinite(value)) continue;
+    if (/^h/.test(unit)) {
+      total += Math.round(value * 60);
+    } else {
+      total += Math.round(value);
+    }
+  }
+  if (total === 0) {
+    const numeric = Number(normalized.replace(/[^0-9.]/g, ""));
+    return Number.isFinite(numeric) ? Math.round(numeric) : 0;
+  }
+  return total;
+};
+
+const formatMinutes = (minutes: number): string => {
+  if (minutes <= 0) return "<5 min";
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  if (hours === 0) return `${minutes} min`;
+  if (remainder === 0) return `${hours} hr${hours > 1 ? "s" : ""}`;
+  return `${hours} hr${hours > 1 ? "s" : ""} ${remainder} min`;
+};
+
+const formatLessonTypeLabel = (type: Lesson["type"]): string => {
+  switch (type) {
+    case "video":
+      return "Video";
+    case "lab":
+      return "Lab";
+    case "reading":
+      return "Reading";
+    case "quiz":
+      return "Quiz";
+    default:
+      return type;
+  }
+};
+
+const getModuleStats = (module: Module) => {
+  const counts: LessonTypeCounts = {
+    video: 0,
+    lab: 0,
+    reading: 0,
+    quiz: 0,
+  };
+  let totalMinutes = 0;
+  for (const lesson of module.lessons) {
+    counts[lesson.type] += 1;
+    totalMinutes += durationToMinutes(lesson.duration);
+  }
+  return { counts, totalMinutes };
+};
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -469,7 +532,12 @@ const CourseDetail = () => {
           </div>
 
           <div className="space-y-4">
-            {course.modules.map((module, moduleIndex) => (
+            {course.modules.map((module, moduleIndex) => {
+              const stats = getModuleStats(module);
+              const lessonTypeBadges = Object.entries(stats.counts)
+                .filter(([, count]) => count > 0)
+                .map(([type, count]) => ({ type: type as Lesson["type"], count }));
+              return (
               <Card
                 key={module.id}
                 className="glass-panel border-none p-6 motion-safe:animate-fade-up"
@@ -492,6 +560,32 @@ const CourseDetail = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4 p-0 pt-6">
+                  <div className="glass-panel rounded-2xl border-none p-4">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-medium text-foreground">
+                        <Clock className="h-4 w-4" />
+                        {formatMinutes(stats.totalMinutes)} total learning time
+                      </span>
+                      {lessonTypeBadges.map(({ type, count }) => (
+                        <span
+                          key={`${module.id}-${type}`}
+                          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 capitalize"
+                        >
+                          <Layers className="h-3 w-3" />
+                          {count} {formatLessonTypeLabel(type)}
+                          {count > 1 ? "s" : ""}
+                        </span>
+                      ))}
+                    </div>
+                    <ul className="mt-4 space-y-3">
+                      {module.lessons.map((lesson) => (
+                        <li key={`${module.id}-${lesson.id}-overview`} className="border-l-2 border-primary/40 pl-3">
+                          <p className="text-sm font-semibold text-foreground">{lesson.title}</p>
+                          <p className="text-xs text-muted-foreground">{lesson.description}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   {module.lessons.map((lesson) => {
                     const completed = completedSet.has(lesson.id);
                     return (
@@ -550,7 +644,8 @@ const CourseDetail = () => {
                   })}
                 </CardContent>
               </Card>
-            ))}
+            );
+          })}
           </div>
         </section>
 
