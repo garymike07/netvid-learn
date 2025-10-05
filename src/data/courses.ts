@@ -1049,7 +1049,7 @@ export const COURSES: Course[] = [
       "Become the technical lead who connects hybrid data centres, cloud regions, and remote sites with policy-driven automation. This capstone track blends SD-WAN, Infrastructure as Code, SLOs, and executive communication skills.",
     duration: "8-10 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/alLFg1EDyk0",
+    heroVideo: "https://www.youtube.com/embed/8239pIsOT-M",
     outcomes: [
       "Architect resilient global transit across AWS, Azure, and Google Cloud",
       "Deploy SD-WAN fabrics integrated with cloud on-ramps and security service edge",
@@ -1072,7 +1072,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "32 min",
             description: "Model hub-and-spoke, full-mesh, and hybrid topologies for enterprise workloads.",
-            videoUrl: "https://www.youtube.com/embed/alLFg1EDyk0",
+            videoUrl: "https://www.youtube.com/embed/Pd5p-fzwsLA",
             resources: [
               { label: "Architecture Diagram Pack", url: "https://networkacademy.ke/resources/multicloud-diagrams.zip" },
             ],
@@ -1083,7 +1083,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "22 min",
             description: "Compare Azure Virtual WAN, AWS Cloud WAN, and Google NCC designs.",
-            videoUrl: "https://www.youtube.com/embed/3cOBlNPs5qQ",
+            videoUrl: "https://www.youtube.com/embed/LH7mbcA-EY0",
             resources: [
               { label: "Pattern Comparison Sheet", url: "https://networkacademy.ke/resources/multicloud-patterns.xlsx" },
             ],
@@ -1094,7 +1094,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "50 min",
             description: "Use automation to connect three cloud regions and on-prem via IPsec and direct links.",
-            videoUrl: "https://www.youtube.com/embed/D8EJc3n75aY",
+            videoUrl: "https://www.youtube.com/embed/1XxtmYqtTdc",
             resources: [
               { label: "Lab Guide", url: "https://networkacademy.ke/labs/multicloud-transit-lab.zip" },
             ],
@@ -1123,7 +1123,7 @@ export const COURSES: Course[] = [
             type: "lab",
             duration: "55 min",
             description: "Provision VPNs, cloud firewalls, and routing policies using Terraform modules.",
-            videoUrl: "https://www.youtube.com/embed/0F0FCRh9bx4",
+            videoUrl: "https://www.youtube.com/embed/AYWuRCQ48JQ",
             resources: [
               { label: "Terraform Modules", url: "https://networkacademy.ke/labs/terraform-network-pack.zip" },
               { label: "CI Pipeline Example", url: "https://networkacademy.ke/resources/network-ci-pipeline.yaml" },
@@ -1135,7 +1135,7 @@ export const COURSES: Course[] = [
             type: "quiz",
             duration: "15 min",
             description: "Validate your understanding of SD-WAN policy intent and failover strategies.",
-            videoUrl: "https://www.youtube.com/embed/uH8A1AsjvZo",
+            videoUrl: "https://www.youtube.com/embed/ANoUQNq1JH8",
             resources: [
               { label: "Answer Key", url: "https://networkacademy.ke/resources/sdwan-quiz-key.pdf" },
             ],
@@ -1153,7 +1153,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "23 min",
             description: "Instrument SaaS, internet, and WAN paths for proactive alerting.",
-            videoUrl: "https://www.youtube.com/embed/9xpoGB8pPNQ",
+            videoUrl: "https://www.youtube.com/embed/nWsBQ9r4jQE",
             resources: [
               { label: "Monitoring Dashboard Pack", url: "https://networkacademy.ke/resources/cloud-visibility-dashboards.zip" },
             ],
@@ -1164,7 +1164,7 @@ export const COURSES: Course[] = [
             type: "reading",
             duration: "20 min",
             description: "Define latency, jitter, and availability targets per application tier.",
-            videoUrl: "https://www.youtube.com/embed/16b0GH0lFFM",
+            videoUrl: "https://www.youtube.com/embed/VAgT7CY572U",
             resources: [
               { label: "SLO Calculator", url: "https://networkacademy.ke/tools/network-slo-calculator" },
             ],
@@ -1175,7 +1175,7 @@ export const COURSES: Course[] = [
             type: "video",
             duration: "18 min",
             description: "Tell the story of connectivity outcomes to leadership and customers.",
-            videoUrl: "https://www.youtube.com/embed/2flIEuQk340",
+            videoUrl: "https://www.youtube.com/embed/MzpzJLBUZDc",
             resources: [
               { label: "Quarterly Review Template", url: "https://networkacademy.ke/resources/cloud-networking-qbr.pptx" },
             ],
