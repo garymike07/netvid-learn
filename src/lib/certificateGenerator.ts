@@ -64,42 +64,58 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   const bodyFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const signatureFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
+  const headingSize = 34;
+  const topPadding = 50;
+  const logoGap = 20;
+  const maxLogoWidthRatio = 0.24;
+  const headingBaseY = height - 210;
+  const logoBottom = headingBaseY + headingSize + logoGap;
+  const headingY = headingBaseY;
+
   const logoBytes = await getLogoBytes();
   if (logoBytes) {
     try {
       const logoImage = await pdfDoc.embedPng(logoBytes);
-      const scaled = logoImage.scale(0.18);
-      page.drawImage(logoImage, {
-        x: 60,
-        y: height - 210,
-        width: scaled.width,
-        height: scaled.height,
-        opacity: 0.9,
-      });
+      const availableHeight = height - topPadding - logoBottom;
+      if (availableHeight > 0) {
+        const maxLogoWidth = Math.min(width * maxLogoWidthRatio, logoImage.width);
+        const maxLogoHeight = Math.min(availableHeight, logoImage.height);
+        const scale = Math.min(maxLogoWidth / logoImage.width, maxLogoHeight / logoImage.height, 1);
+        const displayWidth = logoImage.width * scale;
+        const displayHeight = logoImage.height * scale;
+        const centeredX = (width - displayWidth) / 2;
+
+        page.drawImage(logoImage, {
+          x: centeredX,
+          y: logoBottom,
+          width: displayWidth,
+          height: displayHeight,
+          opacity: 0.95,
+        });
+      }
     } catch (error) {
       console.error("Failed to embed logo", error);
     }
   }
 
-  const headingSize = 34;
   const headingText = "Certificate of Completion";
   const headingWidth = headingFont.widthOfTextAtSize(headingText, headingSize);
   const headingX = (width - headingWidth) / 2;
 
   page.drawText(headingText, {
     x: headingX,
-    y: height - 140,
+    y: headingY,
     size: headingSize,
     font: headingFont,
     color: textStrong,
   });
 
-  const academyText = "Mike Net Academy"
-    .toUpperCase();
+  const academyText = "Mike Net Academy".toUpperCase();
   const academyWidth = bodyFont.widthOfTextAtSize(academyText, 12);
+  const academyY = headingY - 32;
   page.drawText(academyText, {
     x: (width - academyWidth) / 2,
-    y: height - 170,
+    y: academyY,
     size: 12,
     font: bodyFont,
     color: accentPrimary,
@@ -108,9 +124,10 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
 
   const recipientLabel = "This acknowledges that";
   const recipientWidth = bodyFont.widthOfTextAtSize(recipientLabel, 14);
+  const recipientLabelY = academyY - 40;
   page.drawText(recipientLabel, {
     x: (width - recipientWidth) / 2,
-    y: height - 210,
+    y: recipientLabelY,
     size: 14,
     font: bodyFont,
     color: textSoft,
@@ -119,9 +136,10 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   const recipientName = learnerName.trim().length > 0 ? learnerName.trim() : "Esteemed Learner";
   const recipientFontSize = 30;
   const recipientNameWidth = headingFont.widthOfTextAtSize(recipientName, recipientFontSize);
+  const recipientNameY = recipientLabelY - 44;
   page.drawText(recipientName, {
     x: (width - recipientNameWidth) / 2,
-    y: height - 250,
+    y: recipientNameY,
     size: recipientFontSize,
     font: headingFont,
     color: textStrong,
@@ -129,9 +147,10 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
 
   const achievementText = "has successfully completed the advanced certification track";
   const achievementWidth = bodyFont.widthOfTextAtSize(achievementText, 14);
+  const achievementY = recipientNameY - 38;
   page.drawText(achievementText, {
     x: (width - achievementWidth) / 2,
-    y: height - 285,
+    y: achievementY,
     size: 14,
     font: bodyFont,
     color: textSoft,
@@ -140,9 +159,10 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   const courseLabel = courseTitle;
   const courseFontSize = 22;
   const courseWidth = headingFont.widthOfTextAtSize(courseLabel, courseFontSize);
+  const courseY = achievementY - 34;
   page.drawText(courseLabel, {
     x: (width - courseWidth) / 2,
-    y: height - 320,
+    y: courseY,
     size: courseFontSize,
     font: headingFont,
     color: accentPrimary,
@@ -152,9 +172,10 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   const statement = `Awarded on ${issuedDate} for demonstrating outstanding network engineering capability.`;
   const statementSize = 13;
   const statementWidth = bodyFont.widthOfTextAtSize(statement, statementSize);
+  const statementY = courseY - 30;
   page.drawText(statement, {
     x: (width - statementWidth) / 2,
-    y: height - 352,
+    y: statementY,
     size: statementSize,
     font: bodyFont,
     color: textSoft,

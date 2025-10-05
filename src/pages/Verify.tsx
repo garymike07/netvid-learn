@@ -12,9 +12,9 @@ import { CheckCircle2, Loader2, ShieldQuestion } from "lucide-react";
 
 type CertificateRow = Tables<"certificates">;
 
-const formatDate = (isoDate: string) => {
+const formatDateTime = (isoDate: string) => {
   try {
-    return format(new Date(isoDate), "MMMM d, yyyy");
+    return format(new Date(isoDate), "MMMM d, yyyy 'at' p");
   } catch (error) {
     return isoDate;
   }
@@ -43,6 +43,9 @@ const Verify = () => {
       if (record) {
         setVerified(record);
         setStatus("idle");
+        console.info(
+          `[Certificate Verification] ${record.user_name} completed ${record.course_title} on ${format(new Date(record.issued_at), "MMMM d, yyyy 'at' p")}.`,
+        );
       } else {
         setVerified(null);
         setStatus("not-found");
@@ -130,12 +133,8 @@ const Verify = () => {
                       <dd className="text-base font-semibold text-foreground">{verified.user_name}</dd>
                     </div>
                     <div>
-                      <dt className="text-xs uppercase tracking-wide text-muted-foreground">Certificate Number</dt>
-                      <dd className="text-base font-semibold text-foreground">{verified.certificate_number}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs uppercase tracking-wide text-muted-foreground">Issued On</dt>
-                      <dd className="text-base font-medium text-foreground">{formatDate(verified.issued_at)}</dd>
+                      <dt className="text-xs uppercase tracking-wide text-muted-foreground">Acquired</dt>
+                      <dd className="text-base font-semibold text-foreground">{formatDateTime(verified.issued_at)}</dd>
                     </div>
                     <div>
                       <dt className="text-xs uppercase tracking-wide text-muted-foreground">Course Level</dt>

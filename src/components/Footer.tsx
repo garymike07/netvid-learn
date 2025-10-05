@@ -8,8 +8,8 @@ const Footer = () => {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="motion-safe:animate-fade-up">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10">
-                <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-cover" />
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-primary/40">
+                <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-contain" />
               </div>
               <h3 className="text-lg font-semibold text-foreground">Mike Net Academy</h3>
             </div>

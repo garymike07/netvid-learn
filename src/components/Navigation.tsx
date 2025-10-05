@@ -29,8 +29,8 @@ const Navigation = () => {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/30 backdrop-blur-2xl transition-colors">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <Link to="/" className="group flex items-center gap-3 text-foreground transition-colors hover:text-primary">
-          <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:ring-primary/60">
-            <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-cover" />
+          <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-primary/40 transition group-hover:ring-primary">
+            <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-contain" />
           </div>
           <span className="text-xl font-bold tracking-tight">Mike Net Academy</span>
         </Link>
