@@ -649,6 +649,16 @@ const CourseDetail = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4 p-0 pt-6">
+                  {module.notes && module.notes.length > 0 && (
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-muted-foreground">
+                      <h3 className="text-sm font-semibold text-foreground">What you'll cover in this module</h3>
+                      <ul className="mt-2 list-disc space-y-1 pl-5">
+                        {module.notes.map((note, noteIndex) => (
+                          <li key={`${module.id}-note-${noteIndex}`}>{note}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="glass-panel rounded-2xl border-none p-4">
                     <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-medium text-foreground">

@@ -14,6 +14,7 @@ export type Module = {
   id: string;
   title: string;
   description: string;
+  notes?: string[];
   lessons: Lesson[];
 };
 
@@ -56,6 +57,11 @@ export const COURSES: Course[] = [
         id: "foundations-1",
         title: "Getting Started with Networking",
         description: "Discover what a network is, why it matters, and the vocabulary professionals use daily.",
+        notes: [
+          "Connect core terms like nodes, links, and endpoints to familiar real-world systems so the language of networking feels intuitive.",
+          "Compare LAN, WAN, MAN, and PAN scenarios to understand how scale influences design decisions and equipment choices.",
+          "Recognize how reliable connectivity underpins business operations, community services, and everyday digital experiences in Kenya.",
+        ],
         lessons: [
           {
             id: "foundations-1-1",
@@ -107,6 +113,11 @@ export const COURSES: Course[] = [
         id: "foundations-2",
         title: "Networking Hardware Essentials",
         description: "Explore switches, routers, firewalls, and wireless access points in detail.",
+        notes: [
+          "Identify the purpose of each core device in a typical campus or branch network and when to select specialised hardware.",
+          "Understand how wired and wireless segments interconnect, including PoE considerations and coverage planning for mixed environments.",
+          "Apply preventative maintenance and lifecycle management practices that keep infrastructure resilient and cost effective.",
+        ],
         lessons: [
           {
             id: "foundations-2-1",
@@ -159,6 +170,11 @@ export const COURSES: Course[] = [
         id: "foundations-3",
         title: "The Transport and Application Layers",
         description: "Learn how TCP/UDP ensure data delivery and how applications leverage them.",
+        notes: [
+          "Trace how data moves from applications through the transport layer so troubleshooting commands make logical sense.",
+          "Practice decoding packet captures to link symptoms like latency or drops back to specific protocol behaviours.",
+          "Differentiate when UDP’s speed or TCP’s reliability delivers better user experiences in local services and cloud workloads.",
+        ],
         lessons: [
           {
             id: "foundations-3-1",
@@ -223,6 +239,11 @@ export const COURSES: Course[] = [
         id: "routing-1",
         title: "Layer 2 Mastery",
         description: "Segment networks logically using VLANs and understand spanning tree protocols.",
+        notes: [
+          "Design campus switching architectures that balance segmentation, security, and ease of management.",
+          "Implement VLAN strategies that support voice, data, and IoT services without introducing broadcast storms.",
+          "Tune spanning tree variants and link aggregation so redundancy never compromises stability or throughput.",
+        ],
         lessons: [
           {
             id: "routing-1-1",
@@ -274,6 +295,11 @@ export const COURSES: Course[] = [
         id: "routing-2",
         title: "Dynamic Routing Protocols",
         description: "Plan and deploy OSPF and EIGRP to support scalable enterprise networks.",
+        notes: [
+          "Select the right routing protocol mix based on organisational scale, convergence targets, and hardware capabilities.",
+          "Practise route advertisement, summarisation, and authentication workflows used in production change windows.",
+          "Interpret routing tables and protocol debug output to validate that traffic is following the intended design.",
+        ],
         lessons: [
           {
             id: "routing-2-1",
@@ -322,6 +348,11 @@ export const COURSES: Course[] = [
         id: "routing-3",
         title: "High Availability & Troubleshooting",
         description: "Build fault-tolerant designs and respond to outages swiftly.",
+        notes: [
+          "Layer gateway redundancy, load sharing, and failover timers to keep user experiences stable during faults.",
+          "Establish a repeatable troubleshooting playbook that accelerates mean time to resolution during incidents.",
+          "Document post-incident findings so teams continuously harden the network against recurring issues.",
+        ],
         lessons: [
           {
             id: "routing-3-1",
@@ -386,6 +417,11 @@ export const COURSES: Course[] = [
         id: "security-1",
         title: "Perimeter Security",
         description: "Configure next-gen firewalls, intrusion prevention, and DMZ designs.",
+        notes: [
+          "Map inbound and outbound traffic flows so firewall policies protect critical services without blocking business workflows.",
+          "Integrate intrusion prevention, URL filtering, and threat intelligence feeds into a cohesive enforcement stack.",
+          "Document change management steps that keep remote teams aligned when updating perimeter defences.",
+        ],
         lessons: [
           {
             id: "security-1-1",
@@ -426,6 +462,11 @@ export const COURSES: Course[] = [
         id: "security-2",
         title: "Secure Remote Connectivity",
         description: "Deliver secure remote access using IPSec, SSL VPN, and multi-factor authentication.",
+        notes: [
+          "Evaluate when to use site-to-site tunnels versus user VPNs based on workforce locations and application sensitivity.",
+          "Combine identity, device health, and context signals to build Zero Trust access policies that scale globally.",
+          "Prepare incident playbooks that outline containment, eradication, and recovery for compromised remote endpoints.",
+        ],
         lessons: [
           {
             id: "security-2-1",
@@ -477,6 +518,11 @@ export const COURSES: Course[] = [
         id: "security-3",
         title: "Monitoring & Operations",
         description: "Detect anomalies quickly and automate responses with modern tooling.",
+        notes: [
+          "Correlate telemetry from network, endpoint, and cloud platforms to shorten detection time.",
+          "Leverage automation frameworks to enrich alerts and trigger scripted containment workflows.",
+          "Measure SOC performance using metrics like MTTR and dwell time so improvements are data driven.",
+        ],
         lessons: [
           {
             id: "security-3-1",
@@ -552,6 +598,11 @@ export const COURSES: Course[] = [
         id: "automation-1",
         title: "Python Foundations for Networking",
         description: "Refresh Python skills with a focus on parsing configs, working with APIs, and handling data.",
+        notes: [
+          "Translate everyday networking tasks into Python scripts that read inventories and push intent.",
+          "Work with structured data formats like JSON and YAML so automation can integrate with source-of-truth systems.",
+          "Build confidence in Python error handling, virtual environments, and testing practices used by NetDevOps teams.",
+        ],
         lessons: [
           {
             id: "automation-1-1",
@@ -604,6 +655,11 @@ export const COURSES: Course[] = [
         id: "automation-2",
         title: "Network Device Automation",
         description: "Apply automation frameworks to push changes, gather state, and remediate issues.",
+        notes: [
+          "Choose the right connection libraries for different vendors and manage credentials securely.",
+          "Execute change windows with automated pre-check, deployment, and post-validation workflows.",
+          "Capture device state programmatically so troubleshooting and compliance reporting are always current.",
+        ],
         lessons: [
           {
             id: "automation-2-1",
@@ -655,6 +711,11 @@ export const COURSES: Course[] = [
         id: "automation-3",
         title: "Workflow Orchestration",
         description: "Package automation into reusable pipelines with Ansible and CI/CD.",
+        notes: [
+          "Design multi-stage pipelines that test, deploy, and document network changes with minimal manual steps.",
+          "Integrate configuration management with version control to maintain a reliable source of truth.",
+          "Plan rollback and observability hooks so automation remains safe even in complex production environments.",
+        ],
         lessons: [
           {
             id: "automation-3-1",
@@ -730,6 +791,11 @@ export const COURSES: Course[] = [
         id: "carrier-1",
         title: "Core Architecture & Traffic Engineering",
         description: "Engineer a resilient backbone using MPLS, segment routing, and traffic engineering.",
+        notes: [
+          "Design backbone topologies that deliver deterministic latency and rapid convergence for mission-critical services.",
+          "Model traffic engineering policies that balance cost, capacity, and resilience across metro and long-haul links.",
+          "Validate designs with lab simulations so migration plans de-risk production cutovers.",
+        ],
         lessons: [
           {
             id: "carrier-1-1",
@@ -781,6 +847,11 @@ export const COURSES: Course[] = [
         id: "carrier-2",
         title: "Service Edge & Customer Delivery",
         description: "Provision services at the edge while maintaining security, QoS, and automation hooks.",
+        notes: [
+          "Standardise customer turn-up workflows that scale to thousands of sites without sacrificing quality.",
+          "Embed automation into BGP, QoS, and access control so policy changes propagate consistently.",
+          "Protect the edge with operational guardrails that prevent misconfigurations from impacting shared infrastructure.",
+        ],
         lessons: [
           {
             id: "carrier-2-1",
@@ -832,6 +903,11 @@ export const COURSES: Course[] = [
         id: "carrier-3",
         title: "Observability & Operations",
         description: "Instrument the network with streaming telemetry, automation hooks, and incident response.",
+        notes: [
+          "Build telemetry pipelines that transform raw metrics into actionable intelligence for NOC teams.",
+          "Automate remediation steps that restore service faster while keeping humans informed of progress.",
+          "Establish operational scorecards and runbooks so customer experience stays central to every decision.",
+        ],
         lessons: [
           {
             id: "carrier-3-1",
@@ -907,6 +983,11 @@ export const COURSES: Course[] = [
         id: "wireless-1",
         title: "RF Planning & Survey Execution",
         description: "Engineer reliable Wi-Fi coverage using professional survey tools and RF fundamentals.",
+        notes: [
+          "Translate business requirements into RF design targets for coverage, capacity, and device density.",
+          "Practice using predictive and onsite survey tools so channel plans are data driven.",
+          "Document survey findings that inform installation teams and justify design decisions to stakeholders.",
+        ],
         lessons: [
           {
             id: "wireless-1-1",
@@ -960,6 +1041,11 @@ export const COURSES: Course[] = [
         id: "wireless-2",
         title: "Secure Enterprise WLAN",
         description: "Implement WPA3-Enterprise, certificate onboarding, and policy-based access.",
+        notes: [
+          "Configure secure onboarding journeys for employees, contractors, and IoT devices without overwhelming the helpdesk.",
+          "Align wireless security posture with corporate identity platforms and compliance frameworks.",
+          "Plan for roaming, segmentation, and guest access while maintaining consistent enforcement end to end.",
+        ],
         lessons: [
           {
             id: "wireless-2-1",
@@ -1001,6 +1087,11 @@ export const COURSES: Course[] = [
         id: "wireless-3",
         title: "Operations & Optimisation",
         description: "Keep enterprise Wi-Fi performant with proactive analytics and automation.",
+        notes: [
+          "Monitor key RF and client experience metrics to catch degradations before users complain.",
+          "Apply AI-assisted insights and automation to continuously fine-tune configurations.",
+          "Build troubleshooting guides that empower frontline support and accelerate escalations when needed.",
+        ],
         lessons: [
           {
             id: "wireless-3-1",
@@ -1065,6 +1156,11 @@ export const COURSES: Course[] = [
         id: "cloud-1",
         title: "Multi-Cloud Foundations",
         description: "Connect VPCs/VNETs across providers with consistent policy and routing.",
+        notes: [
+          "Assess connectivity options across AWS, Azure, and Google Cloud so architectures stay portable.",
+          "Model routing domains and overlapping CIDR strategies that avoid asymmetric paths.",
+          "Automate baseline connectivity so new regions and accounts can be added with minimal effort.",
+        ],
         lessons: [
           {
             id: "cloud-1-1",
@@ -1105,6 +1201,11 @@ export const COURSES: Course[] = [
         id: "cloud-2",
         title: "SD-WAN & Automation",
         description: "Blend SD-WAN fabrics with Infrastructure as Code to deliver repeatable outcomes.",
+        notes: [
+          "Evaluate SD-WAN platform capabilities against enterprise governance and security requirements.",
+          "Build Terraform-driven workflows that provision cloud and edge resources in a single change set.",
+          "Integrate CI pipelines that continuously validate policy intent, failover, and performance baselines.",
+        ],
         lessons: [
           {
             id: "cloud-2-1",
@@ -1146,6 +1247,11 @@ export const COURSES: Course[] = [
         id: "cloud-3",
         title: "Observability & Executive Storytelling",
         description: "Measure digital experience and narrate outcomes to business stakeholders.",
+        notes: [
+          "Translate telemetry into user experience metrics executives care about.",
+          "Set meaningful SLOs and automate alerting thresholds that focus teams on what matters.",
+          "Craft executive narratives that connect network investments to revenue protection and customer trust.",
+        ],
         lessons: [
           {
             id: "cloud-3-1",
@@ -1210,6 +1316,11 @@ export const COURSES: Course[] = [
         id: "cyber-ops-1",
         title: "Detection Engineering Foundations",
         description: "Instrument telemetry, craft detections, and validate coverage across hybrid environments.",
+        notes: [
+          "Inventory telemetry sources and map them to MITRE ATT&CK so detection coverage is intentional.",
+          "Practice authoring analytics that balance fidelity, noise reduction, and operational simplicity.",
+          "Establish validation routines that prove detections fire during purple-team or lab exercises.",
+        ],
         lessons: [
           {
             id: "cyber-ops-1-1",
@@ -1258,6 +1369,11 @@ export const COURSES: Course[] = [
         id: "cyber-ops-2",
         title: "Incident Response & Automation",
         description: "Coordinate workflows, automate enrichment, and rehearse tabletop exercises.",
+        notes: [
+          "Design incident response processes that clarify roles, escalation paths, and communication expectations.",
+          "Automate enrichment steps so analysts focus on decision-making rather than repetitive tasks.",
+          "Run tabletop drills that expose process gaps and prepare leadership for real-world crises.",
+        ],
         lessons: [
           {
             id: "cyber-ops-2-1",
@@ -1298,6 +1414,11 @@ export const COURSES: Course[] = [
         id: "cyber-ops-3",
         title: "Threat Intelligence & Reporting",
         description: "Transform raw indicators into strategic intelligence and executive-ready briefings.",
+        notes: [
+          "Prioritise intelligence requirements based on sector-specific risks and stakeholder needs.",
+          "Operationalise feeds by enriching, deduplicating, and distributing intel to detection stacks quickly.",
+          "Communicate trends and recommended actions clearly to executives, regulators, and partners.",
+        ],
         lessons: [
           {
             id: "cyber-ops-3-1",
@@ -1359,6 +1480,11 @@ export const COURSES: Course[] = [
         id: "dc-1",
         title: "Fabric Architecture & Design",
         description: "Plan leaf-spine fabrics, redundancy, and buffer profiles for diverse workloads.",
+        notes: [
+          "Design leaf-spine fabrics that align with application east-west traffic patterns and growth forecasts.",
+          "Coordinate underlay addressing, ECMP, and redundancy so failures remain transparent to workloads.",
+          "Automate initial fabric bring-up to reduce human error during device onboarding.",
+        ],
         lessons: [
           {
             id: "dc-1-1",
@@ -1396,6 +1522,11 @@ export const COURSES: Course[] = [
         id: "dc-2",
         title: "VXLAN & EVPN Mastery",
         description: "Deploy multi-tenant overlays, route-types, and distributed anycast gateways.",
+        notes: [
+          "Translate tenant requirements into VRFs, VLANs, and VTEPs that scale cleanly.",
+          "Understand EVPN route types deeply so troubleshooting overlay reachability becomes systematic.",
+          "Integrate multi-vendor fabrics while maintaining consistent policy and control-plane behaviour.",
+        ],
         lessons: [
           {
             id: "dc-2-1",
@@ -1436,6 +1567,11 @@ export const COURSES: Course[] = [
         id: "dc-3",
         title: "Automation & Observability",
         description: "Integrate controllers, telemetry, and CI/CD to sustain reliable data centers.",
+        notes: [
+          "Evaluate intent-based controllers and decide when to centralise versus distribute automation logic.",
+          "Build telemetry pipelines that capture fabric health, capacity trends, and anomaly signals.",
+          "Embed CI/CD practices that validate configurations before deployment and monitor outcomes after changes.",
+        ],
         lessons: [
           {
             id: "dc-3-1",
@@ -1497,6 +1633,11 @@ export const COURSES: Course[] = [
         id: "iot-1",
         title: "Industrial Connectivity Basics",
         description: "Understand the protocols, media, and environmental considerations unique to OT networks.",
+        notes: [
+          "Select physical media, connectors, and protocols that survive vibration, dust, and extreme temperatures.",
+          "Bridge legacy fieldbus systems with modern Ethernet to support gradual modernisation projects.",
+          "Plan for redundant paths and power to keep production lines running during maintenance or failure.",
+        ],
         lessons: [
           {
             id: "iot-1-1",
@@ -1534,6 +1675,11 @@ export const COURSES: Course[] = [
         id: "iot-2",
         title: "Security & Segmentation",
         description: "Implement policies that isolate critical assets while enabling remote support.",
+        notes: [
+          "Apply Zero Trust concepts to OT environments while respecting safety constraints and vendor support needs.",
+          "Segment networks into zones and conduits that align with IEC 62443 and local regulatory expectations.",
+          "Automate policy enforcement so remote engineers and contractors access only what they require.",
+        ],
         lessons: [
           {
             id: "iot-2-1",
@@ -1574,6 +1720,11 @@ export const COURSES: Course[] = [
         id: "iot-3",
         title: "Operations & Analytics",
         description: "Keep deployments observable, proactive, and aligned with business KPIs.",
+        notes: [
+          "Architect edge analytics pipelines that reduce bandwidth usage while surfacing actionable insights.",
+          "Integrate predictive maintenance alerts with OT and IT ticketing workflows for faster interventions.",
+          "Report on uptime, quality, and energy efficiency so IoT initiatives prove their business value.",
+        ],
         lessons: [
           {
             id: "iot-3-1",
@@ -1635,6 +1786,11 @@ export const COURSES: Course[] = [
         id: "edge-5g-1",
         title: "5G RAN Architecture",
         description: "Understand 5G NR components, spectrum strategies, and transport requirements.",
+        notes: [
+          "Assess spectrum assets, radio options, and transport needs for private and public 5G deployments.",
+          "Plan radio placement, fronthaul, and midhaul options that balance cost with performance targets.",
+          "Document design decisions so regulators, partners, and customers understand coverage commitments.",
+        ],
         lessons: [
           {
             id: "edge-5g-1-1",
@@ -1672,6 +1828,11 @@ export const COURSES: Course[] = [
         id: "edge-5g-2",
         title: "Edge Compute & Core Integration",
         description: "Deploy MEC platforms, integrate with 5G core, and host low-latency applications.",
+        notes: [
+          "Evaluate MEC deployment models and choose where to host workloads for optimal latency.",
+          "Integrate edge platforms with the 5G core so policy, charging, and routing remain consistent.",
+          "Package applications in containers and orchestrate them to scale reliably across distributed sites.",
+        ],
         lessons: [
           {
             id: "edge-5g-2-1",
@@ -1712,6 +1873,11 @@ export const COURSES: Course[] = [
         id: "edge-5g-3",
         title: "Network Slicing & Assurance",
         description: "Implement slice management, QoS enforcement, and experience monitoring.",
+        notes: [
+          "Map enterprise requirements into slice templates that define KPIs, QoS, and security policies.",
+          "Automate slice lifecycle management so creation, modification, and teardown are repeatable.",
+          "Monitor slice performance continuously and trigger closed-loop actions when service levels drift.",
+        ],
         lessons: [
           {
             id: "edge-5g-3-1",
@@ -1773,6 +1939,11 @@ export const COURSES: Course[] = [
         id: "sat-rural-1",
         title: "Satellite Connectivity Design",
         description: "Select satellite platforms, plan link budgets, and integrate with terrestrial networks.",
+        notes: [
+          "Compare orbit options to balance latency, throughput, and availability for remote communities.",
+          "Build accurate link budgets that account for weather, power constraints, and equipment limitations.",
+          "Integrate satellite access with terrestrial backhaul so users enjoy seamless connectivity.",
+        ],
         lessons: [
           {
             id: "sat-rural-1-1",
@@ -1810,6 +1981,11 @@ export const COURSES: Course[] = [
         id: "sat-rural-2",
         title: "Microwave & Community Networks",
         description: "Plan terrestrial backhaul and grassroots connectivity initiatives.",
+        notes: [
+          "Design microwave paths that overcome challenging terrain using careful site surveys and profiling.",
+          "Develop community network governance models that keep operations transparent and sustainable.",
+          "Combine multiple access technologies to deliver resilient connectivity across dispersed locations.",
+        ],
         lessons: [
           {
             id: "sat-rural-2-1",
@@ -1850,6 +2026,11 @@ export const COURSES: Course[] = [
         id: "sat-rural-3",
         title: "Operations & Sustainability",
         description: "Keep remote networks operational with limited onsite support.",
+        notes: [
+          "Engineer energy systems that keep sites live despite unreliable grids or long maintenance windows.",
+          "Establish support processes that empower local champions and streamline vendor escalations.",
+          "Stay ahead of regulatory shifts and funding opportunities that impact rural projects.",
+        ],
         lessons: [
           {
             id: "sat-rural-3-1",
@@ -1911,6 +2092,11 @@ export const COURSES: Course[] = [
         id: "leadership-1",
         title: "Governance & Frameworks",
         description: "Adopt structured project governance tailored for network programs.",
+        notes: [
+          "Select governance frameworks that align with technical delivery cadences and stakeholder expectations.",
+          "Build stakeholder maps that keep regulators, executives, and partners aligned throughout delivery.",
+          "Institute decision logs and steering rituals that maintain momentum across long-running programs.",
+        ],
         lessons: [
           {
             id: "leadership-1-1",
@@ -1948,6 +2134,11 @@ export const COURSES: Course[] = [
         id: "leadership-2",
         title: "Compliance & Risk Management",
         description: "Align architectures with standards and mitigate compliance risks.",
+        notes: [
+          "Interpret regulatory requirements and translate them into actionable technical controls.",
+          "Run gap assessments that surface remediation priorities and budget implications early.",
+          "Track risks, issues, and vendor obligations continuously to keep audits stress-free.",
+        ],
         lessons: [
           {
             id: "leadership-2-1",
@@ -1988,6 +2179,11 @@ export const COURSES: Course[] = [
         id: "leadership-3",
         title: "Communication & Delivery Excellence",
         description: "Execute communication plans, manage vendors, and deliver measurable outcomes.",
+        notes: [
+          "Craft executive-ready communications that translate technical progress into business impact.",
+          "Manage vendors with performance scorecards, governance cadences, and clear escalation paths.",
+          "Track benefits realisation and lessons learned so future network programmes launch stronger.",
+        ],
         lessons: [
           {
             id: "leadership-3-1",

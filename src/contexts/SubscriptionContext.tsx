@@ -22,7 +22,7 @@ type ComputedSubscription = {
 
 const SubscriptionContext = createContext<ComputedSubscription | undefined>(undefined);
 
-const TRIAL_LENGTH_DAYS = 14;
+const TRIAL_LENGTH_DAYS = 20;
 
 const addDays = (date: Date, days: number) => {
   const result = new Date(date);
