@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, Award, Clock, ExternalLink, Film, Layers, PlayCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { getCourseBySlug, type Lesson, type Module } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
@@ -76,10 +77,21 @@ const getModuleStats = (module: Module) => {
   return { counts, totalMinutes };
 };
 
+const formatCountdown = (ms: number | null) => {
+  if (ms === null) return null;
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+};
+
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isTrialActive, hasActiveSubscription, loading: subscriptionLoading, durationMs, openUpgradeDialog, isExpired } = useSubscription();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const { ensureCertificate, downloadCertificate, getCertificateByCourse, loading: certificateLoading } = useCertificates();
@@ -109,6 +121,8 @@ const CourseDetail = () => {
   }, [course]);
   const lessons = useMemo(() => lessonCatalog.map((entry) => entry.lesson), [lessonCatalog]);
   const totalLessons = lessons.length;
+  const hasSubscriptionAccess = hasActiveSubscription || isTrialActive;
+  const trialCountdown = useMemo(() => formatCountdown(durationMs), [durationMs]);
   const certificatePayload = useMemo<CourseCertificatePayload | null>(
     () =>
       course
@@ -160,6 +174,10 @@ const CourseDetail = () => {
       : certificateEligible
         ? "Generate certificate"
         : "Complete course to unlock";
+  const requiresPremium = course.isPremium;
+  const subscriptionPending = subscriptionLoading && requiresPremium;
+  const hasAccess = !requiresPremium || hasSubscriptionAccess;
+  const interactionsDisabled = isGuest || subscriptionPending || (requiresPremium && !hasSubscriptionAccess);
 
   const handleDownloadCertificate = async () => {
     if (!certificateAccessible) {
@@ -186,6 +204,15 @@ const CourseDetail = () => {
       navigate(authRedirect);
       return false;
     }
+    if (subscriptionPending) {
+      toast.info("Verifying your trial status. Please try again in a moment.");
+      return false;
+    }
+    if (requiresPremium && !hasSubscriptionAccess) {
+      toast.info("Your trial has ended. Upgrade to resume learning.");
+      openUpgradeDialog();
+      return false;
+    }
     const updated = updateLessonCompletion(progress, course.id, lessonId, checked);
     setProgress(updated);
     saveProgress(updated, user?.id);
@@ -196,6 +223,15 @@ const CourseDetail = () => {
     if (isGuest) {
       toast.info("Sign in to start learning.");
       navigate(authRedirect);
+      return;
+    }
+    if (subscriptionPending) {
+      toast.info("Verifying your trial status. Please try again in a moment.");
+      return;
+    }
+    if (requiresPremium && !hasSubscriptionAccess) {
+      toast.info("Your trial has ended. Upgrade to continue learning.");
+      openUpgradeDialog();
       return;
     }
     const nextIndex = lessonCatalog.findIndex((entry) => !completedSet.has(entry.lesson.id));
@@ -217,6 +253,20 @@ const CourseDetail = () => {
   };
 
   const openLesson = (lessonId: string) => {
+    if (subscriptionPending) {
+      toast.info("Verifying your trial status. Please try again in a moment.");
+      return;
+    }
+    if (requiresPremium && !hasSubscriptionAccess) {
+      toast.info("Your trial has ended. Upgrade to continue learning.");
+      openUpgradeDialog();
+      return;
+    }
+    if (isGuest) {
+      toast.info("Sign in to start learning.");
+      navigate(authRedirect);
+      return;
+    }
     const index = lessonCatalog.findIndex((entry) => entry.lesson.id === lessonId);
     if (index === -1) {
       toast.error("Lesson not found");
@@ -355,12 +405,14 @@ const CourseDetail = () => {
                       <>
                         <Button
                           variant={isActiveLessonComplete ? "secondary" : "default"}
+                          disabled={interactionsDisabled}
                           onClick={() => handleToggleLesson(activeLesson.lesson.id, !isActiveLessonComplete)}
                         >
                           {isActiveLessonComplete ? "Mark incomplete" : "Mark complete"}
                         </Button>
                         {nextLessonEntry ? (
                           <Button
+                            disabled={interactionsDisabled}
                             onClick={() => {
                               if (handleToggleLesson(activeLesson.lesson.id, true)) {
                                 goToLesson(activeLessonIndex !== null ? activeLessonIndex + 1 : null);
@@ -371,6 +423,7 @@ const CourseDetail = () => {
                           </Button>
                         ) : (
                           <Button
+                            disabled={interactionsDisabled}
                             onClick={() => {
                               if (handleToggleLesson(activeLesson.lesson.id, true)) {
                                 closeLesson();
@@ -395,9 +448,13 @@ const CourseDetail = () => {
 
         {isGuest && (
           <section className="glass-panel rounded-2xl border-none p-6">
-            <h2 className="text-lg font-semibold text-foreground">Sign in to track your learning</h2>
+            <h2 className="text-lg font-semibold text-foreground">
+              {requiresPremium ? "Sign in to unlock this premium course" : "Sign in to track your learning"}
+            </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Create an account to mark lessons complete and resume where you left off.
+              {requiresPremium
+                ? "Create a free account to start your 20-day trial and access every premium module."
+                : "Create an account to mark lessons complete and resume where you left off."}
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Button asChild size="sm">
@@ -407,6 +464,38 @@ const CourseDetail = () => {
                 <Link to="/auth?redirect=%2Fdashboard">Create free account</Link>
               </Button>
             </div>
+          </section>
+        )}
+
+        {requiresPremium && !isGuest && (
+          <section className="glass-panel rounded-2xl border border-primary/30 bg-primary/5 p-6">
+            {subscriptionPending ? (
+              <p className="text-sm text-muted-foreground">Verifying your trial status...</p>
+            ) : hasSubscriptionAccess ? (
+              hasActiveSubscription ? (
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">Premium plan active</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">Enjoy unlimited access to every module and downloadable resource.</p>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">20-day trial in progress</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {trialCountdown ? `Time remaining: ${trialCountdown}` : "Tracking your remaining access in real time."}
+                  </p>
+                </div>
+              )
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">Trial ended</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">Upgrade to resume premium lessons, labs, and certifications.</p>
+                </div>
+                <Button size="sm" className="w-full sm:w-auto" onClick={openUpgradeDialog}>
+                  Upgrade plan
+                </Button>
+              </div>
+            )}
           </section>
         )}
 
@@ -597,7 +686,7 @@ const CourseDetail = () => {
                         <div className="flex flex-1 items-start gap-4">
                           <Checkbox
                             checked={completed}
-                            disabled={isGuest}
+                            disabled={interactionsDisabled}
                             onCheckedChange={(checked) => handleToggleLesson(lesson.id, Boolean(checked))}
                             aria-label={`Mark ${lesson.title} ${completed ? "incomplete" : "complete"}`}
                           />
@@ -634,6 +723,7 @@ const CourseDetail = () => {
                           <Button
                             variant="outline"
                             className="w-full sm:w-auto"
+                            disabled={interactionsDisabled}
                             onClick={() => openLesson(lesson.id)}
                           >
                             {completed ? "Rewatch lesson" : "Watch lesson"}

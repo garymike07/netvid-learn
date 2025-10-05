@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Award, BookOpen, Loader2, PlayCircle, TrendingUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { COURSES } from "@/data/courses";
 import { calculateMetrics, loadProgress, resetProgress, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
@@ -39,13 +40,27 @@ const deriveContinueList = (progress: UserProgress): ContinueCourse[] => {
   });
 };
 
+const formatCountdown = (ms: number | null) => {
+  if (ms === null) return null;
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+};
+
 const Dashboard = () => {
   const { user, signOut } = useAuth();
+  const { hasActiveSubscription, isTrialActive, loading: subscriptionLoading, durationMs, openUpgradeDialog } = useSubscription();
   const navigate = useNavigate();
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [signingOut, setSigningOut] = useState(false);
   const metrics = useMemo(() => calculateMetrics(progress), [progress]);
   const continueLearning = useMemo(() => deriveContinueList(progress), [progress]);
+  const hasSubscriptionAccess = hasActiveSubscription || isTrialActive;
+  const showUpgradeOverlay = !subscriptionLoading && !hasSubscriptionAccess;
+  const trialCountdown = useMemo(() => formatCountdown(durationMs), [durationMs]);
 
   useEffect(() => {
     setProgress(loadProgress(user?.id));
@@ -92,6 +107,11 @@ const Dashboard = () => {
     toast.success("Progress reset", { description: "All lessons are now marked as not started." });
   };
 
+  const handleLockedNavigation = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+    event.preventDefault();
+    openUpgradeDialog();
+  };
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-background/40 backdrop-blur-xl">
@@ -116,6 +136,44 @@ const Dashboard = () => {
         <div className="mb-12 motion-safe:animate-fade-up">
           <h1 className="mb-4 text-4xl font-semibold text-foreground">My Dashboard</h1>
           <p className="text-lg text-muted-foreground">Track your progress and continue learning</p>
+        </div>
+
+        <div className="mb-8 motion-safe:animate-fade-up">
+          <div
+            className={`glass-panel rounded-2xl border p-6 ${
+              subscriptionLoading
+                ? "border-white/10 bg-white/5"
+                : showUpgradeOverlay
+                  ? "border-destructive/30 bg-destructive/10"
+                  : "border-primary/30 bg-primary/10"
+            }`}
+          >
+            {subscriptionLoading ? (
+              <p className="text-sm text-muted-foreground">Checking your trial status...</p>
+            ) : hasActiveSubscription ? (
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Premium plan active</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Enjoy unlimited access to every course, lab, and certification.</p>
+              </div>
+            ) : isTrialActive ? (
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">20-day trial in progress</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {trialCountdown ? `Time remaining: ${trialCountdown}` : "Your access counter updates every second."}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">Trial ended</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">Upgrade to regain access to premium lessons and labs.</p>
+                </div>
+                <Button size="sm" className="w-full sm:w-auto" onClick={openUpgradeDialog}>
+                  Upgrade plan
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -165,9 +223,13 @@ const Dashboard = () => {
               <Button variant="outline" className="md:hidden" onClick={handleResetProgress}>
                 Reset Progress
               </Button>
-              <Button asChild>
-                <Link to="/courses">Browse Courses</Link>
-              </Button>
+              {showUpgradeOverlay ? (
+                <Button onClick={openUpgradeDialog}>Upgrade plan</Button>
+              ) : (
+                <Button asChild>
+                  <Link to="/courses">Browse Courses</Link>
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-5 p-6">
@@ -181,10 +243,15 @@ const Dashboard = () => {
                     </p>
                   </div>
                   <Link
-                    to={`/courses/${course.slug}`}
-                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm font-semibold text-primary transition hover:bg-white/10"
+                    to={showUpgradeOverlay ? "#upgrade" : `/courses/${course.slug}`}
+                    onClick={showUpgradeOverlay ? handleLockedNavigation : undefined}
+                    className={`rounded-full border border-white/15 px-3 py-1 text-sm font-semibold transition ${
+                      showUpgradeOverlay
+                        ? "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                        : "bg-white/5 text-primary hover:bg-white/10"
+                    }`}
                   >
-                    {course.progress}% complete
+                    {showUpgradeOverlay ? "Unlock course" : `${course.progress}% complete`}
                   </Link>
                 </div>
               </div>

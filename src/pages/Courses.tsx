@@ -7,10 +7,14 @@ import Curriculum from "@/components/Curriculum";
 import Footer from "@/components/Footer";
 import { COURSES } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { createEmptyProgress, loadProgress, type UserProgress } from "@/lib/progress";
 
 const Courses = () => {
   const { user } = useAuth();
+  const { hasActiveSubscription, isTrialActive, loading: subscriptionLoading, openUpgradeDialog } = useSubscription();
+  const hasSubscriptionAccess = hasActiveSubscription || isTrialActive;
+  const subscriptionPending = subscriptionLoading && Boolean(user);
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
   );
@@ -30,6 +34,9 @@ const Courses = () => {
 
   const courseCards = useMemo(() => {
     return COURSES.map((course) => {
+      const requiresPremium = course.isPremium;
+      const locked = Boolean(user && requiresPremium && !subscriptionPending && !hasSubscriptionAccess);
+      const pendingAccess = Boolean(user && requiresPremium && subscriptionPending && !hasSubscriptionAccess);
       const lessonList = course.modules.flatMap((module) => module.lessons);
       const totalLessons = lessonList.length;
       const courseProgress = progress.courses[course.id];
@@ -43,12 +50,19 @@ const Courses = () => {
 
       let ctaLabel = "View learning path";
       let ctaTarget = route;
+      let ctaMode: "link" | "upgrade" | "disabled" = "link";
 
-      if (!user && course.isPremium) {
+      if (!user && requiresPremium) {
         ctaLabel = "Sign in to unlock";
         ctaTarget = authPath;
       } else if (user) {
-        if (completion === 100) {
+        if (locked) {
+          ctaLabel = "Upgrade to unlock";
+          ctaMode = "upgrade";
+        } else if (pendingAccess) {
+          ctaLabel = "Checking access...";
+          ctaMode = "disabled";
+        } else if (completion === 100) {
           ctaLabel = "Review course";
         } else if (hasProgress) {
           ctaLabel = `Continue (${completion}% done)`;
@@ -64,9 +78,12 @@ const Courses = () => {
         hasProgress,
         ctaLabel,
         ctaTarget,
+        ctaMode,
+        locked,
+        pendingAccess,
       };
     });
-  }, [progress, user]);
+  }, [progress, user, hasSubscriptionAccess, subscriptionPending]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -113,7 +130,8 @@ const Courses = () => {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {courseCards.map(({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget }, index) => (
+              {courseCards.map(
+                ({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget, ctaMode, locked, pendingAccess }, index) => (
                 <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
                   <CardHeader className="space-y-4 p-0">
                     <div className="flex items-center justify-between">
@@ -145,13 +163,25 @@ const Courses = () => {
                           Sign in to track your learning progress
                         </p>
                       )}
+                      {locked ? (
+                        <p className="text-xs font-semibold text-destructive">Trial ended. Upgrade to regain access.</p>
+                      ) : pendingAccess ? (
+                        <p className="text-xs text-muted-foreground">Verifying your trial access...</p>
+                      ) : null}
                     </div>
-                    <Button
-                      asChild
-                      className="w-full"
-                    >
-                      <Link to={ctaTarget}>{ctaLabel}</Link>
-                    </Button>
+                    {ctaMode === "link" ? (
+                      <Button asChild className="w-full">
+                        <Link to={ctaTarget}>{ctaLabel}</Link>
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full"
+                        disabled={ctaMode === "disabled"}
+                        onClick={ctaMode === "upgrade" ? openUpgradeDialog : undefined}
+                      >
+                        {ctaLabel}
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               ))}

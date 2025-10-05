@@ -12,7 +12,7 @@ const UpgradeDialog = () => {
         <DialogHeader className="text-left">
           <DialogTitle className="text-2xl font-semibold text-foreground">Upgrade to keep learning</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            Continue accessing premium modules, labs, and downloadable resources after your 14-day trial ends.
+            Continue accessing premium modules, labs, and downloadable resources after your 20-day trial ends.
           </DialogDescription>
         </DialogHeader>
 
