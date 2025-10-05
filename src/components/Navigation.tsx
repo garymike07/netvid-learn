@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -28,10 +28,9 @@ const Navigation = () => {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/30 backdrop-blur-2xl transition-colors">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
-        <Link to="/" className="group flex items-center gap-2 text-foreground transition-colors hover:text-primary">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-primary">
-            <div className="absolute inset-0 rounded-xl bg-primary/30 blur-2xl" />
-            <GraduationCap className="relative h-6 w-6" />
+        <Link to="/" className="group flex items-center gap-3 text-foreground transition-colors hover:text-primary">
+          <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10 transition group-hover:ring-primary/60">
+            <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-cover" />
           </div>
           <span className="text-xl font-bold tracking-tight">Mike Net Academy</span>
         </Link>
@@ -44,6 +43,9 @@ const Navigation = () => {
           </Link>
           <Link to="/#pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
             Pricing
+          </Link>
+          <Link to="/verify" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+            Verify Certificate
           </Link>
           {user && !loading && (
             <Link to="/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">

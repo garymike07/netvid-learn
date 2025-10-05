@@ -10,6 +10,37 @@ type CertificateDetails = {
 
 const px = (value: number) => value;
 
+let cachedLogoBytes: Uint8Array | null = null;
+
+const fetchAssetBytes = async (path: string) => {
+  const response = await fetch(path, { cache: "force-cache" });
+  if (!response.ok) {
+    throw new Error(`Failed to load asset ${path}`);
+  }
+  const buffer = await response.arrayBuffer();
+  return new Uint8Array(buffer);
+};
+
+const getLogoBytes = async () => {
+  if (cachedLogoBytes) {
+    return cachedLogoBytes;
+  }
+  try {
+    cachedLogoBytes = await fetchAssetBytes("/images/mike-net-logo.png");
+  } catch (error) {
+    console.error(error);
+    cachedLogoBytes = null;
+  }
+  return cachedLogoBytes;
+};
+
+const getVerificationUrl = () => {
+  if (typeof window !== "undefined" && window.location) {
+    return `${window.location.origin}/verify`;
+  }
+  return "https://mikenetacademy.com/verify";
+};
+
 export const createCertificatePdf = async ({ learnerName, courseTitle, certificateNumber, issuedAt }: CertificateDetails) => {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([px(842), px(595)]);
@@ -31,6 +62,24 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   const headingFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const subheadingFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
   const bodyFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const signatureFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+
+  const logoBytes = await getLogoBytes();
+  if (logoBytes) {
+    try {
+      const logoImage = await pdfDoc.embedPng(logoBytes);
+      const scaled = logoImage.scale(0.18);
+      page.drawImage(logoImage, {
+        x: 60,
+        y: height - 210,
+        width: scaled.width,
+        height: scaled.height,
+        opacity: 0.9,
+      });
+    } catch (error) {
+      console.error("Failed to embed logo", error);
+    }
+  }
 
   const headingSize = 34;
   const headingText = "Certificate of Completion";
@@ -113,6 +162,16 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   });
 
   const signatureLabel = "Director of Curriculum";
+  const directorName = "Dr. Jane Mwangi";
+  const directorNameWidth = signatureFont.widthOfTextAtSize(directorName, 18);
+  page.drawText(directorName, {
+    x: width / 4 - directorNameWidth / 2,
+    y: 142,
+    size: 18,
+    font: signatureFont,
+    color: textStrong,
+    opacity: 0.85,
+  });
   page.drawLine({
     start: { x: width / 4 - 90, y: 120 },
     end: { x: width / 4 + 90, y: 120 },
@@ -129,6 +188,16 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
   });
 
   const ceoLabel = "Chief Learning Officer";
+  const ceoName = "Samuel Otieno";
+  const ceoWidth = signatureFont.widthOfTextAtSize(ceoName, 18);
+  page.drawText(ceoName, {
+    x: (width * 3) / 4 - ceoWidth / 2,
+    y: 142,
+    size: 18,
+    font: signatureFont,
+    color: textStrong,
+    opacity: 0.85,
+  });
   page.drawLine({
     start: { x: (width * 3) / 4 - 90, y: 120 },
     end: { x: (width * 3) / 4 + 90, y: 120 },
@@ -153,7 +222,8 @@ export const createCertificatePdf = async ({ learnerName, courseTitle, certifica
     color: textSoft,
   });
 
-  const verificationMessage = `Verify authenticity at mikenetacademy.com/verify with code ${certificateNumber}`;
+  const verificationUrl = getVerificationUrl();
+  const verificationMessage = `Verify authenticity at ${verificationUrl} with code ${certificateNumber}`;
   const verificationWidth = bodyFont.widthOfTextAtSize(verificationMessage, 10);
   page.drawText(verificationMessage, {
     x: width - verificationWidth - 48,

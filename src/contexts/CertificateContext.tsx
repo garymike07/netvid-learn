@@ -43,6 +43,34 @@ const generateCertificateId = () => {
   return `cert-${Math.random().toString(36).slice(2)}-${Date.now()}`;
 };
 
+const LOCAL_CERT_STORAGE_KEY = "mna.certificates";
+
+const sortCertificates = (records: CertificateRow[]) =>
+  [...records].sort((a, b) => new Date(b.issued_at).getTime() - new Date(a.issued_at).getTime());
+
+const dedupeCertificates = (records: CertificateRow[]) => {
+  const byNumber = new Map<string, CertificateRow>();
+  records.forEach((record) => {
+    byNumber.set(record.certificate_number, record);
+  });
+  return sortCertificates(Array.from(byNumber.values()));
+};
+
+const readStoredCertificates = (): CertificateRow[] => {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(LOCAL_CERT_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return dedupeCertificates(parsed as CertificateRow[]);
+    }
+  } catch (error) {
+    console.error("Failed to parse stored certificates", error);
+  }
+  return [];
+};
+
 const deriveUserName = (user: User | null) => {
   const fullName = user?.user_metadata?.full_name;
   if (typeof fullName === "string" && fullName.trim().length > 0) {
@@ -56,9 +84,27 @@ const deriveUserName = (user: User | null) => {
 
 export const CertificateProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
+  const [localRecords, setLocalRecords] = useState<CertificateRow[]>(() => readStoredCertificates());
   const [certificates, setCertificates] = useState<CertificateRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const persistLocalCertificates = useCallback((records: CertificateRow[]) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(LOCAL_CERT_STORAGE_KEY, JSON.stringify(records));
+    }
+  }, []);
+
+  const updateLocalRecords = useCallback(
+    (updater: (previous: CertificateRow[]) => CertificateRow[]) => {
+      setLocalRecords((prev) => {
+        const next = dedupeCertificates(updater(prev));
+        persistLocalCertificates(next);
+        return next;
+      });
+    },
+    [persistLocalCertificates],
+  );
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -79,34 +125,48 @@ export const CertificateProvider = ({ children }: { children: React.ReactNode })
 
     if (fetchError) {
       setError(fetchError.message);
+      setCertificates(dedupeCertificates([...localRecords]));
       setLoading(false);
       return;
     }
 
-    setCertificates(data ?? []);
+    const merged = dedupeCertificates([...(data ?? []), ...localRecords]);
+    setCertificates(merged);
     setLoading(false);
-  }, [user]);
+  }, [user, localRecords]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  const verifyCertificateNumber = useCallback(async (certificateNumber: string) => {
-    if (!certificateNumber) return null;
+  const verifyCertificateNumber = useCallback(
+    async (certificateNumber: string) => {
+      if (!certificateNumber) return null;
+      const trimmed = certificateNumber.trim();
+      if (!trimmed) return null;
 
-    const { data, error: fetchError } = await supabase
-      .from("certificates")
-      .select("*")
-      .eq("certificate_number", certificateNumber)
-      .maybeSingle();
+      const { data, error: fetchError } = await supabase
+        .from("certificates")
+        .select("*")
+        .eq("certificate_number", trimmed)
+        .maybeSingle();
 
-    if (fetchError && fetchError.code !== "PGRST116") {
-      setError(fetchError.message);
-      return null;
-    }
+      if (fetchError && fetchError.code !== "PGRST116") {
+        setError(fetchError.message);
+      }
 
-    return data ?? null;
-  }, []);
+      if (data) {
+        return data;
+      }
+
+      const localFallback = localRecords.find(
+        (entry) => entry.certificate_number.toLowerCase() === trimmed.toLowerCase(),
+      );
+
+      return localFallback ?? null;
+    },
+    [localRecords],
+  );
 
   const ensureUniqueCertificateNumber = useCallback(async () => {
     for (let attempt = 0; attempt < 6; attempt++) {
@@ -189,11 +249,13 @@ export const CertificateProvider = ({ children }: { children: React.ReactNode })
           } satisfies CertificateRow;
 
           setError(null);
-          setCertificates((prev) => [fallbackRecord, ...prev]);
+          updateLocalRecords((prev) => [...prev, fallbackRecord]);
+          setCertificates((prev) => dedupeCertificates([fallbackRecord, ...prev]));
           return fallbackRecord;
         }
 
-        setCertificates((prev) => [data, ...prev]);
+        updateLocalRecords((prev) => [...prev, data]);
+        setCertificates((prev) => dedupeCertificates([data, ...prev]));
         return data;
       } catch (issueError) {
         const message = issueError instanceof Error ? issueError.message : "Unable to issue certificate";
@@ -201,7 +263,7 @@ export const CertificateProvider = ({ children }: { children: React.ReactNode })
         return null;
       }
     },
-    [certificates, ensureUniqueCertificateNumber, user],
+    [certificates, ensureUniqueCertificateNumber, updateLocalRecords, user],
   );
 
   const downloadCertificate = useCallback(

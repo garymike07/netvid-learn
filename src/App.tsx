@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { useAuth } from "./contexts/AuthContext";
 import CourseDetail from "./pages/CourseDetail";
+import Verify from "./pages/Verify";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:slug" element={<CourseDetail />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/verify" element={<Verify />} />
           <Route
             path="/dashboard"
             element={

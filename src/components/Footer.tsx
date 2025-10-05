@@ -7,7 +7,12 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="motion-safe:animate-fade-up">
-            <h3 className="mb-4 text-lg font-semibold text-foreground">Mike Net Academy</h3>
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10">
+                <img src="/images/mike-net-logo.png" alt="Mike Net Academy" className="h-full w-full object-cover" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Mike Net Academy</h3>
+            </div>
             <p className="text-sm text-muted-foreground">
               Master networking through comprehensive video tutorials and hands-on practice.
             </p>
@@ -69,6 +74,11 @@ const Footer = () => {
               <li>
                 <Link to="/courses" className="transition-colors hover:text-primary">
                   For Teams
+                </Link>
+              </li>
+              <li>
+                <Link to="/verify" className="transition-colors hover:text-primary">
+                  Verify Certificates
                 </Link>
               </li>
               <li>
