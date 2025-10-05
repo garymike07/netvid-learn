@@ -48,7 +48,7 @@ const createTrialPayload = (userId: string) => {
 export const SubscriptionProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const [record, setRecord] = useState<SubscriptionRow | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
   const [now, setNow] = useState(() => new Date());
@@ -112,7 +112,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
-    }, 1000 * 60);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -146,8 +146,9 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
     const clampedMs = diffMs !== null ? Math.max(0, diffMs) : null;
 
     const hasActiveSubscription = record?.status === "active";
-    const isTrialActive = record?.status === "trial_active" && (clampedMs === null || clampedMs > 0);
-    const isExpired = Boolean(record) && !hasActiveSubscription && !isTrialActive;
+    const trialWindowActive = Boolean(record) && !hasActiveSubscription && (clampedMs === null || clampedMs > 0);
+    const isTrialActive = trialWindowActive;
+    const isExpired = Boolean(record) && !hasActiveSubscription && !trialWindowActive;
 
     return {
       record,

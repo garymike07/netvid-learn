@@ -21,7 +21,8 @@ const formatCountdown = (ms: number | null) => {
   const days = Math.floor(totalSeconds / (60 * 60 * 24));
   const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
   const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-  return { days, hours, minutes };
+  const seconds = totalSeconds % 60;
+  return { days, hours, minutes, seconds };
 };
 
 const CourseDetail = () => {
@@ -95,19 +96,11 @@ const CourseDetail = () => {
     if (certificatePayload.totalLessons === 0 || completedLessons < certificatePayload.totalLessons) {
       return;
     }
-    const trialEnded =
-      course.isPremium &&
-      !hasActiveSubscription &&
-      !isTrialActive &&
-      !subscriptionLoading;
-    if (trialEnded) {
-      return;
-    }
     if (getCertificateByCourse(course.id)) {
       return;
     }
     void ensureCertificate(certificatePayload);
-  }, [course, certificatePayload, ensureCertificate, getCertificateByCourse, progress, isGuest, hasActiveSubscription, isTrialActive, subscriptionLoading]);
+  }, [course, certificatePayload, ensureCertificate, getCertificateByCourse, progress, isGuest]);
 
   if (!course) {
     return null;
@@ -128,8 +121,7 @@ const CourseDetail = () => {
     !isTrialActive &&
     !subscriptionLoading;
   const certificateEligible = !isGuest && completionPercentage === 100;
-  const certificateAccessible = certificateEligible && (!trialLocked || Boolean(certificateRecord));
-  const certificateLockedByTrial = certificateEligible && trialLocked && !certificateRecord;
+  const certificateAccessible = certificateEligible;
   const certificateButtonLabel = certificateBusy
     ? "Preparing..."
     : certificateRecord
@@ -426,7 +418,7 @@ const CourseDetail = () => {
                   : hasActiveSubscription
                     ? "Premium plan active — enjoy unlimited access."
                     : countdown
-                      ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m remaining.`
+                      ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m ${countdown.seconds}s remaining.`
                       : "Trial access active."}
               </div>
             )}
@@ -492,15 +484,6 @@ const CourseDetail = () => {
                     <Button asChild size="sm" variant="outline">
                       <Link to="/auth?redirect=%2Fdashboard">Create free account</Link>
                     </Button>
-                  </>
-                ) : certificateLockedByTrial ? (
-                  <>
-                    <Button size="sm" onClick={openUpgradeDialog}>
-                      Upgrade to unlock certificate
-                    </Button>
-                    <p className="text-xs text-muted-foreground sm:ml-3">
-                      Your trial has ended. Upgrade to download your verified certificate.
-                    </p>
                   </>
                 ) : (
                   <Button

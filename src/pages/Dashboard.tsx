@@ -51,7 +51,8 @@ const Dashboard = () => {
     const days = Math.floor(totalSeconds / (60 * 60 * 24));
     const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
     const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-    return { days, hours, minutes };
+    const seconds = totalSeconds % 60;
+    return { days, hours, minutes, seconds };
   }, [msRemaining]);
 
   useEffect(() => {
@@ -161,7 +162,7 @@ const Dashboard = () => {
                   <span className="text-xs uppercase tracking-widest">Time remaining</span>
                   <span className="text-2xl font-semibold">
                     {countdown
-                      ? `${countdown.days}d ${countdown.hours}h ${countdown.minutes}m`
+                      ? `${countdown.days}d ${countdown.hours}h ${countdown.minutes}m ${countdown.seconds}s`
                       : "14 days"}
                   </span>
                 </div>

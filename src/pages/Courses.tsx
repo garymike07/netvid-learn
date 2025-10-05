@@ -21,7 +21,8 @@ const Courses = () => {
     const days = Math.floor(totalSeconds / (60 * 60 * 24));
     const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
     const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-    return { days, hours, minutes };
+    const seconds = totalSeconds % 60;
+    return { days, hours, minutes, seconds };
   }, [msRemaining]);
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
@@ -184,7 +185,7 @@ const Courses = () => {
                         {premiumLocked
                           ? "Trial ended — upgrade to unlock premium modules."
                           : countdown
-                            ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m remaining.`
+                            ? `Trial access active • ${countdown.days}d ${countdown.hours}h ${countdown.minutes}m ${countdown.seconds}s remaining.`
                             : "Trial access active."}
                       </div>
                     )}
