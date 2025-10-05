@@ -4,21 +4,19 @@ import { Play, BookOpen, Video } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section id="hero" className="relative overflow-hidden py-20 md:py-32">
+    <section
+      id="hero"
+      className="relative overflow-hidden bg-cover bg-center py-20 md:py-32"
+      style={{ backgroundImage: 'url("/images/futuristic-dashboard.png")' }}
+    >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,hsla(278,97%,72%,0.2),transparent_55%),radial-gradient(circle_at_80%_0%,hsla(215,91%,65%,0.22),transparent_60%)]" />
       <div className="absolute inset-0 opacity-60" style={{ backgroundImage: "var(--gradient-hero)" }} />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background via-background/40 to-transparent" />
       <div className="pointer-events-none absolute inset-0">
         <img
-          src="/images/futuristic-dashboard.png"
-          alt="Futuristic monitoring dashboard interface"
-          className="absolute -right-16 top-12 hidden w-[360px] rotate-6 opacity-80 drop-shadow-[0_45px_65px_rgba(59,130,246,0.35)] md:block lg:w-[420px]"
-          loading="lazy"
-        />
-        <img
           src="/images/futuristic-lab.png"
           alt="Immersive network operations hologram"
-          className="absolute -left-20 bottom-0 hidden w-[320px] -rotate-6 opacity-80 drop-shadow-[0_35px_55px_rgba(236,72,153,0.35)] md:block lg:w-[380px]"
+          className="absolute -right-16 bottom-8 hidden w-[320px] rotate-3 opacity-85 drop-shadow-[0_35px_55px_rgba(59,130,246,0.45)] md:block lg:w-[420px]"
           loading="lazy"
         />
       </div>
