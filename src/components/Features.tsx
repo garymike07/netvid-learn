@@ -1,5 +1,7 @@
-import { Video, BookOpen, Award, Laptop } from "lucide-react";
+import { motion } from "framer-motion";
+import { Award, BookOpen, Laptop, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { FadeIn } from "@/components/motion";
 
 const features = [
   {
@@ -27,32 +29,50 @@ const features = [
 const Features = () => {
   return (
     <section id="features" className="relative py-24 md:py-32">
-      <div className="absolute inset-0 -z-10 opacity-50" style={{ backgroundImage: "radial-gradient(circle at 50% 0%, hsla(278,97%,72%,0.2), transparent 55%)" }} />
+      <motion.div
+        className="absolute inset-0 -z-10"
+        initial={{ opacity: 0, scale: 0.96 }}
+        whileInView={{ opacity: 0.6, scale: 1 }}
+        viewport={{ once: true, amount: 0.45 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{ backgroundImage: "radial-gradient(circle at 50% 0%, hsla(278,97%,72%,0.22), transparent 55%)" }}
+      />
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center motion-safe:animate-fade-up">
-          <h2 className="mb-4 text-4xl font-semibold text-foreground md:text-5xl">
-            Learn Networking the Right Way
-          </h2>
+        <FadeIn className="mb-16 text-center space-y-4">
+          <span className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.28em] text-muted-foreground">
+            Why learners stay
+          </span>
+          <h2 className="text-4xl font-semibold text-foreground md:text-5xl">Learn Networking the Right Way</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Multiple learning formats ensure you understand every concept thoroughly
+            Multiple learning formats ensure every concept sticks — pairing guided labs, cinematic lessons, and certification-ready notes.
           </p>
-        </div>
+        </FadeIn>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card
-                key={index}
-                className="group h-full p-6 motion-safe:animate-fade-up"
-                style={{ animationDelay: `${0.1 * index}s` }}
-              >
-                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 text-primary shadow-[0_20px_45px_-25px_hsla(217,91%,65%,0.7)] transition-transform duration-500 group-hover:-translate-y-1">
-                  <Icon className="h-7 w-7" />
-                </div>
-                <h3 className="mb-3 text-xl font-semibold text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </Card>
+              <FadeIn key={feature.title} delay={0.05 * index} className="h-full">
+                <Card className="group glass-panel h-full overflow-hidden rounded-2xl border border-white/10 p-6">
+                  <CardContent className="space-y-4 p-0">
+                    <motion.div
+                      className="relative inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-glow"
+                      whileHover={{ rotate: -6, scale: 1.05 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <Icon className="h-7 w-7" />
+                      <motion.span
+                        className="absolute inset-0 rounded-xl bg-primary-soft"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 0.35 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                      />
+                    </motion.div>
+                    <h3 className="text-xl font-semibold text-foreground">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
             );
           })}
         </div>

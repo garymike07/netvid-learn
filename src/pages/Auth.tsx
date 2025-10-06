@@ -1,42 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { SignIn, SignUp } from "@clerk/clerk-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { toast } from "sonner";
 
-const authSchema = z.object({
-  fullName: z.string().optional(),
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type AuthFormValues = z.infer<typeof authSchema>;
+const clerkAppearance = {
+  variables: {
+    colorPrimary: "hsl(var(--primary))",
+    colorBackground: "transparent",
+    colorInputBackground: "hsl(var(--background))",
+    borderRadius: "1rem",
+  },
+  elements: {
+    rootBox: "w-full",
+    card: "bg-transparent shadow-none p-0",
+    headerTitle: "text-2xl font-semibold text-foreground",
+    headerSubtitle: "text-sm text-muted-foreground",
+    formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
+    footerAction__signIn: "hidden",
+    footerAction__signUp: "hidden",
+  },
+};
 
 const Auth = () => {
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [formMessage, setFormMessage] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const redirectParam = searchParams.get("redirect");
   const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/dashboard";
 
-  const form = useForm<AuthFormValues>({
-    resolver: zodResolver(authSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-    },
-  });
+  useEffect(() => {
+    const modeParam = searchParams.get("mode");
+    if (modeParam === "signin" || modeParam === "signup") {
+      setMode(modeParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!loading && user) {
@@ -53,154 +54,45 @@ const Auth = () => {
     return <Navigate to={redirectTo} replace />;
   }
 
-  const onSubmit = async (values: AuthFormValues) => {
-    setSubmitting(true);
-    setFormMessage(null);
-
-    try {
-      if (mode === "signin") {
-        const { error } = await signIn(values);
-        if (error) {
-          setFormMessage(error);
-          return;
-        }
-        toast.success("Welcome back!", { description: "Redirecting you now" });
-        navigate(redirectTo, { replace: true });
-      } else {
-        const { fullName = "", email, password } = values;
-        if (!fullName || fullName.trim().length < 2) {
-          setFormMessage("Please enter your full name to personalise your certificate.");
-          return;
-        }
-        const { error } = await signUp({ email, password, fullName });
-        if (error) {
-          setFormMessage(error);
-          return;
-        }
-        toast.success("Account created!", { description: "You are now signed in" });
-        navigate(redirectTo, { replace: true });
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Something went wrong";
-      setFormMessage(message);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-primary/5 to-background">
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-primary/5 to-background">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-            <ArrowLeft className="w-5 h-5" />
+          <Link to="/" className="flex items-center gap-2 text-foreground transition-colors hover:text-primary">
+            <ArrowLeft className="h-5 w-5" />
             <span className="font-semibold">Back to Home</span>
           </Link>
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex flex-1 items-center justify-center p-4">
         <Card className="w-full max-w-md">
-          <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-2xl">
+          <CardHeader className="space-y-2 text-center">
+            <CardTitle className="text-2xl font-semibold text-foreground">
               {mode === "signin" ? "Welcome Back" : "Create your account"}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm text-muted-foreground">
               {mode === "signin"
                 ? "Sign in to continue your learning journey"
                 : "Start learning networking the right way"}
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-                {mode === "signup" ? (
-                  <FormField
-                    control={form.control}
-                    name="fullName"
-                    rules={{
-                      validate: (value) => {
-                        if (mode !== "signup") return true;
-                        if (!value || value.trim().length < 2) {
-                          return "Enter your full name";
-                        }
-                        return true;
-                      },
-                    }}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Full name</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Mike Wanyama"
-                            autoComplete="name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>Your name appears on your certificate of completion.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ) : null}
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="you@example.com" autoComplete="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        {mode === "signup"
-                          ? "Use at least 6 characters. You can change this later."
-                          : "Enter the password associated with your account."}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {formMessage && <p className="text-sm font-medium text-destructive">{formMessage}</p>}
-
-                <Button className="w-full" size="lg" type="submit" disabled={submitting}>
-                  {submitting ? "Processing..." : mode === "signin" ? "Sign In" : "Create Account"}
-                </Button>
-              </form>
-            </Form>
+          <CardContent className="space-y-4">
+            {mode === "signin" ? (
+              <SignIn routing="hash" redirectUrl={redirectTo} appearance={clerkAppearance} />
+            ) : (
+              <SignUp routing="hash" redirectUrl={redirectTo} afterSignUpUrl={redirectTo} appearance={clerkAppearance} />
+            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-3 text-center text-sm text-muted-foreground">
-            <button
+            <Button
               type="button"
-              onClick={() => {
-                setMode((prev) => (prev === "signin" ? "signup" : "signin"));
-                setFormMessage(null);
-              }}
-              className="text-primary hover:underline"
+              variant="link"
+              className="p-0 text-primary"
+              onClick={() => setMode((prev) => (prev === "signin" ? "signup" : "signin"))}
             >
               {toggleLabel}
-            </button>
+            </Button>
             <p>By continuing you agree to receive important updates about your learning progress.</p>
           </CardFooter>
         </Card>

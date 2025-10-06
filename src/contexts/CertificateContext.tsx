@@ -1,9 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Tables } from "@/integrations/supabase/types";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, type AppUser } from "@/contexts/AuthContext";
 import { downloadCertificatePdf } from "@/lib/certificateGenerator";
-import type { User } from "@supabase/supabase-js";
 
 type CertificateRow = Tables<"certificates">;
 
@@ -71,19 +70,26 @@ const readStoredCertificates = (): CertificateRow[] => {
   return [];
 };
 
-const deriveUserName = (user: User | null) => {
-  const fullName = user?.user_metadata?.full_name;
-  if (typeof fullName === "string" && fullName.trim().length > 0) {
-    return fullName.trim();
+const deriveUserName = (user: AppUser | null) => {
+  if (!user) return "Mike Net Learner";
+  if (user.fullName && user.fullName.trim().length > 0) {
+    return user.fullName.trim();
   }
-  if (user?.email) {
+
+  const combinedName = [user.firstName, user.lastName].filter(Boolean).join(" ");
+  if (combinedName.trim().length > 0) {
+    return combinedName.trim();
+  }
+
+  if (user.email) {
     return user.email.split("@")[0];
   }
+
   return "Mike Net Learner";
 };
 
 export const CertificateProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [localRecords, setLocalRecords] = useState<CertificateRow[]>(() => readStoredCertificates());
   const [certificates, setCertificates] = useState<CertificateRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -107,6 +113,11 @@ export const CertificateProvider = ({ children }: { children: React.ReactNode })
   );
 
   const refresh = useCallback(async () => {
+    if (authLoading) {
+      setLoading(true);
+      return;
+    }
+
     if (!user) {
       setCertificates([]);
       setLoading(false);
@@ -133,7 +144,7 @@ export const CertificateProvider = ({ children }: { children: React.ReactNode })
     const merged = dedupeCertificates([...(data ?? []), ...localRecords]);
     setCertificates(merged);
     setLoading(false);
-  }, [user, localRecords]);
+  }, [authLoading, localRecords, user]);
 
   useEffect(() => {
     refresh();

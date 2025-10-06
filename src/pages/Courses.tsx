@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, CheckCircle2, Lock, PlayCircle } from "lucide-react";
 import Curriculum from "@/components/Curriculum";
 import Footer from "@/components/Footer";
@@ -9,6 +10,7 @@ import { COURSES } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { createEmptyProgress, loadProgress, type UserProgress } from "@/lib/progress";
+import { trackEvent } from "@/lib/analytics";
 
 const Courses = () => {
   const { user } = useAuth();
@@ -18,10 +20,13 @@ const Courses = () => {
   const [progress, setProgress] = useState<UserProgress>(() =>
     typeof window === "undefined" ? createEmptyProgress() : loadProgress(user?.id),
   );
+  const [progressLoading, setProgressLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    setProgressLoading(true);
     setProgress(loadProgress(user?.id));
+    setProgressLoading(false);
   }, [user?.id]);
 
   useEffect(() => {
@@ -85,6 +90,8 @@ const Courses = () => {
     });
   }, [progress, user, hasSubscriptionAccess, subscriptionPending]);
 
+  const showSkeleton = progressLoading || subscriptionPending;
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-background/40 backdrop-blur-xl">
@@ -130,61 +137,102 @@ const Courses = () => {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {courseCards.map(
-                ({ course, totalLessons, completion, hasProgress, ctaLabel, ctaTarget, ctaMode, locked, pendingAccess }, index) => (
-                <Card key={course.id} className="flex h-full flex-col p-6 motion-safe:animate-fade-up" style={{ animationDelay: `${0.06 * index}s` }}>
-                  <CardHeader className="space-y-4 p-0">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl text-foreground">{course.title}</CardTitle>
-                      {course.isPremium && (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
-                          <Lock className="h-3 w-3" /> Premium
-                        </span>
-                      )}
-                    </div>
-                    <CardDescription className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
-                      <span className="rounded-full bg-primary/15 px-3 py-1 text-primary">{course.level}</span>
-                      {course.duration && <span className="text-muted-foreground">{course.duration}</span>}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-1 flex-col justify-between space-y-6 p-0">
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>{course.summary}</p>
-                      <div className="flex items-center gap-2 text-success">
-                        <CheckCircle2 className="h-4 w-4" />
-                        Includes labs, quizzes, and certifications
+              {showSkeleton
+                ? Array.from({ length: 6 }).map((_, index) => (
+                    <Card key={`skeleton-${index}`} className="flex h-full flex-col p-6">
+                      <div className="space-y-4">
+                        <Skeleton className="h-6 w-40 rounded-full bg-white/5" />
+                        <Skeleton className="h-4 w-28 rounded-full bg-white/5" />
+                        <Skeleton className="h-20 w-full rounded-2xl bg-white/5" />
+                        <Skeleton className="h-10 w-full rounded-full bg-white/5" />
                       </div>
-                      {user ? (
-                        <p className="text-xs font-medium text-muted-foreground">
-                          {hasProgress ? `${completion}% complete • ${totalLessons} lessons` : `Not started • ${totalLessons} lessons`}
-                        </p>
-                      ) : (
-                        <p className="text-xs font-medium text-muted-foreground">
-                          Sign in to track your learning progress
-                        </p>
-                      )}
-                      {locked ? (
-                        <p className="text-xs font-semibold text-destructive">Trial ended. Upgrade to regain access.</p>
-                      ) : pendingAccess ? (
-                        <p className="text-xs text-muted-foreground">Verifying your trial access...</p>
-                      ) : null}
-                    </div>
-                    {ctaMode === "link" ? (
-                      <Button asChild className="w-full">
-                        <Link to={ctaTarget}>{ctaLabel}</Link>
-                      </Button>
-                    ) : (
-                      <Button
-                        className="w-full"
-                        disabled={ctaMode === "disabled"}
-                        onClick={ctaMode === "upgrade" ? openUpgradeDialog : undefined}
+                    </Card>
+                  ))
+                : courseCards.map(
+                    (
+                      {
+                        course,
+                        totalLessons,
+                        completion,
+                        hasProgress,
+                        ctaLabel,
+                        ctaTarget,
+                        ctaMode,
+                        locked,
+                        pendingAccess,
+                      },
+                      index,
+                    ) => (
+                      <Card
+                        key={course.id}
+                        className="flex h-full flex-col p-6 motion-safe:animate-fade-up"
+                        style={{ animationDelay: `${0.06 * index}s` }}
                       >
-                        {ctaLabel}
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
+                        <CardHeader className="space-y-4 p-0">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-xl text-foreground">{course.title}</CardTitle>
+                            {course.isPremium && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
+                                <Lock className="h-3 w-3" /> Premium
+                              </span>
+                            )}
+                          </div>
+                          <CardDescription className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
+                            <span className="rounded-full bg-primary/15 px-3 py-1 text-primary">{course.level}</span>
+                            {course.duration && <span className="text-muted-foreground">{course.duration}</span>}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex flex-1 flex-col justify-between space-y-6 p-0">
+                          <div className="space-y-4 text-sm text-muted-foreground">
+                            <p>{course.summary}</p>
+                            <div className="flex items-center gap-2 text-success">
+                              <CheckCircle2 className="h-4 w-4" />
+                              Includes labs, quizzes, and certifications
+                            </div>
+                            {user ? (
+                              <p className="text-xs font-medium text-muted-foreground">
+                                {hasProgress ? `${completion}% complete • ${totalLessons} lessons` : `Not started • ${totalLessons} lessons`}
+                              </p>
+                            ) : (
+                              <p className="text-xs font-medium text-muted-foreground">
+                                Sign in to track your learning progress
+                              </p>
+                            )}
+                            {locked ? (
+                              <p className="text-xs font-semibold text-destructive">Trial ended. Upgrade to regain access.</p>
+                            ) : pendingAccess ? (
+                              <p className="text-xs text-muted-foreground">Verifying your trial access...</p>
+                            ) : null}
+                          </div>
+                          {ctaMode === "link" ? (
+                            <Button asChild className="w-full">
+                              <Link
+                                to={ctaTarget}
+                                onClick={() =>
+                                  trackEvent("courses_navigate", { courseId: course.id, destination: ctaTarget })
+                                }
+                              >
+                                {ctaLabel}
+                              </Link>
+                            </Button>
+                          ) : (
+                            <Button
+                              className="w-full"
+                              disabled={ctaMode === "disabled"}
+                              onClick={() => {
+                                if (ctaMode === "upgrade") {
+                                  trackEvent("courses_upgrade_prompt", { courseId: course.id });
+                                  openUpgradeDialog();
+                                }
+                              }}
+                            >
+                              {ctaLabel}
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ),
+                  )}
             </div>
           </div>
         </section>
@@ -198,7 +246,10 @@ const Courses = () => {
             <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
               Sign up now and get immediate access to Level 1 content completely free.
             </p>
-            <Link to={user ? "/dashboard" : "/auth?redirect=%2Fdashboard"}>
+            <Link
+              to={user ? "/dashboard" : "/auth?redirect=%2Fdashboard"}
+              onClick={() => trackEvent("courses_final_cta", { authenticated: Boolean(user) })}
+            >
               <Button size="xl" className="gap-2">
                 <PlayCircle className="h-5 w-5" />
                 {user ? "Resume learning" : "Start Free"}

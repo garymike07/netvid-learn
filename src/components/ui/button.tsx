@@ -20,12 +20,19 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         hero:
           "bg-accent text-accent-foreground shadow-[0_24px_60px_-18px_hsla(278,97%,72%,0.6)] hover:brightness-105",
+        tertiary:
+          "border border-tertiary/40 bg-tertiary text-tertiary-foreground shadow-sm hover:border-tertiary/60 hover:bg-tertiary/80",
+        "pill-primary":
+          "rounded-full bg-gradient-to-r from-primary via-accent to-primary-strong text-primary-foreground shadow-glow px-8 py-3 transition duration-md ease-emphasized hover:brightness-110",
+        "icon-glow":
+          "rounded-full border border-white/10 bg-white/5 p-0 text-primary transition duration-sm ease-emphasized hover:border-primary/40 hover:shadow-glow [&_svg]:size-5",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-lg px-8",
         xl: "h-14 rounded-xl px-10 text-base",
+        "2xl": "h-16 rounded-2xl px-12 text-lg",
         icon: "h-10 w-10",
       },
     },

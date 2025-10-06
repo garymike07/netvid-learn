@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { getCourseBySlug, type Lesson, type Module } from "@/data/courses";
 import { loadProgress, saveProgress, updateLessonCompletion, type UserProgress } from "@/lib/progress";
 import { toast } from "sonner";
 import { useCertificates, type CourseCertificatePayload } from "@/contexts/CertificateContext";
+import { FadeIn } from "@/components/motion";
 
 type LessonTypeCounts = Record<Lesson["type"], number>;
 
@@ -323,7 +325,7 @@ const CourseDetail = () => {
               {course.level}
             </Badge>
           </div>
-          <Button size="lg" className="gap-2" onClick={handleStartLearning}>
+          <Button size="lg" variant="pill-primary" className="gap-2" onClick={handleStartLearning}>
             <PlayCircle className="h-5 w-5" />
             {isGuest ? "Sign in to start" : "Start learning"}
           </Button>
@@ -501,21 +503,32 @@ const CourseDetail = () => {
 
         <section className="grid gap-10 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            <h1 className="text-4xl font-semibold text-foreground">{course.title}</h1>
-            <p className="text-lg text-muted-foreground">{course.description}</p>
-            <div className="glass-panel overflow-hidden rounded-3xl">
-              <div className="aspect-video">
-                <iframe
-                  title={course.title}
-                  src={`${course.heroVideo}?rel=0`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full"
-                />
-              </div>
-            </div>
+            <FadeIn>
+              <h1 className="text-4xl font-semibold text-foreground md:text-5xl">{course.title}</h1>
+            </FadeIn>
+            <FadeIn delay={0.06}>
+              <p className="text-lg text-muted-foreground">{course.description}</p>
+            </FadeIn>
+            <FadeIn delay={0.12}>
+              <motion.div
+                className="glass-panel overflow-hidden rounded-3xl"
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="aspect-video">
+                  <iframe
+                    title={course.title}
+                    src={`${course.heroVideo}?rel=0`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full"
+                  />
+                </div>
+              </motion.div>
+            </FadeIn>
 
-            <div className="space-y-2">
+            <FadeIn delay={0.18} className="space-y-2">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <span className="inline-flex items-center gap-1">
@@ -530,9 +543,10 @@ const CourseDetail = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </FadeIn>
 
-            <div className="glass-panel rounded-2xl border-none p-5">
+            <FadeIn delay={0.24}>
+              <div className="glass-panel rounded-2xl border-none p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
@@ -579,37 +593,40 @@ const CourseDetail = () => {
               <p className="mt-4 text-xs text-muted-foreground">
                 Issue date and certificate number are stored securely for future verification requests.
               </p>
-            </div>
+              </div>
+            </FadeIn>
           </div>
 
-          <Card className="glass-panel self-start border-none p-6">
-            <CardHeader className="p-0">
-              <CardTitle className="text-foreground">What you will achieve</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Master skills that Kenyan employers look for.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 p-0 pt-6">
-              <div className="space-y-3">
-                {course.outcomes.map((outcome) => (
-                  <div key={outcome} className="flex items-start gap-3 text-sm">
-                    <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
-                      <Layers className="h-4 w-4" />
+          <FadeIn delay={0.3}>
+            <Card className="glass-panel self-start border-none p-6">
+              <CardHeader className="p-0">
+                <CardTitle className="text-foreground">What you will achieve</CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Master skills that Kenyan employers look for.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 p-0 pt-6">
+                <div className="space-y-3">
+                  {course.outcomes.map((outcome) => (
+                    <div key={outcome} className="flex items-start gap-3 text-sm">
+                      <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                        <Layers className="h-4 w-4" />
+                      </div>
+                      <span className="text-muted-foreground">{outcome}</span>
                     </div>
-                    <span className="text-muted-foreground">{outcome}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="glass-panel rounded-2xl border-none p-4">
-                <h3 className="text-sm font-semibold text-foreground">Prerequisites</h3>
-                <ul className="mt-3 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
-                  {course.prerequisites.map((req) => (
-                    <li key={req}>{req}</li>
                   ))}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+                <div className="glass-panel rounded-2xl border-none p-4">
+                  <h3 className="text-sm font-semibold text-foreground">Prerequisites</h3>
+                  <ul className="mt-3 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
+                    {course.prerequisites.map((req) => (
+                      <li key={req}>{req}</li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </FadeIn>
         </section>
 
         <section className="space-y-6">
@@ -627,11 +644,8 @@ const CourseDetail = () => {
                 .filter(([, count]) => count > 0)
                 .map(([type, count]) => ({ type: type as Lesson["type"], count }));
               return (
-              <Card
-                key={module.id}
-                className="glass-panel border-none p-6 motion-safe:animate-fade-up"
-                style={{ animationDelay: `${0.05 * moduleIndex}s` }}
-              >
+                <FadeIn key={module.id} delay={0.05 * moduleIndex}>
+                  <Card className="glass-panel border-none p-6">
                 <CardHeader className="p-0">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
@@ -743,27 +757,30 @@ const CourseDetail = () => {
                     );
                   })}
                 </CardContent>
-              </Card>
+                  </Card>
+                </FadeIn>
             );
           })}
           </div>
         </section>
 
-        <section className="glass-panel rounded-2xl border-none p-6 motion-safe:animate-fade-up">
-          <h2 className="text-xl font-semibold text-foreground">Next steps</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Complete all lessons and labs to unlock a downloadable certificate. Stay consistent – the platform saves your
-            progress every time you mark a lesson complete.
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <Button size="lg" className="gap-2" onClick={handleStartLearning}>
-              {isGuest ? "Sign in to start" : "Continue from current lesson"}
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to={isGuest ? "/auth?redirect=%2Fdashboard" : "/dashboard"}>View dashboard</Link>
-            </Button>
-          </div>
-        </section>
+        <FadeIn>
+          <section className="glass-panel rounded-2xl border-none p-6">
+            <h2 className="text-xl font-semibold text-foreground">Next steps</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Complete all lessons and labs to unlock a downloadable certificate. Stay consistent – the platform saves your
+              progress every time you mark a lesson complete.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Button size="lg" variant="pill-primary" className="gap-2" onClick={handleStartLearning}>
+                {isGuest ? "Sign in to start" : "Continue from current lesson"}
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to={isGuest ? "/auth?redirect=%2Fdashboard" : "/dashboard"}>View dashboard</Link>
+              </Button>
+            </div>
+          </section>
+        </FadeIn>
       </main>
     </div>
   );

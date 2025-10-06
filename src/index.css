@@ -21,14 +21,23 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
     --primary-glow: 217 85% 72%;
 
+    --primary-soft: 218 88% 72% / 0.18;
+    --primary-strong: 217 94% 58%;
+
     --secondary: 256 62% 60% / 0.28;
     --secondary-foreground: 210 30% 94%;
+
+    --tertiary: 200 75% 65% / 0.18;
+    --tertiary-foreground: 210 30% 95%;
 
     --muted: 220 36% 18% / 0.6;
     --muted-foreground: 218 18% 70%;
 
     --accent: 278 97% 72%;
     --accent-foreground: 0 0% 100%;
+
+    --accent-soft: 278 100% 78% / 0.16;
+    --accent-strong: 278 92% 65%;
 
     --success: 160 84% 56%;
     --success-foreground: 0 0% 10%;
@@ -41,15 +50,32 @@ All colors MUST be HSL.
     --ring: 217 91% 65%;
 
     --radius: 0.9rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.75rem;
 
     --gradient-hero: radial-gradient(circle at 10% 20%, hsl(215 90% 62% / 0.55), transparent 55%),
       radial-gradient(circle at 80% -10%, hsl(278 96% 72% / 0.45), transparent 60%),
       linear-gradient(120deg, hsl(222 70% 8%), hsl(230 65% 10%));
     --gradient-card: linear-gradient(145deg, hsl(217 60% 12% / 0.9), hsl(220 55% 9% / 0.75));
+    --gradient-accent: radial-gradient(circle at 35% 20%, hsl(217 95% 62% / 0.55), transparent 60%),
+      radial-gradient(circle at 70% 60%, hsl(278 92% 70% / 0.5), transparent 70%),
+      linear-gradient(135deg, hsl(225 70% 12%), hsl(231 66% 8%));
+    --gradient-promo: linear-gradient(120deg, hsl(216 95% 62%), hsl(279 92% 70%), hsl(193 84% 62%));
     --shadow-sm: 0 12px 24px -16px hsl(217 90% 60% / 0.35);
     --shadow-md: 0 28px 48px -24px hsl(222 92% 60% / 0.45);
     --shadow-lg: 0 40px 88px -32px hsl(222 95% 65% / 0.5);
+    --shadow-xl: 0 50px 120px -40px hsl(222 95% 64% / 0.55);
+    --shadow-glow: 0 0 0 1px hsl(217 91% 65% / 0.2), 0 0 40px -10px hsl(217 91% 65% / 0.6);
     --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-linger: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+
+    --motion-duration-xs: 120ms;
+    --motion-duration-sm: 200ms;
+    --motion-duration-md: 380ms;
+    --motion-duration-lg: 620ms;
+    --motion-ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+    --motion-ease-entrance: cubic-bezier(0.16, 1, 0.3, 1.2);
+    --motion-ease-exit: cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 226 50% 8% / 0.85;
     --sidebar-foreground: 210 30% 94%;
@@ -63,6 +89,9 @@ All colors MUST be HSL.
     --glass-border: 220 88% 80% / 0.18;
     --glass-highlight: 0 0% 100% / 0.08;
     --glass-shadow: 222 95% 62% / 0.35;
+    --glass-ambient: 221 90% 68% / 0.18;
+    --backdrop-strong: 28px;
+    --backdrop-vivid: 38px;
   }
 
   .dark {
@@ -78,15 +107,21 @@ All colors MUST be HSL.
     --primary: 217 91% 65%;
     --primary-foreground: 0 0% 100%;
     --primary-glow: 217 85% 72%;
+    --primary-soft: 218 88% 72% / 0.18;
+    --primary-strong: 217 94% 58%;
 
     --secondary: 256 62% 60% / 0.28;
     --secondary-foreground: 210 30% 94%;
+    --tertiary: 200 75% 65% / 0.18;
+    --tertiary-foreground: 210 30% 95%;
 
     --muted: 220 36% 18% / 0.6;
     --muted-foreground: 218 18% 70%;
 
     --accent: 278 97% 72%;
     --accent-foreground: 0 0% 100%;
+    --accent-soft: 278 100% 78% / 0.16;
+    --accent-strong: 278 92% 65%;
 
     --success: 160 84% 56%;
     --success-foreground: 0 0% 10%;
@@ -102,9 +137,15 @@ All colors MUST be HSL.
       radial-gradient(circle at 80% -10%, hsl(278 96% 72% / 0.45), transparent 60%),
       linear-gradient(120deg, hsl(222 70% 8%), hsl(230 65% 10%));
     --gradient-card: linear-gradient(145deg, hsl(217 60% 12% / 0.9), hsl(220 55% 9% / 0.75));
+    --gradient-accent: radial-gradient(circle at 35% 20%, hsl(217 95% 62% / 0.55), transparent 60%),
+      radial-gradient(circle at 70% 60%, hsl(278 92% 70% / 0.5), transparent 70%),
+      linear-gradient(135deg, hsl(225 70% 12%), hsl(231 66% 8%));
+    --gradient-promo: linear-gradient(120deg, hsl(216 95% 62%), hsl(279 92% 70%), hsl(193 84% 62%));
     --shadow-sm: 0 12px 24px -16px hsl(217 90% 60% / 0.35);
     --shadow-md: 0 28px 48px -24px hsl(222 92% 60% / 0.45);
     --shadow-lg: 0 40px 88px -32px hsl(222 95% 65% / 0.5);
+    --shadow-xl: 0 50px 120px -40px hsl(222 95% 64% / 0.55);
+    --shadow-glow: 0 0 0 1px hsl(217 91% 65% / 0.2), 0 0 40px -10px hsl(217 91% 65% / 0.6);
     --sidebar-background: 226 50% 8% / 0.85;
     --sidebar-foreground: 210 30% 94%;
     --sidebar-primary: 217 91% 65%;
@@ -117,6 +158,9 @@ All colors MUST be HSL.
     --glass-border: 220 88% 80% / 0.18;
     --glass-highlight: 0 0% 100% / 0.08;
     --glass-shadow: 222 95% 62% / 0.35;
+    --glass-ambient: 221 90% 68% / 0.18;
+    --backdrop-strong: 28px;
+    --backdrop-vivid: 38px;
   }
 }
 
@@ -134,6 +178,7 @@ All colors MUST be HSL.
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    transition: background 0.6s var(--motion-ease-emphasized);
   }
 }
 
@@ -166,7 +211,24 @@ All colors MUST be HSL.
     border: 1px solid hsl(var(--glass-border));
     background: linear-gradient(160deg, hsl(var(--card)), hsl(225 59% 14% / 0.4));
     box-shadow: 0 18px 48px -24px hsl(var(--glass-shadow));
-    backdrop-filter: blur(28px);
+    backdrop-filter: blur(var(--backdrop-strong));
+  }
+
+  .glass-panel::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background: linear-gradient(140deg, transparent 35%, hsl(var(--glass-ambient)) 55%, transparent 85%);
+    opacity: 0;
+    transition: opacity var(--motion-duration-md) var(--motion-ease-emphasized);
+    pointer-events: none;
+  }
+
+  .glass-panel:hover::after,
+  .glass-panel:focus-within::after {
+    opacity: 1;
   }
 
   .neon-divider {
@@ -184,5 +246,43 @@ All colors MUST be HSL.
 
   .glow-ring {
     box-shadow: 0 0 0 1px hsl(var(--glass-border)), 0 0 40px -18px hsl(var(--glass-shadow));
+  }
+
+  .cta-gradient {
+    background-image: var(--gradient-promo);
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-glow);
+  }
+
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition: transform var(--motion-duration-md) var(--motion-ease-emphasized),
+      box-shadow var(--motion-duration-md) var(--motion-ease-emphasized);
+  }
+
+  .tilt-card:hover {
+    transform: translateY(-6px) rotateX(6deg) rotateY(-4deg);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .shimmer-border {
+    position: relative;
+  }
+
+  .shimmer-border::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(120deg, transparent, hsl(var(--accent-soft)), transparent);
+    filter: blur(4px);
+    opacity: 0;
+    transition: opacity var(--motion-duration-sm) var(--motion-ease-emphasized);
+    pointer-events: none;
+  }
+
+  .shimmer-border:hover::after,
+  .shimmer-border:focus-visible::after {
+    opacity: 1;
   }
 }

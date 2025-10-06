@@ -46,7 +46,7 @@ const createTrialPayload = (userId: string) => {
 };
 
 export const SubscriptionProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [record, setRecord] = useState<SubscriptionRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +71,11 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
   const refresh = useCallback(async () => {
+    if (authLoading) {
+      setLoading(true);
+      return;
+    }
+
     if (!user) {
       setRecord(null);
       setLoading(false);
@@ -103,7 +108,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
 
     setRecord(data);
     setLoading(false);
-  }, [ensureTrialSubscription, user]);
+  }, [authLoading, ensureTrialSubscription, user]);
 
   useEffect(() => {
     refresh();
@@ -118,7 +123,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || authLoading) return;
     const channel = supabase
       .channel("public:subscriptions")
       .on(
@@ -138,10 +143,10 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [refresh, user]);
+  }, [authLoading, refresh, user]);
 
   const computed = useMemo<ComputedSubscription>(() => {
-    const fallbackExpires = !record && user?.created_at ? addDays(new Date(user.created_at), TRIAL_LENGTH_DAYS) : null;
+    const fallbackExpires = !record && user?.createdAt ? addDays(new Date(user.createdAt), TRIAL_LENGTH_DAYS) : null;
     const expires = record?.trial_expires_at ? new Date(record.trial_expires_at) : fallbackExpires;
     const diffMs = expires ? expires.getTime() - now.getTime() : null;
     const clampedMs = diffMs !== null ? Math.max(0, diffMs) : null;
@@ -169,7 +174,7 @@ export const SubscriptionProvider = ({ children }: { children: React.ReactNode }
       upgradeDialogOpen,
       setUpgradeDialogOpen,
     };
-  }, [record, loading, error, refresh, upgradeDialogOpen, now, user?.created_at]);
+  }, [record, loading, error, refresh, upgradeDialogOpen, now, user?.createdAt]);
 
   return <SubscriptionContext.Provider value={computed}>{children}</SubscriptionContext.Provider>;
 };

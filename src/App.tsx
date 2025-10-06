@@ -42,6 +42,7 @@ const ScrollToHash = () => {
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { session, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -52,7 +53,8 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   }
 
   if (!session) {
-    return <Navigate to="/auth" replace />;
+    const redirectQuery = encodeURIComponent(`${location.pathname}${location.search}${location.hash}`);
+    return <Navigate to={`/auth?redirect=${redirectQuery}`} replace />;
   }
 
   return children;

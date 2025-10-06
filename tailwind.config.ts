@@ -28,6 +28,10 @@ export default {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -59,10 +63,36 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      backgroundImage: {
+        hero: "var(--gradient-hero)",
+        card: "var(--gradient-card)",
+        accent: "var(--gradient-accent)",
+        promo: "var(--gradient-promo)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
+      },
+      boxShadow: {
+        sm: "var(--shadow-sm)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        xl: "var(--shadow-xl)",
+        glow: "var(--shadow-glow)",
+      },
+      transitionTimingFunction: {
+        emphasized: "var(--motion-ease-emphasized)",
+        entrance: "var(--motion-ease-entrance)",
+        exit: "var(--motion-ease-exit)",
+      },
+      transitionDuration: {
+        xs: "var(--motion-duration-xs)",
+        sm: "var(--motion-duration-sm)",
+        md: "var(--motion-duration-md)",
+        lg: "var(--motion-duration-lg)",
       },
       keyframes: {
         "accordion-down": {
@@ -130,6 +160,25 @@ export default {
             transform: "translateX(150%) rotate(25deg)",
           },
         },
+        shimmer: {
+          "0%": {
+            transform: "translateX(-100%)",
+          },
+          "50%": {
+            transform: "translateX(15%)",
+          },
+          "100%": {
+            transform: "translateX(120%)",
+          },
+        },
+        "tilt-hover": {
+          "0%": {
+            transform: "rotateX(0deg) rotateY(0deg)",
+          },
+          "100%": {
+            transform: "rotateX(6deg) rotateY(-4deg)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -139,6 +188,8 @@ export default {
         float: "float 6s ease-in-out infinite",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
         shine: "shine 2.2s ease-in-out infinite",
+        shimmer: "shimmer 2.6s ease infinite",
+        "tilt-hover": "tilt-hover 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },
