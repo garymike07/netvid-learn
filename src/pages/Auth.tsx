@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { SignIn, SignUp } from "@clerk/clerk-react";
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { AuthenticateWithRedirectCallback, SignIn, SignUp } from "@clerk/clerk-react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,7 @@ const clerkAppearance = {
 const Auth = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const redirectParam = searchParams.get("redirect");
@@ -34,6 +35,12 @@ const Auth = () => {
   const redirectQueryString = `redirect=${encodeURIComponent(redirectTo)}`;
   const signInUrl = `/auth?mode=signin&${redirectQueryString}`;
   const signUpUrl = `/auth?mode=signup&${redirectQueryString}`;
+  const callbackPath = `/auth/sso-callback`;
+  const callbackRedirect =
+    typeof window !== "undefined" ? window.sessionStorage.getItem("auth:redirectTo") ?? redirectTo : redirectTo;
+  const isCallbackRoute = location.pathname === callbackPath;
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const callbackUrl = origin ? `${origin}${callbackPath}` : callbackPath;
 
   useEffect(() => {
     const modeParam = searchParams.get("mode");
@@ -41,6 +48,12 @@ const Auth = () => {
       setMode(modeParam);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("auth:redirectTo", redirectTo);
+    }
+  }, [redirectTo]);
 
   useEffect(() => {
     if (!loading && user) {
@@ -55,6 +68,14 @@ const Auth = () => {
 
   if (!loading && user) {
     return <Navigate to={redirectTo} replace />;
+  }
+
+  if (isCallbackRoute) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <AuthenticateWithRedirectCallback afterSignInUrl={callbackRedirect} afterSignUpUrl={callbackRedirect} />
+      </div>
+    );
   }
 
   return (
@@ -86,6 +107,7 @@ const Auth = () => {
                 routing="path"
                 path="/auth"
                 appearance={clerkAppearance}
+                redirectUrl={callbackUrl}
                 afterSignInUrl={redirectTo}
                 signUpUrl={signUpUrl}
               />
@@ -94,6 +116,7 @@ const Auth = () => {
                 routing="path"
                 path="/auth"
                 appearance={clerkAppearance}
+                redirectUrl={callbackUrl}
                 afterSignUpUrl={redirectTo}
                 signInUrl={signInUrl}
               />
