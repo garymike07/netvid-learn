@@ -31,6 +31,9 @@ const Auth = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const redirectParam = searchParams.get("redirect");
   const redirectTo = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/dashboard";
+  const redirectQueryString = `redirect=${encodeURIComponent(redirectTo)}`;
+  const signInUrl = `/auth?mode=signin&${redirectQueryString}`;
+  const signUpUrl = `/auth?mode=signup&${redirectQueryString}`;
 
   useEffect(() => {
     const modeParam = searchParams.get("mode");
@@ -79,9 +82,21 @@ const Auth = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {mode === "signin" ? (
-              <SignIn routing="hash" redirectUrl={redirectTo} appearance={clerkAppearance} />
+              <SignIn
+                routing="path"
+                path="/auth"
+                appearance={clerkAppearance}
+                afterSignInUrl={redirectTo}
+                signUpUrl={signUpUrl}
+              />
             ) : (
-              <SignUp routing="hash" redirectUrl={redirectTo} afterSignUpUrl={redirectTo} appearance={clerkAppearance} />
+              <SignUp
+                routing="path"
+                path="/auth"
+                appearance={clerkAppearance}
+                afterSignUpUrl={redirectTo}
+                signInUrl={signInUrl}
+              />
             )}
           </CardContent>
           <CardFooter className="flex flex-col gap-3 text-center text-sm text-muted-foreground">
@@ -89,7 +104,13 @@ const Auth = () => {
               type="button"
               variant="link"
               className="p-0 text-primary"
-              onClick={() => setMode((prev) => (prev === "signin" ? "signup" : "signin"))}
+              onClick={() => {
+                setMode((prev) => {
+                  const next = prev === "signin" ? "signup" : "signin";
+                  navigate(next === "signin" ? signInUrl : signUpUrl, { replace: true });
+                  return next;
+                });
+              }}
             >
               {toggleLabel}
             </Button>
