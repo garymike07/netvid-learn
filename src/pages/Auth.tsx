@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AuthenticateWithRedirectCallback, SignIn, SignUp } from "@clerk/clerk-react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,20 +55,10 @@ const Auth = () => {
     }
   }, [redirectTo]);
 
-  useEffect(() => {
-    if (!loading && user) {
-      navigate(redirectTo, { replace: true });
-    }
-  }, [user, loading, navigate, redirectTo]);
-
   const toggleLabel = useMemo(
     () => (mode === "signin" ? "Need an account? Create one" : "Already registered? Sign in"),
     [mode],
   );
-
-  if (!loading && user) {
-    return <Navigate to={redirectTo} replace />;
-  }
 
   if (isCallbackRoute) {
     return (
@@ -77,6 +67,9 @@ const Auth = () => {
       </div>
     );
   }
+
+  const alreadyAuthenticated = !loading && Boolean(user);
+  const displayName = user?.fullName?.trim()?.length ? user.fullName : user?.email;
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-primary/5 to-background">
@@ -102,6 +95,20 @@ const Auth = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {alreadyAuthenticated ? (
+              <div className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm text-primary">
+                <p className="font-semibold">You're already signed in{displayName ? ` as ${displayName}` : ""}.</p>
+                <p className="mt-1 text-primary/80">You can continue browsing below or head straight to your dashboard.</p>
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Button asChild size="sm" variant="default" className="sm:flex-1">
+                    <Link to={redirectTo}>Go to dashboard</Link>
+                  </Button>
+                  <Button asChild size="sm" variant="outline" className="sm:flex-1">
+                    <Link to="/">Back to home</Link>
+                  </Button>
+                </div>
+              </div>
+            ) : null}
             {mode === "signin" ? (
               <SignIn
                 routing="path"

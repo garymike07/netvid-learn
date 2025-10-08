@@ -22,14 +22,85 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+const SOCIAL_PROVIDER_PRIORITY = ["oauth_google", "oauth_linkedin", "oauth_linkedin_oidc"] as const;
+
+type ExternalAccount = {
+  provider: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  username?: string | null;
+  emailAddress?: string | null;
+};
+
+const selectPreferredExternalAccount = (accounts: Array<ExternalAccount> | undefined) => {
+  if (!accounts || accounts.length === 0) {
+    return undefined;
+  }
+
+  for (const provider of SOCIAL_PROVIDER_PRIORITY) {
+    const match = accounts.find((account) => account.provider === provider);
+    if (match) {
+      return match;
+    }
+  }
+
+  return accounts[0];
+};
+
+const extractExternalName = (account: ExternalAccount | undefined) => {
+  if (!account) {
+    return { firstName: null, lastName: null, fullName: null };
+  }
+
+  const firstName = account.firstName ?? account.username ?? account.emailAddress?.split?.("@")[0] ?? null;
+  const lastName = account.lastName ?? null;
+
+  let fullName: string | null = null;
+  const combined = [account.firstName, account.lastName].filter(Boolean).join(" ").trim();
+  if (combined.length > 0) {
+    fullName = combined;
+  } else if (typeof account.username === "string" && account.username.trim().length > 0) {
+    fullName = account.username.trim();
+  } else if (typeof account.emailAddress === "string") {
+    const emailAlias = account.emailAddress.split("@")[0];
+    fullName = emailAlias.length > 0 ? emailAlias : null;
+  }
+
+  return { firstName: firstName ?? null, lastName, fullName };
+};
+
 const mapClerkUser = (user: ReturnType<typeof useUser>["user"]): AppUser | null => {
   if (!user) return null;
+
+  const preferredExternalAccount = selectPreferredExternalAccount(user.externalAccounts as Array<ExternalAccount> | undefined);
+  const externalName = extractExternalName(preferredExternalAccount);
+
+  const derivedFirstName = user.firstName ?? externalName.firstName;
+  const derivedLastName = user.lastName ?? externalName.lastName;
+
+  let derivedFullName = user.fullName ?? null;
+  if (!derivedFullName || derivedFullName.trim().length === 0) {
+    const combined = [derivedFirstName, derivedLastName].filter(Boolean).join(" ").trim();
+    if (combined.length > 0) {
+      derivedFullName = combined;
+    } else if (externalName.fullName && externalName.fullName.trim().length > 0) {
+      derivedFullName = externalName.fullName.trim();
+    }
+  }
+
+  if (!derivedFullName && preferredExternalAccount?.emailAddress) {
+    const alias = preferredExternalAccount.emailAddress.split("@")[0];
+    if (alias.length > 0) {
+      derivedFullName = alias;
+    }
+  }
+
   return {
     id: user.id,
-    email: user.primaryEmailAddress?.emailAddress ?? null,
-    fullName: user.fullName ?? null,
-    firstName: user.firstName ?? null,
-    lastName: user.lastName ?? null,
+    email: user.primaryEmailAddress?.emailAddress ?? preferredExternalAccount?.emailAddress ?? null,
+    fullName: derivedFullName ?? null,
+    firstName: derivedFirstName ?? null,
+    lastName: derivedLastName ?? null,
     createdAt: user.createdAt?.toISOString?.() ?? null,
   };
 };
