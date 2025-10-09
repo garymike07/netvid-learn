@@ -9,16 +9,30 @@ import { useAuth } from "@/contexts/AuthContext";
 const clerkAppearance = {
   variables: {
     colorPrimary: "hsl(var(--primary))",
-    colorBackground: "transparent",
+    colorText: "hsl(var(--foreground))",
+    colorTextOnPrimary: "hsl(var(--primary-foreground))",
+    colorBackground: "hsl(var(--card))",
     colorInputBackground: "hsl(var(--background))",
-    borderRadius: "1rem",
+    colorInputText: "hsl(var(--foreground))",
+    borderRadius: "1.25rem",
+    fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
   },
   elements: {
     rootBox: "w-full",
-    card: "bg-transparent shadow-none p-0",
-    headerTitle: "text-2xl font-semibold text-foreground",
-    headerSubtitle: "text-sm text-muted-foreground",
-    formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
+    card:
+      "relative overflow-hidden border border-primary/40 bg-gradient-to-br from-primary/15 via-background/95 to-background/95 p-0 shadow-[0_32px_95px_-48px_hsl(var(--primary))] backdrop-blur-2xl",
+    headerTitle: "text-3xl font-bold tracking-tight text-primary-foreground drop-shadow-[0_6px_18px_rgba(30,64,175,0.45)]",
+    headerSubtitle: "text-base text-primary/80 font-medium",
+    formFieldLabel: "text-xs font-semibold uppercase tracking-[0.24em] text-foreground/70",
+    formFieldInput:
+      "bg-foreground/10 border border-primary/40 text-foreground placeholder:text-foreground/40 shadow-inner shadow-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/70 focus:ring-offset-2 focus:ring-offset-background",
+    formFieldInputShowPasswordButton: "text-primary hover:text-primary/80",
+    formButtonPrimary:
+      "bg-gradient-to-r from-primary via-accent to-primary/85 text-primary-foreground font-semibold shadow-[0_22px_45px_-28px_hsl(var(--primary))] hover:from-primary/90 hover:to-accent/90 hover:shadow-[0_28px_55px_-25px_hsl(var(--primary))] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    socialButtons: "gap-3",
+    socialButtonsProvider:
+      "bg-background/70 border border-primary/40 text-foreground hover:bg-primary/20 hover:border-primary/60 transition-colors duration-300",
+    dividerRow: "text-[11px] uppercase tracking-[0.28em] text-muted-foreground/80",
     footerAction__signIn: "hidden",
     footerAction__signUp: "hidden",
   },
@@ -83,7 +97,7 @@ const Auth = () => {
       </header>
 
       <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-2xl border border-primary/30 bg-gradient-to-br from-primary/20 via-background/90 to-background/95 shadow-[0_40px_120px_-55px_hsl(var(--primary))] backdrop-blur-2xl">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl font-semibold text-foreground">
               {mode === "signin" ? "Welcome Back" : "Create your account"}
