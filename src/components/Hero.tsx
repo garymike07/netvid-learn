@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { FadeIn, ParallaxContainer } from "@/components/motion";
-import { BookOpen, Play, Sparkles, Video } from "lucide-react";
+import { BookOpen, Play, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 const Hero = () => {
@@ -26,21 +26,31 @@ const Hero = () => {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-12 text-center lg:flex-row lg:text-left">
           <div className="flex-1 space-y-8">
             <FadeIn once>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm text-muted-foreground backdrop-blur">
-                <Video className="h-4 w-4 text-primary" />
-                Immersive video-first learning
+              <div className="glass-card flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur">
+                <img
+                  src="/assets/hero-avatar.png"
+                  alt="Mika, your NetVid learning guide"
+                  className="h-14 w-14 rounded-full border border-white/20 object-cover shadow-glow"
+                  loading="eager"
+                />
+                <div className="text-left">
+                  <span className="block text-sm font-semibold uppercase tracking-wide text-primary">Meet Mika</span>
+                  <span className="block text-sm text-muted-foreground">
+                    Your friendly avatar, ready to walk you through every network milestone.
+                  </span>
+                </div>
               </div>
             </FadeIn>
             <FadeIn delay={0.08} className="space-y-6">
               <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl lg:text-7xl">
                 Mike Net Academy
                 <span className="block bg-gradient-to-r from-primary via-accent to-primary-strong bg-clip-text text-transparent">
-                  From Zero to Expert
+                  Guided from Zero to Expert
                 </span>
               </h1>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
-                Dive into curated playlists, guided labs, and a holographic journey that keeps you inspired from your first
-                packet to carrier-grade automation.
+                Dive into playlists, labs, and challenges with Mika at your side—clarifying jargon, recommending next steps,
+                and celebrating wins as you master enterprise-grade networking.
               </p>
             </FadeIn>
             <FadeIn delay={0.16}>
@@ -111,19 +121,28 @@ const Hero = () => {
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <img
-                  src="/images/futuristic-dashboard.png"
-                  alt="Immersive network operations hologram"
+                  src="/assets/hero-avatar.png"
+                  alt="Mika guiding learners through the NetVid experience"
                   className="w-full rounded-xl border border-white/10 object-cover"
                   loading="lazy"
                 />
-                <div className="mt-6 space-y-3 text-sm text-muted-foreground">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-foreground">Live Routing Lab</span>
-                    <span className="rounded-full bg-primary-soft px-3 py-1 text-xs text-primary">Active</span>
+                <div className="mt-6 space-y-4 text-sm text-muted-foreground">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-foreground">
+                    <p className="text-sm font-medium">“Hi, I’m Mika.”</p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      I’ll highlight which course to start with, which labs unlock next, and how to claim your certificates.
+                      Click anywhere I appear to get instant guidance.
+                    </p>
                   </div>
-                  <p className="text-xs leading-relaxed text-muted-foreground/90">
-                    Walk through packet captures, automate configs, and master the same tooling top-tier engineers rely on.
-                  </p>
+                  <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+                    {["Pick your first learning path", "Track labs and quizzes", "Earn shareable certificates", "Stay on your trial timeline"].map(
+                      (tip) => (
+                        <div key={tip} className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                          {tip}
+                        </div>
+                      ),
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </ParallaxContainer>

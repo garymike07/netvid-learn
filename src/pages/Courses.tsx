@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, CheckCircle2, Lock, PlayCircle } from "lucide-react";
 import Curriculum from "@/components/Curriculum";
 import Footer from "@/components/Footer";
+import SiteGuide from "@/components/SiteGuide";
 import { COURSES } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
@@ -260,6 +261,7 @@ const Courses = () => {
       </main>
 
       <Footer />
+      <SiteGuide context="courses" />
     </div>
   );
 };

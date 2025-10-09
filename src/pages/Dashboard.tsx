@@ -17,6 +17,7 @@ import { LearningRoadmap, type RoadmapItem } from "@/components/dashboard/Learni
 import { CertificateShareCard } from "@/components/dashboard/CertificateShareCard";
 import { OnboardingCoach } from "@/components/dashboard/OnboardingCoach";
 import { trackEvent } from "@/lib/analytics";
+import SiteGuide from "@/components/SiteGuide";
 
 type ContinueCourse = {
   id: string;
@@ -534,6 +535,7 @@ const Dashboard = () => {
         </FadeIn>
       </main>
 
+      <SiteGuide context="dashboard" />
       <OnboardingCoach />
     </div>
   );
