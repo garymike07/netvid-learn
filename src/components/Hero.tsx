@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { FadeIn, ParallaxContainer } from "@/components/motion";
-import { BookOpen, Play, Sparkles } from "lucide-react";
+import { FadeIn } from "@/components/motion";
+import { BookOpen, Play } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 const Hero = () => {
@@ -23,8 +23,8 @@ const Hero = () => {
       </motion.div>
 
       <div className="container relative z-10 mx-auto px-4">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-12 text-center lg:flex-row lg:text-left">
-          <div className="flex-1 space-y-8">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-12 text-center">
+          <div className="w-full space-y-8">
             <FadeIn once>
               <div className="glass-card flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur">
                 <img
@@ -54,7 +54,7 @@ const Hero = () => {
               </p>
             </FadeIn>
             <FadeIn delay={0.16}>
-              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
                 <Link
                   to="/courses"
                   className="w-full sm:w-auto"
@@ -107,45 +107,6 @@ const Hero = () => {
                 ))}
               </div>
             </FadeIn>
-          </div>
-
-          <div className="flex-1">
-            <ParallaxContainer className="relative hidden w-full justify-center lg:flex">
-              <motion.div
-                className="relative max-w-[420px] rounded-2xl border border-white/10 bg-white/5 p-4 text-left backdrop-blur-sm shadow-xl"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="absolute -right-4 -top-4 rounded-full bg-primary/20 p-4 text-primary shadow-glow">
-                  <Sparkles className="h-6 w-6" />
-                </div>
-                <img
-                  src="/assets/hero-avatar.png"
-                  alt="Mika guiding learners through the NetVid experience"
-                  className="w-full rounded-xl border border-white/10 object-cover"
-                  loading="lazy"
-                />
-                <div className="mt-6 space-y-4 text-sm text-muted-foreground">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-foreground">
-                    <p className="text-sm font-medium">“Hi, I’m Mika.”</p>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      I’ll highlight which course to start with, which labs unlock next, and how to claim your certificates.
-                      Click anywhere I appear to get instant guidance.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
-                    {["Pick your first learning path", "Track labs and quizzes", "Earn shareable certificates", "Stay on your trial timeline"].map(
-                      (tip) => (
-                        <div key={tip} className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                          {tip}
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            </ParallaxContainer>
           </div>
         </div>
       </div>
