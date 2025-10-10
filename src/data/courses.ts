@@ -18,7 +18,7 @@ export type Module = {
   lessons: Lesson[];
 };
 
-export type Course = {
+export type CourseRecord = {
   id: string;
   slug: string;
   title: string;
@@ -33,7 +33,33 @@ export type Course = {
   modules: Module[];
 };
 
-export const COURSES: Course[] = [
+export type DurationRange = {
+  min: number;
+  max: number;
+};
+
+export type CourseStats = {
+  totalLessons: number;
+  labCount: number;
+  quizCount: number;
+  videoCount: number;
+  readingCount: number;
+};
+
+export type CourseMetadata = {
+  categories: string[];
+  tags: string[];
+  focusAreas: string[];
+  tracks: string[];
+  durationWeeks: DurationRange;
+  localizedSummaries: Record<string, string>;
+};
+
+export type Course = CourseRecord & {
+  stats: CourseStats;
+} & CourseMetadata;
+
+const COURSE_DATA: CourseRecord[] = [
   {
     id: "network-foundations",
     slug: "network-foundations",
@@ -2219,6 +2245,870 @@ export const COURSES: Course[] = [
       },
     ],
   },
+  {
+    id: "cloud-networking-essentials",
+    slug: "cloud-networking-essentials",
+    title: "Cloud Networking Essentials",
+    level: "Intermediate",
+    summary: "Bridge on-prem and cloud networks with secure, observable connectivity patterns.",
+    description:
+      "Design resilient hybrid networks that connect data centres to AWS, Azure, and GCP. Master transit gateways, private connectivity, and shared-responsibility security so workloads stay available and compliant.",
+    duration: "5-7 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/kJex3TtyrSg",
+    outcomes: [
+      "Architect hub-and-spoke, mesh, and transit gateway topologies across major clouds",
+      "Secure traffic with zero trust principles, private endpoints, and microsegmentation",
+      "Instrument observability with flow logs, packet mirrors, and synthetic probes",
+      "Automate cloud networking deployments using infrastructure as code",
+    ],
+    prerequisites: [
+      "Routing & Switching Essentials or equivalent",
+      "Familiarity with at least one public cloud provider",
+    ],
+    modules: [
+      {
+        id: "cloud-net-1",
+        title: "Hybrid Foundations",
+        description: "Lay the groundwork for reliable connectivity between campuses and clouds.",
+        notes: [
+          "Compare VPN, Direct Connect, and ExpressRoute options for resilient connectivity.",
+          "Design hub-and-spoke vs mesh topologies that balance cost, performance, and control.",
+          "Understand shared responsibility boundaries so teams know where to harden controls.",
+        ],
+        lessons: [
+          {
+            id: "cloud-net-1-1",
+            title: "Transit Gateway Deep Dive",
+            type: "video",
+            duration: "18 min",
+            description: "Explore AWS Transit Gateway, Azure Virtual WAN, and Google Cloud Network Connectivity Center patterns.",
+            videoUrl: "https://www.youtube.com/embed/F4f-tEFV0cA",
+            resources: [
+              { label: "Design Workbook", url: "https://networkacademy.ke/resources/cloud-transit-workbook.xlsx" },
+            ],
+          },
+          {
+            id: "cloud-net-1-2",
+            title: "Lab: Build a Hybrid VPC",
+            type: "lab",
+            duration: "40 min",
+            description: "Deploy a site-to-site VPN between a branch router and AWS using Terraform, then validate routing.",
+            videoUrl: "https://www.youtube.com/embed/dFzE4mcwp4M",
+            resources: [
+              { label: "Terraform Bundle", url: "https://networkacademy.ke/labs/hybrid-vpc-terraform.zip" },
+            ],
+          },
+          {
+            id: "cloud-net-1-3",
+            title: "Quiz: Connectivity Trade-offs",
+            type: "quiz",
+            duration: "12 min",
+            description: "Evaluate which hybrid networking option fits specific enterprise scenarios.",
+            videoUrl: "https://www.youtube.com/embed/6pWjzJxvlMQ",
+          },
+        ],
+      },
+      {
+        id: "cloud-net-2",
+        title: "Cloud Network Security",
+        description: "Secure traffic flows and enforce modern zero-trust controls.",
+        notes: [
+          "Apply zero trust network access patterns using identity-aware proxies and private endpoints.",
+          "Implement network firewalls, security groups, and microsegmentation at scale.",
+          "Automate guardrails and policy checks using infrastructure as code pipelines.",
+        ],
+        lessons: [
+          {
+            id: "cloud-net-2-1",
+            title: "Enforcing Zero Trust",
+            type: "video",
+            duration: "20 min",
+            description: "Design architecture that combines identity, device posture, and network context for access decisions.",
+            videoUrl: "https://www.youtube.com/embed/0uNyij7k1y0",
+            resources: [
+              { label: "Zero Trust Checklist", url: "https://networkacademy.ke/resources/cloud-zero-trust-checklist.pdf" },
+            ],
+          },
+          {
+            id: "cloud-net-2-2",
+            title: "Lab: Secure Private Endpoints",
+            type: "lab",
+            duration: "35 min",
+            description: "Deploy private service endpoints and policy-based routing to keep sensitive workloads off the public internet.",
+            videoUrl: "https://www.youtube.com/embed/iWf4H6qvKQ0",
+            resources: [
+              { label: "Policy Pack", url: "https://networkacademy.ke/labs/private-endpoint-policy-pack.zip" },
+            ],
+          },
+          {
+            id: "cloud-net-2-3",
+            title: "Reading: Policy as Code",
+            type: "reading",
+            duration: "15 min",
+            description: "Validate network deployments using Open Policy Agent and CI/CD integration.",
+            videoUrl: "https://www.youtube.com/embed/rGbiWowRU9c",
+            resources: [
+              { label: "OPA Starter", url: "https://networkacademy.ke/resources/opa-network-policies.zip" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "cloud-net-3",
+        title: "Observability & Automation",
+        description: "Monitor, troubleshoot, and automate cloud networks end to end.",
+        notes: [
+          "Collect flow logs, packet captures, and traces for cross-cloud visibility.",
+          "Build synthetic tests and dashboards that alert on experience degradations.",
+          "Automate remediation with serverless workflows and event-driven infrastructure.",
+        ],
+        lessons: [
+          {
+            id: "cloud-net-3-1",
+            title: "Observability Patterns",
+            type: "video",
+            duration: "19 min",
+            description: "Instrument multi-cloud networks with native and third-party tooling.",
+            videoUrl: "https://www.youtube.com/embed/8jW-ltVRgAk",
+            resources: [
+              { label: "Observability Playbook", url: "https://networkacademy.ke/resources/cloud-observability-playbook.pdf" },
+            ],
+          },
+          {
+            id: "cloud-net-3-2",
+            title: "Lab: Automate Incident Response",
+            type: "lab",
+            duration: "42 min",
+            description: "Trigger Lambda and Azure Functions to remediate connectivity issues detected by synthetic probes.",
+            videoUrl: "https://www.youtube.com/embed/8WQZrMNQMM0",
+            resources: [
+              { label: "Automation Toolkit", url: "https://networkacademy.ke/labs/cloud-automation-toolkit.zip" },
+            ],
+          },
+          {
+            id: "cloud-net-3-3",
+            title: "Quiz: Monitoring & Automation",
+            type: "quiz",
+            duration: "10 min",
+            description: "Confirm you can select tooling and workflows that keep cloud networks observable.",
+            videoUrl: "https://www.youtube.com/embed/kDrMoAA1xAc",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "cyber-operations-defense",
+    slug: "cyber-operations-defense",
+    title: "Cybersecurity Operations & Defense",
+    level: "Advanced",
+    summary: "Detect, respond, and recover from modern network attacks with automation and playbooks.",
+    description:
+      "Build and lead a security operations programme focused on network-centric threats. Master SIEM tuning, threat hunting, incident response, and purple teaming to keep organisations resilient.",
+    duration: "7-9 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/TzqAbdDrFas",
+    outcomes: [
+      "Design SOC runbooks and communication paths that accelerate response times",
+      "Deploy detection pipelines using Zeek, Suricata, and cloud-native telemetry",
+      "Run tabletop and purple-team exercises to validate readiness",
+      "Automate containment and recovery workflows with orchestration tooling",
+    ],
+    prerequisites: [
+      "Network Foundations",
+      "Comfort with scripting or automation tooling",
+    ],
+    modules: [
+      {
+        id: "cyber-ops-1",
+        title: "Detection Engineering",
+        description: "Collect and analyse network telemetry to surface actionable alerts.",
+        notes: [
+          "Tune IDS/IPS signatures to reduce false positives while catching advanced threats.",
+          "Correlate NetFlow, packet captures, and endpoint telemetry for high-fidelity detections.",
+          "Map detections to MITRE ATT&CK so teams know coverage and gaps.",
+        ],
+        lessons: [
+          {
+            id: "cyber-ops-1-1",
+            title: "Network Telemetry Pipeline",
+            type: "video",
+            duration: "22 min",
+            description: "Collect, normalise, and enrich telemetry from firewalls, proxies, and cloud services.",
+            videoUrl: "https://www.youtube.com/embed/5fWsxwSX1QY",
+            resources: [
+              { label: "Telemetry Blueprint", url: "https://networkacademy.ke/resources/network-telemetry-blueprint.pdf" },
+            ],
+          },
+          {
+            id: "cyber-ops-1-2",
+            title: "Lab: Zeek + Suricata",
+            type: "lab",
+            duration: "45 min",
+            description: "Deploy open-source sensors, tune signatures, and forward enriched events to a SIEM.",
+            videoUrl: "https://www.youtube.com/embed/n2bT59T3m1s",
+            resources: [
+              { label: "Sensor Toolkit", url: "https://networkacademy.ke/labs/zeek-suricata-toolkit.zip" },
+            ],
+          },
+          {
+            id: "cyber-ops-1-3",
+            title: "Quiz: Detection Coverage",
+            type: "quiz",
+            duration: "11 min",
+            description: "Identify detection gaps and prioritise engineering backlog items.",
+            videoUrl: "https://www.youtube.com/embed/qg_ob-u6X48",
+          },
+        ],
+      },
+      {
+        id: "cyber-ops-2",
+        title: "Incident Response Mastery",
+        description: "Coordinate rapid response with well-rehearsed playbooks and automation.",
+        notes: [
+          "Structure incident response teams with clear roles and escalation paths.",
+          "Automate investigation steps using SOAR platforms and serverless runbooks.",
+          "Communicate effectively with executives, regulators, and customers during crises.",
+        ],
+        lessons: [
+          {
+            id: "cyber-ops-2-1",
+            title: "Response Frameworks",
+            type: "video",
+            duration: "20 min",
+            description: "Apply NIST, SANS, and FIRST methodologies to modern network incidents.",
+            videoUrl: "https://www.youtube.com/embed/BPvHqtAtAh4",
+            resources: [
+              { label: "IR Runbook", url: "https://networkacademy.ke/resources/incident-response-runbook.docx" },
+            ],
+          },
+          {
+            id: "cyber-ops-2-2",
+            title: "Lab: SOAR Automation",
+            type: "lab",
+            duration: "42 min",
+            description: "Build playbooks that enrich alerts, isolate hosts, and track evidence automatically.",
+            videoUrl: "https://www.youtube.com/embed/UdJh0jOmYbk",
+            resources: [
+              { label: "SOAR Playbook Pack", url: "https://networkacademy.ke/labs/soar-playbook-pack.zip" },
+            ],
+          },
+          {
+            id: "cyber-ops-2-3",
+            title: "Reading: Crisis Communications",
+            type: "reading",
+            duration: "14 min",
+            description: "Coordinate communication flows across legal, PR, and operations teams.",
+            videoUrl: "https://www.youtube.com/embed/INPY4AG2LA4",
+            resources: [
+              { label: "Comm Plan Template", url: "https://networkacademy.ke/resources/incident-communication-plan.pptx" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "cyber-ops-3",
+        title: "Resilience & Purple Teaming",
+        description: "Validate defences continuously with collaborative offensive simulations.",
+        notes: [
+          "Plan purple team exercises that align red team goals with defensive detection capability.",
+          "Track metrics such as mean time to detect and respond to drive maturity improvements.",
+          "Develop recovery plans that sequence containment, eradication, and lessons learned.",
+        ],
+        lessons: [
+          {
+            id: "cyber-ops-3-1",
+            title: "Purple Team Framework",
+            type: "video",
+            duration: "19 min",
+            description: "Design collaborative exercises where offensive and defensive teams learn together.",
+            videoUrl: "https://www.youtube.com/embed/f4e-BG2xqyk",
+            resources: [
+              { label: "Exercise Planner", url: "https://networkacademy.ke/resources/purple-team-planner.xlsx" },
+            ],
+          },
+          {
+            id: "cyber-ops-3-2",
+            title: "Lab: Simulated Ransomware",
+            type: "lab",
+            duration: "48 min",
+            description: "Walk through a full ransomware scenario from initial detection to recovery and retrospection.",
+            videoUrl: "https://www.youtube.com/embed/8r6iyNvoIZY",
+            resources: [
+              { label: "Scenario Kit", url: "https://networkacademy.ke/labs/ransomware-scenario-kit.zip" },
+            ],
+          },
+          {
+            id: "cyber-ops-3-3",
+            title: "Quiz: Resilience Metrics",
+            type: "quiz",
+            duration: "10 min",
+            description: "Measure SOC performance and prioritise continuous improvement initiatives.",
+            videoUrl: "https://www.youtube.com/embed/aEUxkY2b7nM",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "wireless-design-pro",
+    slug: "wireless-design-pro",
+    title: "Advanced Wireless Design Pro",
+    level: "Advanced",
+    summary: "Engineer high-density Wi-Fi and private cellular networks with confidence.",
+    description:
+      "Deliver flawless experiences across campuses, arenas, and industrial sites. Plan spectrum, design RF, and tune performance using surveys, analytics, and automation.",
+    duration: "6-8 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/1blci9Z2dAM",
+    outcomes: [
+      "Conduct predictive, passive, and active wireless surveys with professional tooling",
+      "Design channel plans and capacity for high-density venues",
+      "Integrate private LTE/5G for mission-critical wireless",
+      "Automate optimisation with analytics and AI-driven tuning",
+    ],
+    prerequisites: [
+      "Networking Hardware Essentials or equivalent",
+      "Experience deploying basic wireless networks",
+    ],
+    modules: [
+      {
+        id: "wireless-pro-1",
+        title: "Survey & Capacity Planning",
+        description: "Survey environments and translate requirements into RF designs.",
+        notes: [
+          "Choose survey methods that match site constraints and project budgets.",
+          "Calculate capacity requirements for voice, video, and IoT workloads.",
+          "Deliver survey reports stakeholders understand and trust.",
+        ],
+        lessons: [
+          {
+            id: "wireless-pro-1-1",
+            title: "High-Density Survey Techniques",
+            type: "video",
+            duration: "21 min",
+            description: "Predict coverage using Ekahau, AirMagnet, and open-source tooling.",
+            videoUrl: "https://www.youtube.com/embed/0F_m6yBIQSs",
+            resources: [
+              { label: "Survey Checklist", url: "https://networkacademy.ke/resources/wireless-survey-checklist.pdf" },
+            ],
+          },
+          {
+            id: "wireless-pro-1-2",
+            title: "Lab: Arena Capacity Plan",
+            type: "lab",
+            duration: "45 min",
+            description: "Design AP placement and channel plans for a 20,000-seat arena using predictive models.",
+            videoUrl: "https://www.youtube.com/embed/PLxhWSf9cCM",
+            resources: [
+              { label: "Arena Dataset", url: "https://networkacademy.ke/labs/arena-wireless-dataset.zip" },
+            ],
+          },
+          {
+            id: "wireless-pro-1-3",
+            title: "Quiz: RF Fundamentals",
+            type: "quiz",
+            duration: "11 min",
+            description: "Validate understanding of propagation, signal-to-noise, and channel reuse.",
+            videoUrl: "https://www.youtube.com/embed/NOe9GKQ93js",
+          },
+        ],
+      },
+      {
+        id: "wireless-pro-2",
+        title: "Private Cellular Integration",
+        description: "Blend Wi-Fi with private LTE/5G for industrial and campus deployments.",
+        notes: [
+          "Understand spectrum options, licensing, and CBRS opportunities.",
+          "Design end-to-end private cellular architecture from radio to core.",
+          "Integrate with enterprise networks and security policies.",
+        ],
+        lessons: [
+          {
+            id: "wireless-pro-2-1",
+            title: "Private 5G Architecture",
+            type: "video",
+            duration: "19 min",
+            description: "Compare solutions from Nokia, Ericsson, and open-source stacks for private cellular.",
+            videoUrl: "https://www.youtube.com/embed/7i0o_zJXH6o",
+            resources: [
+              { label: "Architecture Templates", url: "https://networkacademy.ke/resources/private-5g-templates.zip" },
+            ],
+          },
+          {
+            id: "wireless-pro-2-2",
+            title: "Lab: Industrial IoT Wireless",
+            type: "lab",
+            duration: "42 min",
+            description: "Connect sensors and AGVs to a private 5G network with QoS and segmentation.",
+            videoUrl: "https://www.youtube.com/embed/c5z5nV5bA2Y",
+            resources: [
+              { label: "Industrial Lab Pack", url: "https://networkacademy.ke/labs/industrial-wireless-pack.zip" },
+            ],
+          },
+          {
+            id: "wireless-pro-2-3",
+            title: "Reading: Spectrum Strategy",
+            type: "reading",
+            duration: "14 min",
+            description: "Plan spectrum acquisition, licensing, and coexistence with incumbent operators.",
+            videoUrl: "https://www.youtube.com/embed/yXAY3nOM8hI",
+            resources: [
+              { label: "Spectrum Planner", url: "https://networkacademy.ke/resources/spectrum-planner.xlsx" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "wireless-pro-3",
+        title: "Optimisation & Analytics",
+        description: "Operate wireless like a mission-critical service with proactive tuning.",
+        notes: [
+          "Instrument analytics platforms to capture experience metrics and anomalies.",
+          "Use AI/ML recommendations to adjust RF parameters, beamforming, and roaming.",
+          "Create optimisation cadences with change management and documentation.",
+        ],
+        lessons: [
+          {
+            id: "wireless-pro-3-1",
+            title: "Analytics & AI Ops",
+            type: "video",
+            duration: "20 min",
+            description: "Leverage Cisco DNA Center, Mist AI, and Aruba Central for proactive optimisation.",
+            videoUrl: "https://www.youtube.com/embed/_U1SLaHc8no",
+            resources: [
+              { label: "Analytics Checklist", url: "https://networkacademy.ke/resources/wireless-analytics-checklist.pdf" },
+            ],
+          },
+          {
+            id: "wireless-pro-3-2",
+            title: "Lab: Automated Optimisation",
+            type: "lab",
+            duration: "38 min",
+            description: "Use APIs to collect KPIs and push tuning changes with rollback protection.",
+            videoUrl: "https://www.youtube.com/embed/Br9ELXoD868",
+            resources: [
+              { label: "Automation Scripts", url: "https://networkacademy.ke/labs/wireless-automation-scripts.zip" },
+            ],
+          },
+          {
+            id: "wireless-pro-3-3",
+            title: "Quiz: Optimisation Playbooks",
+            type: "quiz",
+            duration: "10 min",
+            description: "Determine next steps when wireless KPIs drift from targets.",
+            videoUrl: "https://www.youtube.com/embed/JrDz_RClFok",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "network-automation-devops",
+    slug: "network-automation-devops",
+    title: "Network Automation & DevOps",
+    level: "Advanced",
+    summary: "Automate and observe infrastructure using pipelines, APIs, and GitOps workflows.",
+    description:
+      "Evolve from CLI heroics to collaborative automation. Model intent, validate changes, and deploy via continuous delivery pipelines that keep networks reliable and auditable.",
+    duration: "6-8 weeks",
+    isPremium: true,
+    heroVideo: "https://www.youtube.com/embed/9QnCuo8elFo",
+    outcomes: [
+      "Model network intent using data structures, templates, and source control",
+      "Build CI/CD pipelines with automated testing and compliance gates",
+      "Leverage APIs, gNMI, NETCONF, and OpenConfig for multi-vendor automation",
+      "Monitor automation health with observability and feedback loops",
+    ],
+    prerequisites: [
+      "Routing & Switching Essentials",
+      "Basic experience with Python or TypeScript",
+    ],
+    modules: [
+      {
+        id: "net-devops-1",
+        title: "Automation Foundations",
+        description: "Set up tooling, version control, and reusable data models for network automation.",
+        notes: [
+          "Structure source control repositories for infrastructure as code.",
+          "Design data models that capture device intent and services cleanly.",
+          "Use templating engines to generate configurations consistently across platforms.",
+        ],
+        lessons: [
+          {
+            id: "net-devops-1-1",
+            title: "Building the Automation Toolkit",
+            type: "video",
+            duration: "18 min",
+            description: "Compare Nornir, Ansible, and Terraform for enterprise automation.",
+            videoUrl: "https://www.youtube.com/embed/Ez6p7G6cDCM",
+            resources: [
+              { label: "Toolkit Matrix", url: "https://networkacademy.ke/resources/network-automation-toolkit.pdf" },
+            ],
+          },
+          {
+            id: "net-devops-1-2",
+            title: "Lab: Source of Truth",
+            type: "lab",
+            duration: "40 min",
+            description: "Model campus and data centre configs in NetBox, then generate device configs automatically.",
+            videoUrl: "https://www.youtube.com/embed/5W-WSQgORhE",
+            resources: [
+              { label: "NetBox Seed", url: "https://networkacademy.ke/labs/netbox-source-of-truth.zip" },
+            ],
+          },
+          {
+            id: "net-devops-1-3",
+            title: "Quiz: Intent Modelling",
+            type: "quiz",
+            duration: "10 min",
+            description: "Confirm you can transform business requirements into structured data models.",
+            videoUrl: "https://www.youtube.com/embed/t92e1mZiK34",
+          },
+        ],
+      },
+      {
+        id: "net-devops-2",
+        title: "Pipelines & Validation",
+        description: "Create repeatable pipelines with automated testing and safety checks.",
+        notes: [
+          "Set up CI/CD pipelines that lint, test, and deploy configuration changes.",
+          "Use simulation and digital twins to validate changes before rollout.",
+          "Implement approval workflows and chat-ops integrations.",
+        ],
+        lessons: [
+          {
+            id: "net-devops-2-1",
+            title: "CI/CD for Networks",
+            type: "video",
+            duration: "22 min",
+            description: "Build pipelines in GitHub Actions and GitLab CI for multi-stage deployments.",
+            videoUrl: "https://www.youtube.com/embed/g3t43yPXgSw",
+            resources: [
+              { label: "Pipeline Templates", url: "https://networkacademy.ke/resources/network-ci-cd-templates.yml" },
+            ],
+          },
+          {
+            id: "net-devops-2-2",
+            title: "Lab: Automated Testing",
+            type: "lab",
+            duration: "44 min",
+            description: "Use batfish and pyATS to verify intent, detect diffs, and gate deployments.",
+            videoUrl: "https://www.youtube.com/embed/mGVY2A4e6XY",
+            resources: [
+              { label: "Testing Toolkit", url: "https://networkacademy.ke/labs/network-testing-toolkit.zip" },
+            ],
+          },
+          {
+            id: "net-devops-2-3",
+            title: "Reading: ChatOps Playbooks",
+            type: "reading",
+            duration: "14 min",
+            description: "Deliver controlled change approvals with bots, notifications, and guardrails.",
+            videoUrl: "https://www.youtube.com/embed/7S8GO8Cdbi4",
+            resources: [
+              { label: "ChatOps Cookbook", url: "https://networkacademy.ke/resources/chatops-cookbook.pdf" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "net-devops-3",
+        title: "Operations & Observability",
+        description: "Monitor automation health and close the loop with continuous improvement.",
+        notes: [
+          "Collect metrics and traces for automation pipelines and network state.",
+          "Automate rollback, drift detection, and compliance reporting.",
+          "Foster collaboration between NetOps, SecOps, and DevOps teams.",
+        ],
+        lessons: [
+          {
+            id: "net-devops-3-1",
+            title: "Feedback Loops",
+            type: "video",
+            duration: "19 min",
+            description: "Capture telemetry from pipelines and infrastructure to inform future automation work.",
+            videoUrl: "https://www.youtube.com/embed/qIYwql1zv_c",
+            resources: [
+              { label: "Observability Dashboard", url: "https://networkacademy.ke/resources/automation-observability-dashboard.json" },
+            ],
+          },
+          {
+            id: "net-devops-3-2",
+            title: "Lab: Drift Detection",
+            type: "lab",
+            duration: "36 min",
+            description: "Detect config drift using GitOps comparisons, then trigger automated remediation.",
+            videoUrl: "https://www.youtube.com/embed/1cHu5P0xO04",
+            resources: [
+              { label: "Drift Toolkit", url: "https://networkacademy.ke/labs/network-drift-toolkit.zip" },
+            ],
+          },
+          {
+            id: "net-devops-3-3",
+            title: "Quiz: Automation SRE",
+            type: "quiz",
+            duration: "11 min",
+            description: "Measure understanding of SLIs, SLOs, and incident management for automation.",
+            videoUrl: "https://www.youtube.com/embed/OnUfzkdqBwk",
+          },
+        ],
+      },
+    ],
+  },
 ];
+
+const unique = <T,>(items: T[]) => Array.from(new Set(items.filter(Boolean)));
+
+const KEYWORD_FOCUS_MAP: Array<{ focus: string; keywords: string[] }> = [
+  { focus: "Network Foundations", keywords: ["foundation", "fundamentals", "beginner", "lan", "wan"] },
+  { focus: "Routing & Switching", keywords: ["route", "routing", "switch", "ospf", "vlan"] },
+  { focus: "Network Security", keywords: ["security", "threat", "defense", "firewall", "soc"] },
+  { focus: "Cloud Networking", keywords: ["cloud", "aws", "azure", "gcp", "hybrid"] },
+  { focus: "Wireless & Mobility", keywords: ["wireless", "wifi", "5g", "lte", "cbrs"] },
+  { focus: "Edge & IoT", keywords: ["edge", "mec", "iot"] },
+  { focus: "Automation & DevOps", keywords: ["automation", "devops", "api", "script", "gitops"] },
+  { focus: "Operations & Troubleshooting", keywords: ["troubleshoot", "operations", "incident", "noc"] },
+  { focus: "Leadership & Strategy", keywords: ["leadership", "project", "governance", "compliance"] },
+  { focus: "Satellite & Rural Connectivity", keywords: ["satellite", "rural", "vsat", "community"] },
+  { focus: "Service Provider Engineering", keywords: ["carrier", "isp", "service provider", "telco"] },
+  { focus: "Data Center & Virtualization", keywords: ["data center", "datacenter", "fabric", "sdn", "virtualization"] },
+  { focus: "IoT & Industrial", keywords: ["iot", "industrial", "factory", "manufacturing"] },
+];
+
+const SWAHILI_DICTIONARY: Record<string, string> = {
+  advanced: "ya juu",
+  architect: "mbunifu",
+  automation: "uhalisishaji",
+  cloud: "wingu",
+  community: "jamii",
+  connectivity: "muunganisho",
+  course: "kozi",
+  design: "buni",
+  engineer: "mhandisi",
+  enterprise: "biashara",
+  foundations: "misingi",
+  hybrid: "mseto",
+  lab: "maabara",
+  labs: "maabara",
+  learn: "jifunze",
+  learning: "kujifunza",
+  mastery: "utaalam",
+  network: "mtandao",
+  networking: "uundaji wa mitandao",
+  operations: "ufanyaji kazi",
+  professional: "taaluma",
+  security: "usalama",
+  skills: "ujuzi",
+  troubleshooting: "utatua tatizo",
+  wireless: "bila waya",
+};
+
+const translateToSwahili = (sentence: string) =>
+  sentence
+    .split(/(\s+)/)
+    .map((segment) => {
+      const trimmed = segment.trim();
+      if (!trimmed) return segment;
+      const leading = segment.match(/^\s*/)?.[0] ?? "";
+      const trailing = segment.match(/\s*$/)?.[0] ?? "";
+      const word = trimmed.replace(/[^a-zA-Z]/g, "");
+      const lower = word.toLowerCase();
+      const replacement = SWAHILI_DICTIONARY[lower];
+      if (!replacement) return segment;
+      const prefix = trimmed.match(/^[^a-zA-Z]*/)?.[0] ?? "";
+      const suffix = trimmed.match(/[^a-zA-Z]*$/)?.[0] ?? "";
+      return `${leading}${prefix}${replacement}${suffix}${trailing}`;
+    })
+    .join("");
+
+const parseDurationRange = (duration: string): DurationRange => {
+  const match = duration.match(/(\d+)(?:\s*[–-]\s*(\d+))?/);
+  if (match) {
+    const min = Number.parseInt(match[1], 10);
+    const max = match[2] ? Number.parseInt(match[2], 10) : min;
+    if (!Number.isNaN(min) && !Number.isNaN(max)) {
+      return { min, max };
+    }
+  }
+  return { min: 4, max: 6 };
+};
+
+const deriveFocusAreas = (course: CourseRecord): string[] => {
+  const haystack = [
+    course.title,
+    course.summary,
+    course.description,
+    course.outcomes.join(" "),
+    course.prerequisites.join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const matched = KEYWORD_FOCUS_MAP.filter((entry) =>
+    entry.keywords.some((keyword) => haystack.includes(keyword)),
+  ).map((entry) => entry.focus);
+
+  return matched.length > 0 ? unique(matched) : ["Network Engineering"];
+};
+
+const createDefaultMetadata = (course: CourseRecord): CourseMetadata => {
+  const focusAreas = deriveFocusAreas(course);
+  const baseCategory =
+    course.level === "Beginner"
+      ? "Foundations"
+      : course.level === "Intermediate"
+        ? "Professional"
+        : "Advanced";
+  const baseTrack =
+    course.level === "Beginner"
+      ? "Foundation Journey"
+      : course.level === "Intermediate"
+        ? "Professional Journey"
+        : course.level === "Expert"
+          ? "Leadership Journey"
+          : "Advanced Journey";
+
+  return {
+    categories: unique([baseCategory, course.isPremium ? "Premium Library" : "Core Library"]),
+    tags: unique([
+      course.level,
+      course.isPremium ? "Premium Access" : "Trial Included",
+      ...focusAreas,
+    ]),
+    focusAreas,
+    tracks: unique([...focusAreas.map((focus) => `${focus} Track`), baseTrack]),
+    durationWeeks: parseDurationRange(course.duration),
+    localizedSummaries: {
+      en: course.summary,
+      sw: translateToSwahili(course.summary),
+    },
+  };
+};
+
+const META_OVERRIDES: Partial<Record<string, Partial<CourseMetadata>>> = {
+  "network-foundations": {
+    categories: ["Foundations", "Core Library"],
+    focusAreas: ["Network Foundations", "Operations & Troubleshooting"],
+    tags: ["Beginner", "Free", "Network Foundations"],
+    tracks: ["Foundation Journey", "Network Foundations Track"],
+    localizedSummaries: {
+      sw: "Jifunze misingi ya mtandao na ufahamu vifaa muhimu vinavyounganisha biashara na jamii.",
+    },
+  },
+  "routing-essentials": {
+    tracks: ["Routing & Switching Track", "Professional Journey"],
+    tags: ["Intermediate", "Premium Access", "Routing & Switching"],
+  },
+  "network-security-pro": {
+    categories: ["Advanced", "Premium Library"],
+    focusAreas: ["Network Security", "Operations & Troubleshooting"],
+    tracks: ["Security Operations Track"],
+  },
+  "edge-5g-engineering": {
+    focusAreas: ["Wireless & Mobility", "Edge & IoT"],
+    tracks: ["5G & Edge Track"],
+  },
+  "satellite-rural-connectivity": {
+    focusAreas: ["Satellite & Rural Connectivity"],
+    tracks: ["Rural Connectivity Track"],
+  },
+  "network-project-leadership": {
+    focusAreas: ["Leadership & Strategy"],
+    tracks: ["Leadership Journey"],
+  },
+  "cloud-networking-essentials": {
+    focusAreas: ["Cloud Networking", "Network Security"],
+    tracks: ["Cloud Networking Track"],
+    tags: ["Intermediate", "Premium Access", "Cloud Networking"],
+  },
+  "cyber-operations-defense": {
+    focusAreas: ["Network Security", "Operations & Troubleshooting"],
+    tracks: ["Security Operations Track"],
+  },
+  "network-automation-pro": {
+    focusAreas: ["Automation & DevOps"],
+    tracks: ["Automation Track"],
+  },
+  "wireless-design-specialist": {
+    focusAreas: ["Wireless & Mobility"],
+    tracks: ["Wireless Engineering Track"],
+  },
+  "cloud-networking-architect": {
+    focusAreas: ["Cloud Networking", "Data Center & Virtualization"],
+    tracks: ["Cloud Networking Track"],
+  },
+  "cyber-operations-specialist": {
+    focusAreas: ["Network Security"],
+    tracks: ["Security Operations Track"],
+  },
+  "datacenter-network-virtualization": {
+    focusAreas: ["Data Center & Virtualization", "Automation & DevOps"],
+    tracks: ["Data Center Track"],
+  },
+  "iot-industrial-networking": {
+    focusAreas: ["IoT & Industrial", "Edge & IoT"],
+    tracks: ["Industrial Connectivity Track"],
+  },
+  "carrier-network-operations": {
+    focusAreas: ["Service Provider Engineering", "Operations & Troubleshooting"],
+    tracks: ["Service Provider Track"],
+  },
+  "wireless-design-pro": {
+    focusAreas: ["Wireless & Mobility"],
+    tracks: ["Wireless Engineering Track"],
+  },
+  "network-automation-devops": {
+    focusAreas: ["Automation & DevOps"],
+    tracks: ["Automation Track"],
+    tags: ["Advanced", "Premium Access", "Automation & DevOps"],
+  },
+};
+
+const mergeMetadata = (course: CourseRecord): CourseMetadata => {
+  const base = createDefaultMetadata(course);
+  const overrides = META_OVERRIDES[course.id];
+  if (!overrides) {
+    return base;
+  }
+
+  return {
+    categories: overrides.categories ? unique(overrides.categories) : base.categories,
+    tags: overrides.tags ? unique(overrides.tags) : base.tags,
+    focusAreas: overrides.focusAreas ? unique(overrides.focusAreas) : base.focusAreas,
+    tracks: overrides.tracks ? unique(overrides.tracks) : base.tracks,
+    durationWeeks: overrides.durationWeeks ?? base.durationWeeks,
+    localizedSummaries: {
+      ...base.localizedSummaries,
+      ...(overrides.localizedSummaries ?? {}),
+    },
+  };
+};
+
+const computeStats = (course: CourseRecord): CourseStats => {
+  const lessons = course.modules.flatMap((module) => module.lessons);
+  const labCount = lessons.filter((lesson) => lesson.type === "lab").length;
+  const quizCount = lessons.filter((lesson) => lesson.type === "quiz").length;
+  const videoCount = lessons.filter((lesson) => lesson.type === "video").length;
+  const readingCount = lessons.filter((lesson) => lesson.type === "reading").length;
+  return {
+    totalLessons: lessons.length,
+    labCount,
+    quizCount,
+    videoCount,
+    readingCount,
+  };
+};
+
+export const COURSES: Course[] = COURSE_DATA.map((course) => {
+  const stats = computeStats(course);
+  const metadata = mergeMetadata(course);
+  return {
+    ...course,
+    ...metadata,
+    stats,
+  };
+});
 
 export const getCourseBySlug = (slug: string) => COURSES.find((course) => course.slug === slug);

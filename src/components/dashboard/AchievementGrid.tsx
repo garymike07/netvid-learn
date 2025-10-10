@@ -1,9 +1,12 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
+import { Share2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { Achievement } from "@/lib/achievements";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 type AchievementGridProps = {
   achievements: Achievement[];
@@ -12,6 +15,7 @@ type AchievementGridProps = {
 const AchievementCard = ({ achievement, index }: { achievement: Achievement; index: number }) => {
   const Icon = (Icons as Record<string, React.ComponentType<{ className?: string }>>)[achievement.icon] ?? Icons.Award;
   const unlocked = achievement.unlocked;
+  const remaining = Math.max(0, achievement.requirement - achievement.current);
 
   return (
     <motion.div
@@ -56,6 +60,25 @@ const AchievementCard = ({ achievement, index }: { achievement: Achievement; ind
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           {achievement.current} / {achievement.requirement}
         </p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        {unlocked ? (
+          <Button asChild size="sm" variant="outline" className="gap-2 text-xs">
+            <a href="https://community.mikenet.academy/feed" target="_blank" rel="noreferrer">
+              <Share2 className="h-4 w-4" /> Share with peers
+            </a>
+          </Button>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            {remaining <= 0 ? "Almost there – revisit a lesson." : `Complete ${remaining} more step${remaining === 1 ? "" : "s"} to unlock.`}
+          </p>
+        )}
+        {!unlocked ? (
+          <Button asChild size="sm" variant="ghost" className="gap-1 text-xs text-primary hover:text-primary">
+            <Link to="/courses">View guidance</Link>
+          </Button>
+        ) : null}
       </div>
 
       {unlocked ? (

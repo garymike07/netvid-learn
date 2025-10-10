@@ -57,7 +57,14 @@ const Navigation = () => {
   );
 
   return (
-    <motion.header
+    <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-background"
+      >
+        Skip to main content
+      </a>
+      <motion.header
       className="sticky top-0 z-50 transition-colors"
       animate={{
         backgroundColor: elevated ? "rgba(9, 12, 24, 0.82)" : "rgba(9, 12, 24, 0.55)",
@@ -83,7 +90,7 @@ const Navigation = () => {
             <span className="text-xl font-semibold tracking-tight">Mike Net Academy</span>
           </Link>
         </FadeIn>
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
           {authenticatedLinks.map((link, index) => (
             <FadeIn key={link.href} delay={0.08 + index * 0.04}>
               <Link
@@ -142,7 +149,8 @@ const Navigation = () => {
           </div>
         </FadeIn>
       </div>
-    </motion.header>
+      </motion.header>
+    </>
   );
 };
 

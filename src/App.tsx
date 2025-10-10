@@ -1,19 +1,21 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Index from "./pages/Index";
-import Courses from "./pages/Courses";
-import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
 import { useAuth } from "./contexts/AuthContext";
-import CourseDetail from "./pages/CourseDetail";
-import Verify from "./pages/Verify";
 import TrialBanner from "./components/TrialBanner";
 import UpgradeDialog from "./components/UpgradeDialog";
+import PageLoader from "./components/PageLoader";
+
+const Index = lazy(() => import("./pages/Index"));
+const Courses = lazy(() => import("./pages/Courses"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const CourseDetail = lazy(() => import("./pages/CourseDetail"));
+const Verify = lazy(() => import("./pages/Verify"));
 
 const queryClient = new QueryClient();
 
@@ -69,23 +71,25 @@ const App = () => (
         <ScrollToHash />
         <TrialBanner />
         <UpgradeDialog />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:slug" element={<CourseDetail />} />
-          <Route path="/auth/*" element={<Auth />} />
-          <Route path="/verify" element={<Verify />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:slug" element={<CourseDetail />} />
+            <Route path="/auth/*" element={<Auth />} />
+            <Route path="/verify" element={<Verify />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

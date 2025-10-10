@@ -18,6 +18,13 @@ import { CertificateShareCard } from "@/components/dashboard/CertificateShareCar
 import { OnboardingCoach } from "@/components/dashboard/OnboardingCoach";
 import { trackEvent } from "@/lib/analytics";
 import SiteGuide from "@/components/SiteGuide";
+import { CommunityPulseCard } from "@/components/dashboard/CommunityPulseCard";
+import { CommunityRecommendations } from "@/components/dashboard/CommunityRecommendations";
+import { CommunityUpdates } from "@/components/dashboard/CommunityUpdates";
+import { COMMUNITY_FEED_FALLBACK, useCommunityFeed } from "@/hooks/use-community-feed";
+import type { CommunityFeed } from "@/hooks/use-community-feed";
+import { useDocumentMetadata } from "@/hooks/use-document-metadata";
+import { SITE_NAME, SITE_URL } from "@/config/site";
 
 type ContinueCourse = {
   id: string;
@@ -36,10 +43,25 @@ const resolvePrimaryCourse = (courses: ContinueCourse[]) => {
   return courses[0] ?? null;
 };
 
+const formatEventDate = (value: string) => {
+  try {
+    return new Intl.DateTimeFormat("en-KE", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(value));
+  } catch (error) {
+    console.warn("Failed to format event date", error);
+    return "Soon";
+  }
+};
+
 const buildRoadmapItems = (
   continueCourses: ContinueCourse[],
   totals: ReturnType<typeof getAchievementTotals>,
   showUpgradeOverlay: boolean,
+  communityFeed?: Pick<CommunityFeed, "events" | "recommendations" | "updates">,
 ): RoadmapItem[] => {
   const primary = resolvePrimaryCourse(continueCourses);
   const base: RoadmapItem[] = [];
@@ -101,6 +123,74 @@ const buildRoadmapItems = (
       locked: false,
     },
   });
+
+  const nextEvent = communityFeed?.events?.[0];
+  if (nextEvent) {
+    base.push({
+      id: `event-${nextEvent.id}`,
+      title: nextEvent.type === "live" ? "Join the upcoming live review" : "Enter the async study sprint",
+      description: `${nextEvent.title} • ${formatEventDate(nextEvent.startsAt)}`,
+      badge: "Community",
+      progress: 0,
+      status: "upcoming",
+      action: {
+        label: nextEvent.type === "live" ? "Reserve seat" : "View sprint",
+        href: nextEvent.href,
+        locked: false,
+      },
+    });
+  }
+
+  const sharePrompt = communityFeed?.recommendations?.find((rec) => rec.type === "community");
+  if (sharePrompt) {
+    base.push({
+      id: `community-${sharePrompt.id}`,
+      title: sharePrompt.label,
+      description: sharePrompt.description,
+      badge: "Accountability",
+      progress: 0,
+      status: "upcoming",
+      action: {
+        label: sharePrompt.ctaLabel,
+        href: sharePrompt.href,
+        locked: false,
+      },
+    });
+  }
+
+  const recentWin = communityFeed?.updates?.[0];
+  if (recentWin) {
+    base.push({
+      id: `shoutout-${recentWin.id}`,
+      title: `Congratulate ${recentWin.learner.split(" ")[0]}`,
+      description: `${recentWin.highlight} • ${recentWin.message}`,
+      badge: "Peer boost",
+      progress: 0,
+      status: "upcoming",
+      action: {
+        label: "Send kudos",
+        href: "https://community.mikenet.academy/feed",
+        locked: false,
+      },
+    });
+  }
+
+  const streakMetric = communityFeed?.pulse?.metrics?.find((metric) => metric.label.toLowerCase().includes("streak"));
+  if (streakMetric) {
+    base.push({
+      id: "streak",
+      title: "Protect your learning streak",
+      description: `Log a lesson in the next 24 hours to stay ahead of the ${streakMetric.value} community average.`,
+      badge: "Streak",
+      progress: 0,
+      status: "upcoming",
+      action: {
+        label: primary ? "Resume course" : "Browse lessons",
+        href: primary ? `/courses/${primary.slug}` : "/courses",
+        locked: showUpgradeOverlay,
+      },
+    });
+  }
 
   let activated = false;
   return base.map((item) => {
@@ -201,10 +291,54 @@ const Dashboard = () => {
   const [progress, setProgress] = useState<UserProgress>(() => loadProgress(user?.id));
   const [progressLoading, setProgressLoading] = useState(true);
   const [signingOut, setSigningOut] = useState(false);
+  const { data: communityFeedData } = useCommunityFeed();
   const metrics = useMemo(() => calculateMetrics(progress), [progress]);
   const continueLearning = useMemo(() => deriveContinueList(progress), [progress]);
   const achievementTotals = useMemo(() => getAchievementTotals(progress), [progress]);
   const achievements = useMemo(() => evaluateAchievements(progress), [progress]);
+  const nextMilestone = useMemo(() => achievements.find((achievement) => !achievement.unlocked), [achievements]);
+  const nextMilestoneRemaining = nextMilestone ? Math.max(0, nextMilestone.requirement - nextMilestone.current) : 0;
+  useDocumentMetadata(
+    useMemo(
+      () => ({
+        title: `Dashboard | ${SITE_NAME}`,
+        description: "Track your progress, streaks, and community momentum across Mike Net Academy.",
+        canonical: `${SITE_URL}/dashboard`,
+        openGraph: {
+          title: `Dashboard | ${SITE_NAME}`,
+          description: "Monitor your learning streaks, achievements, and upcoming live events.",
+          type: "website",
+          url: `${SITE_URL}/dashboard`,
+          image: `${SITE_URL}/images/mike-net-logo.png`,
+        },
+        twitter: {
+          title: `Dashboard | ${SITE_NAME}`,
+          description: "Monitor your learning streaks, achievements, and upcoming live events.",
+          image: `${SITE_URL}/images/mike-net-logo.png`,
+          card: "summary_large_image",
+        },
+        structuredData: {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: SITE_URL,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Dashboard",
+              item: `${SITE_URL}/dashboard`,
+            },
+          ],
+        },
+      }),
+      [],
+    ),
+  );
   const stats = useMemo(
     () => [
       {
@@ -238,9 +372,10 @@ const Dashboard = () => {
   const hasSubscriptionAccess = hasActiveSubscription || isTrialActive;
   const showUpgradeOverlay = !subscriptionLoading && !hasSubscriptionAccess;
   const trialCountdown = useMemo(() => formatCountdown(durationMs), [durationMs]);
+  const communityFeed = communityFeedData ?? COMMUNITY_FEED_FALLBACK;
   const roadmapItems = useMemo(
-    () => buildRoadmapItems(continueLearning, achievementTotals, showUpgradeOverlay),
-    [achievementTotals, continueLearning, showUpgradeOverlay],
+    () => buildRoadmapItems(continueLearning, achievementTotals, showUpgradeOverlay, communityFeed),
+    [achievementTotals, communityFeed, continueLearning, showUpgradeOverlay],
   );
 
   useEffect(() => {
@@ -320,7 +455,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-16">
+      <main id="main-content" role="main" className="container mx-auto px-4 py-16">
         <div className="mb-12 motion-safe:animate-fade-up">
           <h1 className="mb-4 text-4xl font-semibold text-foreground">My Dashboard</h1>
           <p className="text-lg text-muted-foreground">Track your progress and continue learning</p>
@@ -414,6 +549,18 @@ const Dashboard = () => {
         </div>
 
         <FadeIn>
+          <div className="mb-12 grid gap-6 lg:grid-cols-[2fr,1.2fr]">
+            <CommunityPulseCard pulse={communityFeed.pulse} />
+            <CommunityRecommendations
+              recommendations={communityFeed.recommendations}
+              events={communityFeed.events}
+              showUpgradeOverlay={showUpgradeOverlay}
+              onLockedRequest={openUpgradeDialog}
+            />
+          </div>
+        </FadeIn>
+
+        <FadeIn>
           <section className="mb-16 space-y-6" id="achievements">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -424,8 +571,21 @@ const Dashboard = () => {
                 Keep climbing. Each milestone unlocks guidance tailored to how you love to learn.
               </p>
             </div>
+            {nextMilestone ? (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-muted-foreground">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70">Next milestone</p>
+                <p className="mt-1 text-sm text-foreground">
+                  Unlock <span className="font-semibold">{nextMilestone.title}</span> by completing {nextMilestoneRemaining} more step
+                  {nextMilestoneRemaining === 1 ? "" : "s"}. {nextMilestone.description}
+                </p>
+              </div>
+            ) : null}
             <AchievementGrid achievements={achievements} />
           </section>
+        </FadeIn>
+
+        <FadeIn>
+          <CommunityUpdates updates={communityFeed.updates} />
         </FadeIn>
 
         <FadeIn>

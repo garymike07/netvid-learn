@@ -6,6 +6,7 @@ export type CourseProgress = {
   courseId: string;
   completedLessons: string[];
   lastLessonId?: string;
+  bookmarkedLessons: string[];
 };
 
 export type UserProgress = {
@@ -15,7 +16,7 @@ export type UserProgress = {
 
 const buildEmptyProgress = (courses: Course[]): UserProgress => ({
   courses: Object.fromEntries(
-    courses.map((course) => [course.id, { courseId: course.id, completedLessons: [], lastLessonId: undefined }]),
+    courses.map((course) => [course.id, { courseId: course.id, completedLessons: [], bookmarkedLessons: [], lastLessonId: undefined }]),
   ),
   lastUpdated: new Date().toISOString(),
 });
@@ -47,6 +48,7 @@ export const loadProgress = (userId?: string | null, courses: Course[] = COURSES
           courseId: course.id,
           completedLessons: Array.from(new Set(existing.completedLessons)),
           lastLessonId: existing.lastLessonId,
+          bookmarkedLessons: Array.from(new Set((existing as CourseProgress).bookmarkedLessons ?? [])),
         };
       }
     }
@@ -80,7 +82,8 @@ export const updateLessonCompletion = (
   lessonId: string,
   completed: boolean,
 ): UserProgress => {
-  const courseProgress = progress.courses[courseId] ?? { courseId, completedLessons: [] };
+  const courseProgress =
+    progress.courses[courseId] ?? { courseId, completedLessons: [], bookmarkedLessons: [], lastLessonId: undefined };
   const completedLessons = new Set(courseProgress.completedLessons);
 
   if (completed) {
@@ -96,7 +99,59 @@ export const updateLessonCompletion = (
       [courseId]: {
         courseId,
         completedLessons: Array.from(completedLessons),
+        bookmarkedLessons: Array.from(new Set(courseProgress.bookmarkedLessons ?? [])),
         lastLessonId: completed ? lessonId : courseProgress.lastLessonId === lessonId ? undefined : courseProgress.lastLessonId,
+      },
+    },
+    lastUpdated: new Date().toISOString(),
+  };
+};
+
+export const setLastLesson = (progress: UserProgress, courseId: string, lessonId: string | undefined): UserProgress => {
+  const courseProgress = progress.courses[courseId] ?? {
+    courseId,
+    completedLessons: [],
+    bookmarkedLessons: [],
+    lastLessonId: undefined,
+  };
+
+  return {
+    ...progress,
+    courses: {
+      ...progress.courses,
+      [courseId]: {
+        ...courseProgress,
+        lastLessonId: lessonId,
+        completedLessons: Array.from(new Set(courseProgress.completedLessons ?? [])),
+        bookmarkedLessons: Array.from(new Set(courseProgress.bookmarkedLessons ?? [])),
+      },
+    },
+    lastUpdated: new Date().toISOString(),
+  };
+};
+
+export const toggleBookmark = (progress: UserProgress, courseId: string, lessonId: string): UserProgress => {
+  const courseProgress = progress.courses[courseId] ?? {
+    courseId,
+    completedLessons: [],
+    bookmarkedLessons: [],
+    lastLessonId: undefined,
+  };
+
+  const bookmarks = new Set(courseProgress.bookmarkedLessons ?? []);
+  if (bookmarks.has(lessonId)) {
+    bookmarks.delete(lessonId);
+  } else {
+    bookmarks.add(lessonId);
+  }
+
+  return {
+    ...progress,
+    courses: {
+      ...progress.courses,
+      [courseId]: {
+        ...courseProgress,
+        bookmarkedLessons: Array.from(bookmarks),
       },
     },
     lastUpdated: new Date().toISOString(),
