@@ -2255,7 +2255,7 @@ const COURSE_DATA: CourseRecord[] = [
       "Design resilient hybrid networks that connect data centres to AWS, Azure, and GCP. Master transit gateways, private connectivity, and shared-responsibility security so workloads stay available and compliant.",
     duration: "5-7 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/kJex3TtyrSg",
+    heroVideo: "https://www.youtube.com/embed/WmyiE27uKOo",
     outcomes: [
       "Architect hub-and-spoke, mesh, and transit gateway topologies across major clouds",
       "Secure traffic with zero trust principles, private endpoints, and microsegmentation",
@@ -2283,7 +2283,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "18 min",
             description: "Explore AWS Transit Gateway, Azure Virtual WAN, and Google Cloud Network Connectivity Center patterns.",
-            videoUrl: "https://www.youtube.com/embed/F4f-tEFV0cA",
+            videoUrl: "https://www.youtube.com/embed/a55Iud-66q0",
             resources: [
               { label: "Design Workbook", url: "https://networkacademy.ke/resources/cloud-transit-workbook.xlsx" },
             ],
@@ -2294,7 +2294,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "40 min",
             description: "Deploy a site-to-site VPN between a branch router and AWS using Terraform, then validate routing.",
-            videoUrl: "https://www.youtube.com/embed/dFzE4mcwp4M",
+            videoUrl: "https://www.youtube.com/embed/AYWuRCQ48JQ",
             resources: [
               { label: "Terraform Bundle", url: "https://networkacademy.ke/labs/hybrid-vpc-terraform.zip" },
             ],
@@ -2305,7 +2305,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "12 min",
             description: "Evaluate which hybrid networking option fits specific enterprise scenarios.",
-            videoUrl: "https://www.youtube.com/embed/6pWjzJxvlMQ",
+            videoUrl: "https://www.youtube.com/embed/CAudAxzmJ8w",
           },
         ],
       },
@@ -2325,7 +2325,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "20 min",
             description: "Design architecture that combines identity, device posture, and network context for access decisions.",
-            videoUrl: "https://www.youtube.com/embed/0uNyij7k1y0",
+            videoUrl: "https://www.youtube.com/embed/yn6CPQ9RioA",
             resources: [
               { label: "Zero Trust Checklist", url: "https://networkacademy.ke/resources/cloud-zero-trust-checklist.pdf" },
             ],
@@ -2336,7 +2336,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "35 min",
             description: "Deploy private service endpoints and policy-based routing to keep sensitive workloads off the public internet.",
-            videoUrl: "https://www.youtube.com/embed/iWf4H6qvKQ0",
+            videoUrl: "https://www.youtube.com/embed/bo88q4JPOR0",
             resources: [
               { label: "Policy Pack", url: "https://networkacademy.ke/labs/private-endpoint-policy-pack.zip" },
             ],
@@ -2347,7 +2347,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "reading",
             duration: "15 min",
             description: "Validate network deployments using Open Policy Agent and CI/CD integration.",
-            videoUrl: "https://www.youtube.com/embed/rGbiWowRU9c",
+            videoUrl: "https://www.youtube.com/embed/hENwFyrtm1g",
             resources: [
               { label: "OPA Starter", url: "https://networkacademy.ke/resources/opa-network-policies.zip" },
             ],
@@ -2370,7 +2370,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "19 min",
             description: "Instrument multi-cloud networks with native and third-party tooling.",
-            videoUrl: "https://www.youtube.com/embed/8jW-ltVRgAk",
+            videoUrl: "https://www.youtube.com/embed/f0aKRMfJ4eY",
             resources: [
               { label: "Observability Playbook", url: "https://networkacademy.ke/resources/cloud-observability-playbook.pdf" },
             ],
@@ -2381,7 +2381,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "42 min",
             description: "Trigger Lambda and Azure Functions to remediate connectivity issues detected by synthetic probes.",
-            videoUrl: "https://www.youtube.com/embed/8WQZrMNQMM0",
+            videoUrl: "https://www.youtube.com/embed/FHNDx2jsdnQ",
             resources: [
               { label: "Automation Toolkit", url: "https://networkacademy.ke/labs/cloud-automation-toolkit.zip" },
             ],
@@ -2392,7 +2392,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "10 min",
             description: "Confirm you can select tooling and workflows that keep cloud networks observable.",
-            videoUrl: "https://www.youtube.com/embed/kDrMoAA1xAc",
+            videoUrl: "https://www.youtube.com/embed/nD6JfA9nGOg",
           },
         ],
       },
@@ -2408,7 +2408,7 @@ const COURSE_DATA: CourseRecord[] = [
       "Build and lead a security operations programme focused on network-centric threats. Master SIEM tuning, threat hunting, incident response, and purple teaming to keep organisations resilient.",
     duration: "7-9 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/TzqAbdDrFas",
+    heroVideo: "https://www.youtube.com/embed/OHkWXFheSKM",
     outcomes: [
       "Design SOC runbooks and communication paths that accelerate response times",
       "Deploy detection pipelines using Zeek, Suricata, and cloud-native telemetry",
@@ -2436,7 +2436,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "22 min",
             description: "Collect, normalise, and enrich telemetry from firewalls, proxies, and cloud services.",
-            videoUrl: "https://www.youtube.com/embed/5fWsxwSX1QY",
+            videoUrl: "https://www.youtube.com/embed/Skx4jxzpyIs",
             resources: [
               { label: "Telemetry Blueprint", url: "https://networkacademy.ke/resources/network-telemetry-blueprint.pdf" },
             ],
@@ -2447,7 +2447,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "45 min",
             description: "Deploy open-source sensors, tune signatures, and forward enriched events to a SIEM.",
-            videoUrl: "https://www.youtube.com/embed/n2bT59T3m1s",
+            videoUrl: "https://www.youtube.com/embed/aqTHGRUEYgM",
             resources: [
               { label: "Sensor Toolkit", url: "https://networkacademy.ke/labs/zeek-suricata-toolkit.zip" },
             ],
@@ -2458,7 +2458,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "11 min",
             description: "Identify detection gaps and prioritise engineering backlog items.",
-            videoUrl: "https://www.youtube.com/embed/qg_ob-u6X48",
+            videoUrl: "https://www.youtube.com/embed/WmQPtk3Ybxs",
           },
         ],
       },
@@ -2478,7 +2478,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "20 min",
             description: "Apply NIST, SANS, and FIRST methodologies to modern network incidents.",
-            videoUrl: "https://www.youtube.com/embed/BPvHqtAtAh4",
+            videoUrl: "https://www.youtube.com/embed/jaym8vwmZOI",
             resources: [
               { label: "IR Runbook", url: "https://networkacademy.ke/resources/incident-response-runbook.docx" },
             ],
@@ -2489,7 +2489,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "42 min",
             description: "Build playbooks that enrich alerts, isolate hosts, and track evidence automatically.",
-            videoUrl: "https://www.youtube.com/embed/UdJh0jOmYbk",
+            videoUrl: "https://www.youtube.com/embed/k7ju95jDxFA",
             resources: [
               { label: "SOAR Playbook Pack", url: "https://networkacademy.ke/labs/soar-playbook-pack.zip" },
             ],
@@ -2500,7 +2500,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "reading",
             duration: "14 min",
             description: "Coordinate communication flows across legal, PR, and operations teams.",
-            videoUrl: "https://www.youtube.com/embed/INPY4AG2LA4",
+            videoUrl: "https://www.youtube.com/embed/qcuznNb5wsY",
             resources: [
               { label: "Comm Plan Template", url: "https://networkacademy.ke/resources/incident-communication-plan.pptx" },
             ],
@@ -2523,7 +2523,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "19 min",
             description: "Design collaborative exercises where offensive and defensive teams learn together.",
-            videoUrl: "https://www.youtube.com/embed/f4e-BG2xqyk",
+            videoUrl: "https://www.youtube.com/embed/t-G3ee2qoJk",
             resources: [
               { label: "Exercise Planner", url: "https://networkacademy.ke/resources/purple-team-planner.xlsx" },
             ],
@@ -2534,7 +2534,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "48 min",
             description: "Walk through a full ransomware scenario from initial detection to recovery and retrospection.",
-            videoUrl: "https://www.youtube.com/embed/8r6iyNvoIZY",
+            videoUrl: "https://www.youtube.com/embed/nVR8qr2ivOg",
             resources: [
               { label: "Scenario Kit", url: "https://networkacademy.ke/labs/ransomware-scenario-kit.zip" },
             ],
@@ -2545,7 +2545,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "10 min",
             description: "Measure SOC performance and prioritise continuous improvement initiatives.",
-            videoUrl: "https://www.youtube.com/embed/aEUxkY2b7nM",
+            videoUrl: "https://www.youtube.com/embed/Z6TkY6Zbp_E",
           },
         ],
       },
@@ -2561,7 +2561,7 @@ const COURSE_DATA: CourseRecord[] = [
       "Deliver flawless experiences across campuses, arenas, and industrial sites. Plan spectrum, design RF, and tune performance using surveys, analytics, and automation.",
     duration: "6-8 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/1blci9Z2dAM",
+    heroVideo: "https://www.youtube.com/embed/U31fQGCsmKk",
     outcomes: [
       "Conduct predictive, passive, and active wireless surveys with professional tooling",
       "Design channel plans and capacity for high-density venues",
@@ -2589,7 +2589,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "21 min",
             description: "Predict coverage using Ekahau, AirMagnet, and open-source tooling.",
-            videoUrl: "https://www.youtube.com/embed/0F_m6yBIQSs",
+            videoUrl: "https://www.youtube.com/embed/w_t6H1yISM8",
             resources: [
               { label: "Survey Checklist", url: "https://networkacademy.ke/resources/wireless-survey-checklist.pdf" },
             ],
@@ -2600,7 +2600,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "45 min",
             description: "Design AP placement and channel plans for a 20,000-seat arena using predictive models.",
-            videoUrl: "https://www.youtube.com/embed/PLxhWSf9cCM",
+            videoUrl: "https://www.youtube.com/embed/cMFt5GZ5Wm8",
             resources: [
               { label: "Arena Dataset", url: "https://networkacademy.ke/labs/arena-wireless-dataset.zip" },
             ],
@@ -2611,7 +2611,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "11 min",
             description: "Validate understanding of propagation, signal-to-noise, and channel reuse.",
-            videoUrl: "https://www.youtube.com/embed/NOe9GKQ93js",
+            videoUrl: "https://www.youtube.com/embed/dwDRAqfA7GI",
           },
         ],
       },
@@ -2631,7 +2631,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "19 min",
             description: "Compare solutions from Nokia, Ericsson, and open-source stacks for private cellular.",
-            videoUrl: "https://www.youtube.com/embed/7i0o_zJXH6o",
+            videoUrl: "https://www.youtube.com/embed/kdsyhsXicNk",
             resources: [
               { label: "Architecture Templates", url: "https://networkacademy.ke/resources/private-5g-templates.zip" },
             ],
@@ -2642,7 +2642,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "42 min",
             description: "Connect sensors and AGVs to a private 5G network with QoS and segmentation.",
-            videoUrl: "https://www.youtube.com/embed/c5z5nV5bA2Y",
+            videoUrl: "https://www.youtube.com/embed/WpQxUtkJTbQ",
             resources: [
               { label: "Industrial Lab Pack", url: "https://networkacademy.ke/labs/industrial-wireless-pack.zip" },
             ],
@@ -2653,7 +2653,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "reading",
             duration: "14 min",
             description: "Plan spectrum acquisition, licensing, and coexistence with incumbent operators.",
-            videoUrl: "https://www.youtube.com/embed/yXAY3nOM8hI",
+            videoUrl: "https://www.youtube.com/embed/w9YgpLJmMYM",
             resources: [
               { label: "Spectrum Planner", url: "https://networkacademy.ke/resources/spectrum-planner.xlsx" },
             ],
@@ -2676,7 +2676,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "20 min",
             description: "Leverage Cisco DNA Center, Mist AI, and Aruba Central for proactive optimisation.",
-            videoUrl: "https://www.youtube.com/embed/_U1SLaHc8no",
+            videoUrl: "https://www.youtube.com/embed/5Zd3dsKe4sU",
             resources: [
               { label: "Analytics Checklist", url: "https://networkacademy.ke/resources/wireless-analytics-checklist.pdf" },
             ],
@@ -2687,7 +2687,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "38 min",
             description: "Use APIs to collect KPIs and push tuning changes with rollback protection.",
-            videoUrl: "https://www.youtube.com/embed/Br9ELXoD868",
+            videoUrl: "https://www.youtube.com/embed/x0yD5pEZ_-g",
             resources: [
               { label: "Automation Scripts", url: "https://networkacademy.ke/labs/wireless-automation-scripts.zip" },
             ],
@@ -2698,7 +2698,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "10 min",
             description: "Determine next steps when wireless KPIs drift from targets.",
-            videoUrl: "https://www.youtube.com/embed/JrDz_RClFok",
+            videoUrl: "https://www.youtube.com/embed/iHBCWy6qDBs",
           },
         ],
       },
@@ -2714,7 +2714,7 @@ const COURSE_DATA: CourseRecord[] = [
       "Evolve from CLI heroics to collaborative automation. Model intent, validate changes, and deploy via continuous delivery pipelines that keep networks reliable and auditable.",
     duration: "6-8 weeks",
     isPremium: true,
-    heroVideo: "https://www.youtube.com/embed/9QnCuo8elFo",
+    heroVideo: "https://www.youtube.com/embed/dvwftVmxhjI",
     outcomes: [
       "Model network intent using data structures, templates, and source control",
       "Build CI/CD pipelines with automated testing and compliance gates",
@@ -2742,7 +2742,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "18 min",
             description: "Compare Nornir, Ansible, and Terraform for enterprise automation.",
-            videoUrl: "https://www.youtube.com/embed/Ez6p7G6cDCM",
+            videoUrl: "https://www.youtube.com/embed/cjHgoxEKb2E",
             resources: [
               { label: "Toolkit Matrix", url: "https://networkacademy.ke/resources/network-automation-toolkit.pdf" },
             ],
@@ -2753,7 +2753,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "40 min",
             description: "Model campus and data centre configs in NetBox, then generate device configs automatically.",
-            videoUrl: "https://www.youtube.com/embed/5W-WSQgORhE",
+            videoUrl: "https://www.youtube.com/embed/zT82jOUCcW4",
             resources: [
               { label: "NetBox Seed", url: "https://networkacademy.ke/labs/netbox-source-of-truth.zip" },
             ],
@@ -2764,7 +2764,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "10 min",
             description: "Confirm you can transform business requirements into structured data models.",
-            videoUrl: "https://www.youtube.com/embed/t92e1mZiK34",
+            videoUrl: "https://www.youtube.com/embed/U2UDO6_L3lI",
           },
         ],
       },
@@ -2784,7 +2784,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "22 min",
             description: "Build pipelines in GitHub Actions and GitLab CI for multi-stage deployments.",
-            videoUrl: "https://www.youtube.com/embed/g3t43yPXgSw",
+            videoUrl: "https://www.youtube.com/embed/BEP4q0Cno98",
             resources: [
               { label: "Pipeline Templates", url: "https://networkacademy.ke/resources/network-ci-cd-templates.yml" },
             ],
@@ -2795,7 +2795,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "44 min",
             description: "Use batfish and pyATS to verify intent, detect diffs, and gate deployments.",
-            videoUrl: "https://www.youtube.com/embed/mGVY2A4e6XY",
+            videoUrl: "https://www.youtube.com/embed/xwmWqS_BY-o",
             resources: [
               { label: "Testing Toolkit", url: "https://networkacademy.ke/labs/network-testing-toolkit.zip" },
             ],
@@ -2806,7 +2806,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "reading",
             duration: "14 min",
             description: "Deliver controlled change approvals with bots, notifications, and guardrails.",
-            videoUrl: "https://www.youtube.com/embed/7S8GO8Cdbi4",
+            videoUrl: "https://www.youtube.com/embed/nIQLcB1VT9A",
             resources: [
               { label: "ChatOps Cookbook", url: "https://networkacademy.ke/resources/chatops-cookbook.pdf" },
             ],
@@ -2829,7 +2829,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "video",
             duration: "19 min",
             description: "Capture telemetry from pipelines and infrastructure to inform future automation work.",
-            videoUrl: "https://www.youtube.com/embed/qIYwql1zv_c",
+            videoUrl: "https://www.youtube.com/embed/km4jQ7wroxw",
             resources: [
               { label: "Observability Dashboard", url: "https://networkacademy.ke/resources/automation-observability-dashboard.json" },
             ],
@@ -2840,7 +2840,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "lab",
             duration: "36 min",
             description: "Detect config drift using GitOps comparisons, then trigger automated remediation.",
-            videoUrl: "https://www.youtube.com/embed/1cHu5P0xO04",
+            videoUrl: "https://www.youtube.com/embed/74Ibb9frhh4",
             resources: [
               { label: "Drift Toolkit", url: "https://networkacademy.ke/labs/network-drift-toolkit.zip" },
             ],
@@ -2851,7 +2851,7 @@ const COURSE_DATA: CourseRecord[] = [
             type: "quiz",
             duration: "11 min",
             description: "Measure understanding of SLIs, SLOs, and incident management for automation.",
-            videoUrl: "https://www.youtube.com/embed/OnUfzkdqBwk",
+            videoUrl: "https://www.youtube.com/embed/2alcBvMBRzw",
           },
         ],
       },
