@@ -20,7 +20,7 @@ const clerkAppearance = {
   elements: {
     rootBox: "w-full",
     card:
-      "relative overflow-hidden border border-border bg-card p-0 shadow-[0_36px_120px_-64px_hsl(225_24%_22%/0.85)] backdrop-blur-xl",
+      "relative overflow-hidden border border-border bg-[hsl(266_38%_19%_/_0.95)] p-0 shadow-[0_36px_120px_-64px_hsl(288_48%_20%_/_0.78)] backdrop-blur-xl",
     headerTitle: "text-3xl font-bold tracking-tight text-foreground drop-shadow-[0_6px_18px_rgba(0,0,0,0.35)]",
     headerSubtitle: "text-base text-muted-foreground font-medium",
     formFieldLabel: "text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground",
@@ -86,7 +86,7 @@ const Auth = () => {
   const displayName = user?.fullName?.trim()?.length ? user.fullName : user?.email;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background/85 via-background to-background">
+    <div className="auth-backdrop flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <Link to="/" className="flex items-center gap-2 text-foreground transition-colors hover:text-primary">
@@ -97,7 +97,7 @@ const Auth = () => {
       </header>
 
       <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-2xl border border-border bg-card shadow-[0_42px_120px_-64px_hsl(225_24%_22%/0.85)] backdrop-blur-xl">
+        <Card className="w-full max-w-2xl border border-border bg-[hsl(266_38%_19%_/_0.95)] shadow-[0_42px_120px_-64px_hsl(288_48%_20%_/_0.78)] backdrop-blur-xl">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl font-semibold text-foreground">
               {mode === "signin" ? "Welcome Back" : "Create your account"}
