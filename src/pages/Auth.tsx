@@ -20,19 +20,19 @@ const clerkAppearance = {
   elements: {
     rootBox: "w-full",
     card:
-      "relative overflow-hidden border border-primary/40 bg-gradient-to-br from-primary/15 via-background/95 to-background/95 p-0 shadow-[0_32px_95px_-48px_hsl(var(--primary))] backdrop-blur-2xl",
-    headerTitle: "text-3xl font-bold tracking-tight text-primary-foreground drop-shadow-[0_6px_18px_rgba(30,64,175,0.45)]",
-    headerSubtitle: "text-base text-primary/80 font-medium",
-    formFieldLabel: "text-xs font-semibold uppercase tracking-[0.24em] text-foreground/70",
+      "relative overflow-hidden border border-border bg-card p-0 shadow-[0_36px_120px_-64px_hsl(225_24%_22%/0.85)] backdrop-blur-xl",
+    headerTitle: "text-3xl font-bold tracking-tight text-foreground drop-shadow-[0_6px_18px_rgba(0,0,0,0.35)]",
+    headerSubtitle: "text-base text-muted-foreground font-medium",
+    formFieldLabel: "text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground",
     formFieldInput:
-      "bg-foreground/10 border border-primary/40 text-foreground placeholder:text-foreground/40 shadow-inner shadow-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/70 focus:ring-offset-2 focus:ring-offset-background",
-    formFieldInputShowPasswordButton: "text-primary hover:text-primary/80",
+      "bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 focus:ring-offset-background",
+    formFieldInputShowPasswordButton: "text-accent hover:text-accent/80",
     formButtonPrimary:
-      "bg-gradient-to-r from-primary via-accent to-primary/85 text-primary-foreground font-semibold shadow-[0_22px_45px_-28px_hsl(var(--primary))] hover:from-primary/90 hover:to-accent/90 hover:shadow-[0_28px_55px_-25px_hsl(var(--primary))] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground font-semibold shadow-[0_22px_45px_-28px_hsl(28_92%_58%/0.8)] hover:from-primary/95 hover:via-primary/95 hover:to-accent/90 hover:shadow-[0_28px_55px_-26px_hsl(28_92%_58%/0.75)] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     socialButtons: "gap-3",
     socialButtonsProvider:
-      "bg-background/70 border border-primary/40 text-foreground hover:bg-primary/20 hover:border-primary/60 transition-colors duration-300",
-    dividerRow: "text-[11px] uppercase tracking-[0.28em] text-muted-foreground/80",
+      "bg-card border border-border text-foreground transition-colors duration-300 hover:bg-background/90 hover:border-primary",
+    dividerRow: "text-[11px] uppercase tracking-[0.28em] text-muted-foreground",
     footerAction__signIn: "hidden",
     footerAction__signUp: "hidden",
   },
@@ -86,7 +86,7 @@ const Auth = () => {
   const displayName = user?.fullName?.trim()?.length ? user.fullName : user?.email;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-primary/5 to-background">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background/85 via-background to-background">
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <Link to="/" className="flex items-center gap-2 text-foreground transition-colors hover:text-primary">
@@ -97,7 +97,7 @@ const Auth = () => {
       </header>
 
       <main className="flex flex-1 items-center justify-center p-4">
-        <Card className="w-full max-w-2xl border border-primary/30 bg-gradient-to-br from-primary/20 via-background/90 to-background/95 shadow-[0_40px_120px_-55px_hsl(var(--primary))] backdrop-blur-2xl">
+        <Card className="w-full max-w-2xl border border-border bg-card shadow-[0_42px_120px_-64px_hsl(225_24%_22%/0.85)] backdrop-blur-xl">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl font-semibold text-foreground">
               {mode === "signin" ? "Welcome Back" : "Create your account"}
@@ -110,9 +110,9 @@ const Auth = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {alreadyAuthenticated ? (
-              <div className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm text-primary">
+              <div className="rounded-xl border border-border bg-background/80 p-4 text-sm text-foreground">
                 <p className="font-semibold">You're already signed in{displayName ? ` as ${displayName}` : ""}.</p>
-                <p className="mt-1 text-primary/80">You can continue browsing below or head straight to your dashboard.</p>
+                <p className="mt-1 text-muted-foreground">You can continue browsing below or head straight to your dashboard.</p>
                 <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
                   <Button asChild size="sm" variant="default" className="sm:flex-1">
                     <Link to={redirectTo}>Go to dashboard</Link>

@@ -8,36 +8,36 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 228 52% 5%;
+    --background: 225 15% 12%;
     --foreground: 210 30% 94%;
 
-    --card: 225 52% 12% / 0.68;
+    --card: 220 18% 18% / 0.88;
     --card-foreground: 210 30% 94%;
 
-    --popover: 225 52% 14% / 0.72;
+    --popover: 220 20% 20% / 0.9;
     --popover-foreground: 210 30% 94%;
 
-    --primary: 217 91% 65%;
+    --primary: 28 92% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 85% 72%;
+    --primary-glow: 28 92% 64%;
 
-    --primary-soft: 218 88% 72% / 0.18;
-    --primary-strong: 217 94% 58%;
+    --primary-soft: 28 92% 58% / 0.18;
+    --primary-strong: 28 92% 48%;
 
-    --secondary: 256 62% 60% / 0.28;
+    --secondary: 214 18% 32% / 0.28;
     --secondary-foreground: 210 30% 94%;
 
-    --tertiary: 200 75% 65% / 0.18;
+    --tertiary: 200 32% 36% / 0.22;
     --tertiary-foreground: 210 30% 95%;
 
-    --muted: 220 36% 18% / 0.6;
-    --muted-foreground: 218 18% 70%;
+    --muted: 220 16% 24% / 0.65;
+    --muted-foreground: 220 12% 72%;
 
-    --accent: 278 97% 72%;
+    --accent: 13 84% 62%;
     --accent-foreground: 0 0% 100%;
 
-    --accent-soft: 278 100% 78% / 0.16;
-    --accent-strong: 278 92% 65%;
+    --accent-soft: 13 84% 62% / 0.16;
+    --accent-strong: 13 84% 52%;
 
     --success: 160 84% 56%;
     --success-foreground: 0 0% 10%;
@@ -45,27 +45,27 @@ All colors MUST be HSL.
     --destructive: 0 74% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 48% 22% / 0.65;
-    --input: 220 48% 22% / 0.65;
-    --ring: 217 91% 65%;
+    --border: 220 20% 32% / 0.7;
+    --input: 220 20% 32% / 0.7;
+    --ring: 28 92% 58%;
 
     --radius: 0.9rem;
     --radius-xl: 1.25rem;
     --radius-2xl: 1.75rem;
 
-    --gradient-hero: radial-gradient(circle at 10% 20%, hsl(215 90% 62% / 0.55), transparent 55%),
-      radial-gradient(circle at 80% -10%, hsl(278 96% 72% / 0.45), transparent 60%),
-      linear-gradient(120deg, hsl(222 70% 8%), hsl(230 65% 10%));
-    --gradient-card: linear-gradient(145deg, hsl(217 60% 12% / 0.9), hsl(220 55% 9% / 0.75));
-    --gradient-accent: radial-gradient(circle at 35% 20%, hsl(217 95% 62% / 0.55), transparent 60%),
-      radial-gradient(circle at 70% 60%, hsl(278 92% 70% / 0.5), transparent 70%),
-      linear-gradient(135deg, hsl(225 70% 12%), hsl(231 66% 8%));
-    --gradient-promo: linear-gradient(120deg, hsl(216 95% 62%), hsl(279 92% 70%), hsl(193 84% 62%));
-    --shadow-sm: 0 12px 24px -16px hsl(217 90% 60% / 0.35);
-    --shadow-md: 0 28px 48px -24px hsl(222 92% 60% / 0.45);
-    --shadow-lg: 0 40px 88px -32px hsl(222 95% 65% / 0.5);
-    --shadow-xl: 0 50px 120px -40px hsl(222 95% 64% / 0.55);
-    --shadow-glow: 0 0 0 1px hsl(217 91% 65% / 0.2), 0 0 40px -10px hsl(217 91% 65% / 0.6);
+    --gradient-hero: radial-gradient(circle at 12% 18%, hsl(28 92% 58% / 0.35), transparent 55%),
+      radial-gradient(circle at 78% -8%, hsl(13 84% 62% / 0.3), transparent 60%),
+      linear-gradient(120deg, hsl(225 22% 14%), hsl(230 24% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(220 18% 18% / 0.92), hsl(225 18% 14% / 0.85));
+    --gradient-accent: radial-gradient(circle at 40% 18%, hsl(28 92% 58% / 0.4), transparent 60%),
+      radial-gradient(circle at 68% 62%, hsl(13 84% 62% / 0.35), transparent 70%),
+      linear-gradient(135deg, hsl(225 22% 16%), hsl(231 26% 10%));
+    --gradient-promo: linear-gradient(120deg, hsl(28 92% 58%), hsl(13 84% 62%), hsl(42 88% 60%));
+    --shadow-sm: 0 12px 24px -16px hsl(225 24% 18% / 0.45);
+    --shadow-md: 0 28px 48px -24px hsl(225 24% 18% / 0.55);
+    --shadow-lg: 0 40px 88px -32px hsl(225 24% 20% / 0.6);
+    --shadow-xl: 0 50px 120px -40px hsl(225 24% 22% / 0.62);
+    --shadow-glow: 0 0 0 1px hsl(28 92% 58% / 0.22), 0 0 40px -10px hsl(28 92% 58% / 0.55);
     --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     --transition-linger: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -84,7 +84,7 @@ All colors MUST be HSL.
     --sidebar-accent: 256 62% 60% / 0.32;
     --sidebar-accent-foreground: 210 30% 94%;
     --sidebar-border: 220 48% 22% / 0.5;
-    --sidebar-ring: 217 91% 65%;
+    --sidebar-ring: 28 92% 58%;
 
     --glass-border: 220 88% 80% / 0.18;
     --glass-highlight: 0 0% 100% / 0.08;
@@ -95,33 +95,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 228 52% 5%;
+    --background: 225 15% 12%;
     --foreground: 210 30% 94%;
 
-    --card: 225 52% 12% / 0.68;
+    --card: 220 18% 18% / 0.88;
     --card-foreground: 210 30% 94%;
 
-    --popover: 225 52% 14% / 0.72;
+    --popover: 220 20% 20% / 0.9;
     --popover-foreground: 210 30% 94%;
 
-    --primary: 217 91% 65%;
+    --primary: 28 92% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 85% 72%;
-    --primary-soft: 218 88% 72% / 0.18;
-    --primary-strong: 217 94% 58%;
+    --primary-glow: 28 92% 64%;
+    --primary-soft: 28 92% 58% / 0.18;
+    --primary-strong: 28 92% 48%;
 
-    --secondary: 256 62% 60% / 0.28;
+    --secondary: 214 18% 32% / 0.28;
     --secondary-foreground: 210 30% 94%;
-    --tertiary: 200 75% 65% / 0.18;
+    --tertiary: 200 32% 36% / 0.22;
     --tertiary-foreground: 210 30% 95%;
 
-    --muted: 220 36% 18% / 0.6;
-    --muted-foreground: 218 18% 70%;
+    --muted: 220 16% 24% / 0.65;
+    --muted-foreground: 220 12% 72%;
 
-    --accent: 278 97% 72%;
+    --accent: 13 84% 62%;
     --accent-foreground: 0 0% 100%;
-    --accent-soft: 278 100% 78% / 0.16;
-    --accent-strong: 278 92% 65%;
+    --accent-soft: 13 84% 62% / 0.16;
+    --accent-strong: 13 84% 52%;
 
     --success: 160 84% 56%;
     --success-foreground: 0 0% 10%;
@@ -129,23 +129,23 @@ All colors MUST be HSL.
     --destructive: 0 74% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 48% 22% / 0.65;
-    --input: 220 48% 22% / 0.65;
-    --ring: 217 91% 65%;
+    --border: 220 20% 32% / 0.7;
+    --input: 220 20% 32% / 0.7;
+    --ring: 28 92% 58%;
 
-    --gradient-hero: radial-gradient(circle at 10% 20%, hsl(215 90% 62% / 0.55), transparent 55%),
-      radial-gradient(circle at 80% -10%, hsl(278 96% 72% / 0.45), transparent 60%),
-      linear-gradient(120deg, hsl(222 70% 8%), hsl(230 65% 10%));
-    --gradient-card: linear-gradient(145deg, hsl(217 60% 12% / 0.9), hsl(220 55% 9% / 0.75));
-    --gradient-accent: radial-gradient(circle at 35% 20%, hsl(217 95% 62% / 0.55), transparent 60%),
-      radial-gradient(circle at 70% 60%, hsl(278 92% 70% / 0.5), transparent 70%),
-      linear-gradient(135deg, hsl(225 70% 12%), hsl(231 66% 8%));
-    --gradient-promo: linear-gradient(120deg, hsl(216 95% 62%), hsl(279 92% 70%), hsl(193 84% 62%));
-    --shadow-sm: 0 12px 24px -16px hsl(217 90% 60% / 0.35);
-    --shadow-md: 0 28px 48px -24px hsl(222 92% 60% / 0.45);
-    --shadow-lg: 0 40px 88px -32px hsl(222 95% 65% / 0.5);
-    --shadow-xl: 0 50px 120px -40px hsl(222 95% 64% / 0.55);
-    --shadow-glow: 0 0 0 1px hsl(217 91% 65% / 0.2), 0 0 40px -10px hsl(217 91% 65% / 0.6);
+    --gradient-hero: radial-gradient(circle at 12% 18%, hsl(28 92% 58% / 0.35), transparent 55%),
+      radial-gradient(circle at 78% -8%, hsl(13 84% 62% / 0.3), transparent 60%),
+      linear-gradient(120deg, hsl(225 22% 14%), hsl(230 24% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(220 18% 18% / 0.92), hsl(225 18% 14% / 0.85));
+    --gradient-accent: radial-gradient(circle at 40% 18%, hsl(28 92% 58% / 0.4), transparent 60%),
+      radial-gradient(circle at 68% 62%, hsl(13 84% 62% / 0.35), transparent 70%),
+      linear-gradient(135deg, hsl(225 22% 16%), hsl(231 26% 10%));
+    --gradient-promo: linear-gradient(120deg, hsl(28 92% 58%), hsl(13 84% 62%), hsl(42 88% 60%));
+    --shadow-sm: 0 12px 24px -16px hsl(225 24% 18% / 0.45);
+    --shadow-md: 0 28px 48px -24px hsl(225 24% 18% / 0.55);
+    --shadow-lg: 0 40px 88px -32px hsl(225 24% 20% / 0.6);
+    --shadow-xl: 0 50px 120px -40px hsl(225 24% 22% / 0.62);
+    --shadow-glow: 0 0 0 1px hsl(28 92% 58% / 0.22), 0 0 40px -10px hsl(28 92% 58% / 0.55);
     --sidebar-background: 226 50% 8% / 0.85;
     --sidebar-foreground: 210 30% 94%;
     --sidebar-primary: 217 91% 65%;
@@ -153,7 +153,7 @@ All colors MUST be HSL.
     --sidebar-accent: 256 62% 60% / 0.32;
     --sidebar-accent-foreground: 210 30% 94%;
     --sidebar-border: 220 48% 22% / 0.5;
-    --sidebar-ring: 217 91% 65%;
+    --sidebar-ring: 28 92% 58%;
 
     --glass-border: 220 88% 80% / 0.18;
     --glass-highlight: 0 0% 100% / 0.08;
@@ -173,7 +173,7 @@ All colors MUST be HSL.
     @apply bg-background text-foreground antialiased;
     background-attachment: fixed;
     background-image:
-      linear-gradient(160deg, hsl(222 80% 5% / 0.94), hsl(220 72% 12% / 0.88)),
+      linear-gradient(160deg, hsl(225 30% 10% / 0.94), hsl(228 34% 8% / 0.88)),
       url("/images/futuristic-lab.png");
     background-size: cover;
     background-position: center;
